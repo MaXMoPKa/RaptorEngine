@@ -13,7 +13,8 @@ linear_allocator::linear_allocator()
 linear_allocator::linear_allocator(std::size_t size, const void* address)
     : size{size}, address{address}, used_size{0} {}
 
-linear_allocator::linear_allocator(linear_allocator&& allocator) noexcept {
+linear_allocator::linear_allocator(linear_allocator&& allocator) noexcept
+    : size{0}, address{nullptr}, used_size{0} {
   this->swap(allocator);
 }
 

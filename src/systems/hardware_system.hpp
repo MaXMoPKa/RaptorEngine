@@ -37,6 +37,17 @@ class hardware_system {
     }
   }
 
+  hardware_system(hardware_system&& system) noexcept
+      : sdl_init_flags{SDL_INIT_VIDEO}, window(nullptr), window_info{} {
+    this->swap(system);
+  }
+
+  hardware_system& operator=(hardware_system&& system) noexcept {
+    hardware_system tmp{std::move(system)};
+    this->swap(tmp);
+    return *this;
+  }
+
   hardware_system(const hardware_system&) = delete;
   hardware_system& operator=(const hardware_system&) = delete;
 
@@ -72,7 +83,7 @@ class hardware_system {
 
   u32 get_sdl_init_flags() const noexcept { return this->sdl_init_flags; }
 
-  const window_data& get_window_data() const noexcept {
+  window_data const& get_window_data() const noexcept {
     return this->window_info;
   }
 
