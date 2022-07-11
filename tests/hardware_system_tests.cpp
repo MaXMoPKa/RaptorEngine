@@ -3,6 +3,8 @@
 #include "systems/hardware_system.hpp"
 
 using namespace testing;
+using namespace raptor_enigne::systems;
+using namespace raptor_engine::structs;
 
 TEST(hardware_system, create_with_default_constructor) {
   hardware_system hardware_system;
