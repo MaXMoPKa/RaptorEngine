@@ -1,3 +1,28 @@
-.idea
-cmake-build-debug
-third_party
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.so
+*.a
+*.dll
+*.lib
+*.la
+*.lai
+*.dylib
+
+# Cmake
+.cmake*
+CMakeFiles*
+example_autogen*
+*.ninja_deps
+*.ninja_log
+*.cmake
+CMakeCahce.txt*
+*.ninja
+
+# QtCtreator CMake
+CMakeLists.txt.user*
+
+# build dirs
+build*
+build_realese*

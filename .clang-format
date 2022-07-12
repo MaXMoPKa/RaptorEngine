@@ -109,7 +109,7 @@ ObjCBreakBeforeNestedBlockParam:           false
 ObjCSpaceAfterProperty:                    true
 ObjCSpaceBeforeProtocolList:               false
 PPIndentWidth:                             2
-# PackConstructorInitializers:               Never
+# PackConstructorInitializers:             Never
 # PenaltyBreakAssignment:
 PenaltyBreakBeforeFirstCallParameter:      19
 PenaltyBreakComment:                       300
@@ -121,14 +121,14 @@ PenaltyExcessCharacter:                    1000000
 # PenaltyIndentedWhitespace:
 PenaltyReturnTypeOnItsOwnLine:             200
 PointerAlignment:                          Left
-# QualifierAlignment:                        Right
+# QualifierAlignment:                      Right
 # QualifierOrder:
 # RawStringFormats:
 ReferenceAlignment:                        Left
 ReflowComments:                            true
-# RemoveBracesLLVM:                          false
-# RequiresClausePosition:                    OwnLine
-# SeparateDefinitionBlocks:                  Always
+# RemoveBracesLLVM:                        false
+# RequiresClausePosition:                  OwnLine
+# SeparateDefinitionBlocks:                Always
 # ShortNamespaceLines:
 SortIncludes:                              CaseSensitive
 SortJavaStaticImport:                      After
@@ -157,7 +157,7 @@ SpacesInLineCommentPrefix:
   Maximum: 1
 SpacesInParentheses:                       false
 SpacesInSquareBrackets:                    false
-Standard:                                  c++17
+Standard:                                  c++20
 # StatementAttributeLikeMacros:
 # StatementMacros:
 TabWidth:                                  4
