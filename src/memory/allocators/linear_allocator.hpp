@@ -1,8 +1,8 @@
 #pragma once
 
-#include <utility>
+#include <cstddef>  // for size_t
 
-#include "defines.hpp"
+#include "defines.hpp"  // for u8
 
 namespace raptor_engine {
 namespace memory {

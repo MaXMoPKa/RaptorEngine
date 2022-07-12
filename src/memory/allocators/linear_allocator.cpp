@@ -1,8 +1,9 @@
 #include "linear_allocator.hpp"
 
-#include <cassert>
+#include <cassert>  // for assert
+#include <utility>  // for swap, move
 
-#include "memory/utils.hpp"
+#include "memory/utils.hpp"  // for get_adjustment
 
 using namespace raptor_engine::memory;
 using namespace raptor_engine::memory::allocator;

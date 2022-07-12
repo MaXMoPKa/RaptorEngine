@@ -1,8 +1,12 @@
-#include <gmock/gmock.h>
+#include <cstddef>     // for size_t
+#include <functional>  // for function
+#include <memory>      // for allocator, unique_ptr
+#include <utility>     // for move
 
-#include <memory>
-
-#include "memory/allocators/linear_allocator.hpp"
+#include "defines.hpp"                             // for u8
+#include "gmock/gmock.h"                           // for MakePredicateForma...
+#include "gtest/gtest.h"                           // for Eq, Test, Message
+#include "memory/allocators/linear_allocator.hpp"  // for linear_allocator
 
 using namespace testing;
 using namespace raptor_engine::memory::allocator;

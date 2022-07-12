@@ -18,6 +18,10 @@ set(SOURCES ${HEADER_FILES} ${SOURCE_CODE_FILES})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+find_program(IWYU_PATH NAMES include-what-you-use include_what_you_use iwyu REQUIRED)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH})
+
 target_link_libraries(${PROJECT_NAME} pthread)
 target_link_libraries(${PROJECT_NAME} gmock)
 target_link_libraries(${PROJECT_NAME} gtest)

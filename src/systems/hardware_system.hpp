@@ -1,11 +1,11 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_video.h>  // for SDL_Window
 
-#include <string>
-#include <utility>
+#include <memory>  // for unique_ptr
 
-#include "structs/window_data.hpp"
+#include "defines.hpp"              // for u32
+#include "structs/window_data.hpp"  // for structs, window_data
 
 using namespace raptor_engine::structs;
 
@@ -18,11 +18,7 @@ class hardware_system {
   hardware_system(u32 sdl_init_flags /*= SDL_INIT_VIDEO*/,
                   const window_data& window_info /*= window_info{}*/);
 
-  hardware_system(hardware_system&& system) noexcept
-      : sdl_init_flags{SDL_INIT_VIDEO}, window(nullptr), window_info{} {
-    this->swap(system);
-  }
-
+  hardware_system(hardware_system&& system) noexcept;
   hardware_system& operator=(hardware_system&& system) noexcept;
 
   hardware_system(const hardware_system&) = delete;
@@ -31,29 +27,23 @@ class hardware_system {
   ~hardware_system();
 
  public:
-  void create(u32 sdl_init_flags /*= SDL_INIT_VIDEO*/,
-              const window_data& window_info);
+  void create(u32 sdl_init_flags = 20U /*SDL_INIT_VIDEO*/,
+              const window_data& window_info = window_data{});
 
   void swap(hardware_system& system) noexcept;
 
   void reset() noexcept;
 
  public:
-  inline SDL_Window const* get_window() const noexcept { return this->window; }
+  SDL_Window const* get_window() const noexcept;
 
-  inline u32 get_sdl_init_flags() const noexcept {
-    return this->sdl_init_flags;
-  }
+  u32 get_sdl_init_flags() const noexcept;
 
-  inline window_data const& get_window_data() const noexcept {
-    return this->window_info;
-  }
+  window_data const& get_window_data() const noexcept;
 
  private:
-  u32 sdl_init_flags;
-
-  SDL_Window* window;
-  window_data window_info;
+  class hardware_system_pimpl;
+  std::unique_ptr<hardware_system_pimpl> pimpl;
 };
 
 }  // namespace systems
