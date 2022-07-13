@@ -35,11 +35,11 @@ class hardware_system {
   void reset() noexcept;
 
  public:
-  SDL_Window const* get_window() const noexcept;
+  [[nodiscard]] SDL_Window const* get_window() const noexcept;
 
-  u32 get_sdl_init_flags() const noexcept;
+  [[nodiscard]] u32 get_sdl_init_flags() const noexcept;
 
-  window_data const& get_window_data() const noexcept;
+  [[nodiscard]] window_data const& get_window_data() const noexcept;
 
  private:
   class hardware_system_pimpl;

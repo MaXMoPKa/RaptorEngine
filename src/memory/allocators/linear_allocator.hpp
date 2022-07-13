@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>  // for size_t
+#include <memory>   // for unique_ptr
 
 #include "defines.hpp"  // for u8
 
@@ -20,8 +21,7 @@ class linear_allocator {
   linear_allocator& operator=(const linear_allocator&) = delete;
 
   linear_allocator(linear_allocator&& allocator) noexcept;
-
-  linear_allocator& operator=(linear_allocator&& allocator);
+  linear_allocator& operator=(linear_allocator&& allocator) noexcept;
 
   ~linear_allocator();
 
@@ -33,28 +33,26 @@ class linear_allocator {
   void reset() noexcept;
 
  public:
+  [[nodiscard]] bool is_allocation_possible(std::size_t size);
+
+ public:
   [[nodiscard]] void* allocate(std::size_t size,
                                u8 alignment = default_alignment);
-
-  bool is_allocation_possible(std::size_t size);
 
   void free();
 
   void clear() noexcept;
 
  public:
-  [[nodiscard]] inline void const* get_address() const { return this->address; }
+  [[nodiscard]] void const* get_address() const;
 
-  [[nodiscard]] inline std::size_t get_size() const { return this->size; }
+  [[nodiscard]] std::size_t get_size() const;
 
-  [[nodiscard]] inline std::size_t get_used_size() const {
-    return this->used_size;
-  }
+  [[nodiscard]] std::size_t get_used_size() const;
 
  private:
-  std::size_t size;
-  const void* address;
-  std::size_t used_size;
+  class linear_allocator_pimpl;
+  std::unique_ptr<linear_allocator_pimpl> pimpl;
 };
 
 }  // namespace allocator

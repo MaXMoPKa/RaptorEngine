@@ -85,37 +85,27 @@ class hardware_system::hardware_system_pimpl {
 
 hardware_system::hardware_system() : pimpl(new hardware_system_pimpl()) {}
 
-hardware_system::hardware_system(u32 sdl_init_flags /*= SDL_INIT_VIDEO*/,
+hardware_system::hardware_system(u32 sdl_init_flags,
                                  const window_data& window_info)
     : pimpl(new hardware_system_pimpl(sdl_init_flags, window_info)) {}
 
-hardware_system::hardware_system(hardware_system&& system) noexcept
-    : pimpl(new hardware_system_pimpl()) {
-  this->swap(system);
-}
+hardware_system::hardware_system(hardware_system&& system) noexcept = default;
 
-hardware_system& hardware_system::operator=(hardware_system&& system) noexcept {
-  hardware_system tmp{std::move(system)};
-  this->swap(tmp);
-  return *this;
-}
+hardware_system& hardware_system::operator=(hardware_system&& system) noexcept =
+    default;
 
 hardware_system::~hardware_system() {}
 
-void hardware_system::create(u32 sdl_init_flags /*= SDL_INIT_VIDEO*/,
+void hardware_system::create(u32 sdl_init_flags,
                              const window_data& window_info) {
-  hardware_system tmp{sdl_init_flags, window_info};
-  this->swap(tmp);
+  this->pimpl->create(sdl_init_flags, window_info);
 }
 
 void hardware_system::swap(hardware_system& system) noexcept {
   this->pimpl->swap(*system.pimpl);
 }
 
-void hardware_system::reset() noexcept {
-  hardware_system tmp{};
-  this->swap(tmp);
-}
+void hardware_system::reset() noexcept { this->pimpl->reset(); }
 
 SDL_Window const* hardware_system::get_window() const noexcept {
   return this->pimpl->get_window();
