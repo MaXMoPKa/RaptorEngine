@@ -94,7 +94,7 @@ hardware_system::hardware_system(hardware_system&& system) noexcept = default;
 hardware_system& hardware_system::operator=(hardware_system&& system) noexcept =
     default;
 
-hardware_system::~hardware_system() {}
+hardware_system::~hardware_system() = default;
 
 void hardware_system::create(u32 sdl_init_flags,
                              const window_data& window_info) {

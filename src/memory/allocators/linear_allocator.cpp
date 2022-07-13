@@ -104,7 +104,7 @@ linear_allocator::linear_allocator(linear_allocator&& allocator) noexcept =
 linear_allocator& linear_allocator::operator=(
     linear_allocator&& allocator) noexcept = default;
 
-linear_allocator::~linear_allocator() {}
+linear_allocator::~linear_allocator() = default;
 
 void linear_allocator::create(std::size_t size, const void* address) {
   this->pimpl->create(size, address);
