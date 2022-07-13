@@ -5,7 +5,12 @@
 namespace raptor_engine {
 namespace utils {
 
-/// create an object of type T at a given address
+// TODO: think about tests for this method:
+// 1) two tests for placement_new (with Args and without)
+// 2) two tests for placement_cast (for const and non-const buffer)
+// 3) one test for placement_delete;
+
+// create an object of type T at a given address
 template <typename type, typename... Args>
 void placement_new(void *buffer, std::size_t buffer_size, Args... args) {
   // check the size of the buffer (at runtime, in debug builds)
@@ -16,7 +21,7 @@ void placement_new(void *buffer, std::size_t buffer_size, Args... args) {
   new (buffer) type(args...);
 }
 
-/// cast a given address to a pointer to type T
+// cast a given address to a pointer to type T
 template <typename type>
 type *placement_cast(void *buffer) {
   return reinterpret_cast<type *>(buffer);
@@ -27,7 +32,7 @@ type const *placement_cast(void const *buffer) {
   return reinterpret_cast<type const *>(buffer);
 }
 
-/// call the destructor of type T at a given address
+// call the destructor of type T at a given address
 template <typename type>
 void placement_delete(void *buffer) {
   placement_cast<type>(buffer)->~type();
