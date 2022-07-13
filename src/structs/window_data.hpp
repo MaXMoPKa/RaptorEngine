@@ -10,8 +10,8 @@ namespace raptor_engine {
 namespace structs {
 
 struct window_data {
-  static constexpr std::size_t WINDOW_PIXEL_WIDTH{640};
-  static constexpr std::size_t WINDOW_PIXEL_HEIGHT{480};
+  static constexpr u16 WINDOW_PIXEL_WIDTH{640};
+  static constexpr u16 WINDOW_PIXEL_HEIGHT{480};
   static constexpr char WINDOW_TITLE[]{"Raptor engine window"};
 
  public:

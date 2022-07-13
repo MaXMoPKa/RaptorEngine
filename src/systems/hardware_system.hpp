@@ -12,6 +12,8 @@ using namespace raptor_engine::structs;
 namespace raptor_enigne {
 namespace systems {
 
+// TODO: think about SIMPL.
+
 class hardware_system {
  public:
   hardware_system();
