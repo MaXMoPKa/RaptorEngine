@@ -1,14 +1,17 @@
-#include <string>
+#pragma once
 
-#include "SDL2/SDL_video.h"
-#include "defines.hpp"
+#include <cstddef>  // for size_t
+#include <string>   // for allocator, string
+
+#include "SDL2/SDL_video.h"  // for SDL_WINDOWPOS_CENTERED, SDL_WINDOW_OPENGL
+#include "defines.hpp"       // for u32
 
 namespace raptor_engine {
 namespace structs {
 
 struct window_data {
-  static constexpr std::size_t WINDOW_PIXEL_WIDTH{640};
-  static constexpr std::size_t WINDOW_PIXEL_HEIGHT{480};
+  static constexpr u16 WINDOW_PIXEL_WIDTH{640};
+  static constexpr u16 WINDOW_PIXEL_HEIGHT{480};
   static constexpr char WINDOW_TITLE[]{"Raptor engine window"};
 
  public:
