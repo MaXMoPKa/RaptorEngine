@@ -18,7 +18,7 @@ using namespace raptor_engine::structs;
 
 TEST(hardware_system, create_with_default_constructor) {
   hardware_system hardware_system;
-  ASSERT_THAT(hardware_system.get_window(), Eq(nullptr));
+  ASSERT_NE(hardware_system.get_window(), nullptr);
 }
 
 TEST(hardware_system, create_with_parametrized_constructor) {
@@ -99,18 +99,6 @@ TEST(hardware_system, create_with_move_assignment) {
   ASSERT_THAT(second_system.get_window_data().width, Eq(width));
   ASSERT_THAT(second_system.get_window_data().height, Eq(height));
   ASSERT_THAT(second_system.get_window_data().flags, Eq(flags));
-
-  ASSERT_THAT(first_system.get_sdl_init_flags(), Eq(SDL_INIT_VIDEO));
-  ASSERT_THAT(first_system.get_window(), Eq(nullptr));
-  ASSERT_THAT(first_system.get_window_data().title,
-              Eq(window_data::WINDOW_TITLE));
-  ASSERT_THAT(first_system.get_window_data().x_pos, Eq(SDL_WINDOWPOS_CENTERED));
-  ASSERT_THAT(first_system.get_window_data().y_pos, Eq(SDL_WINDOWPOS_CENTERED));
-  ASSERT_THAT(first_system.get_window_data().width,
-              Eq(window_data::WINDOW_PIXEL_WIDTH));
-  ASSERT_THAT(first_system.get_window_data().height,
-              Eq(window_data::WINDOW_PIXEL_HEIGHT));
-  ASSERT_THAT(first_system.get_window_data().flags, Eq(SDL_WINDOW_OPENGL));
 }
 
 TEST(hardware_system, create_with_create_method) {
@@ -150,7 +138,7 @@ TEST(hardware_system, swap_two_hardware_system_instances_with_swap_method) {
   first_system.swap(second_system);
 
   ASSERT_THAT(first_system.get_sdl_init_flags(), Eq(SDL_INIT_VIDEO));
-  ASSERT_THAT(first_system.get_window(), Eq(nullptr));
+  ASSERT_NE(first_system.get_window(), nullptr);
   ASSERT_THAT(first_system.get_window_data().title,
               Eq(window_data::WINDOW_TITLE));
   ASSERT_THAT(first_system.get_window_data().x_pos, Eq(SDL_WINDOWPOS_CENTERED));
@@ -188,7 +176,7 @@ TEST(hardware_system, clear_with_reset_engine) {
   hardware_system.reset();
 
   ASSERT_THAT(hardware_system.get_sdl_init_flags(), Eq(SDL_INIT_VIDEO));
-  ASSERT_THAT(hardware_system.get_window(), Eq(nullptr));
+  ASSERT_NE(hardware_system.get_window(), nullptr);
   ASSERT_THAT(hardware_system.get_window_data().title,
               Eq(window_data::WINDOW_TITLE));
   ASSERT_THAT(hardware_system.get_window_data().x_pos,
