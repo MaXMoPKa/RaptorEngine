@@ -1,5 +1,7 @@
 #include "window_data.hpp"
 
+#include <utility>  // for swap
+
 using namespace raptor_engine::structs;
 
 window_data::window_data(const std::string& title, int x_pos, int y_pos,

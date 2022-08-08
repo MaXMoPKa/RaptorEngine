@@ -1,6 +1,16 @@
-#include <gmock/gmock.h>
+#include <SDL2/SDL.h>        // for SDL_INIT_VIDEO, SDL_INIT_AUDIO
+#include <SDL2/SDL_video.h>  // for SDL_WINDOW_OPENGL, SDL_WINDOW...
 
-#include "systems/hardware_system.hpp"
+#include <cstddef>     // for size_t
+#include <functional>  // for function
+#include <memory>      // for allocator
+#include <utility>     // for move
+
+#include "defines.hpp"                  // for u32
+#include "gmock/gmock.h"                // for MakePredicateFormatterFromMat...
+#include "gtest/gtest.h"                // for Eq, Message, TestPartResult
+#include "structs/window_data.hpp"      // for window_data, window_data::WIN...
+#include "systems/hardware_system.hpp"  // for hardware_system, systems
 
 using namespace testing;
 using namespace raptor_enigne::systems;

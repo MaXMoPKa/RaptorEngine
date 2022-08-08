@@ -1,6 +1,8 @@
-#include <gmock/gmock.h>
+#include <gtest/gtest.h>  // for Test, TestInfo (ptr only), TEST, testing
 
-#include "core/engine.hpp"
+#include <memory>  // for allocator
+
+#include "core/engine.hpp"  // for engine, raptor_engine
 
 using namespace testing;
 using namespace raptor_engine;
