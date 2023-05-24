@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL2/SDL_video.h>  // for SDL_Window
+#include <SDL_video.h>  // for SDL_Window
 
 #include <memory>  // for unique_ptr
 

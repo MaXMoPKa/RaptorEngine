@@ -3,9 +3,10 @@
 #include <memory>      // for allocator, unique_ptr
 #include <utility>     // for move
 
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+
 #include "defines.hpp"                             // for u8
-#include "gmock/gmock.h"                           // for MakePredicateForma...
-#include "gtest/gtest.h"                           // for Eq, Test, Message
 #include "memory/allocators/linear_allocator.hpp"  // for linear_allocator
 
 using namespace testing;

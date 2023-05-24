@@ -1,5 +1,5 @@
-#include <gmock/gmock.h>  // for InitGoogleMock
-#include <gtest/gtest.h>  // for RUN_ALL_TESTS
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 int main(int argc, char** argv) {
   testing::InitGoogleMock(&argc, argv);
