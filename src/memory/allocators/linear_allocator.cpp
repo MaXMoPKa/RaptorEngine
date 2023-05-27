@@ -1,7 +1,7 @@
-#include "linear_allocator.hpp"
-
 #include <cassert>  // for assert
 #include <utility>  // for swap, move
+
+#include "linear_allocator.hpp"
 
 #include "memory/utils.hpp"  // for get_adjustment
 #include "utils/simpl.hpp"

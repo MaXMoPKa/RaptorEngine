@@ -1,17 +1,17 @@
-#include <SDL2/SDL.h>        // for SDL_INIT_VIDEO, SDL_INIT...
-#include <SDL2/SDL_video.h>  // for SDL_WINDOW_OPENGL, SDL_W...
-
 #include <cstddef>     // for size_t
 #include <functional>  // for function
 #include <memory>      // for __shared_ptr_access, mak...
 #include <utility>     // for move
 
-#include "defines.hpp"                       // for u32, u16
-#include "gmock/gmock.h"                     // for MakePredicateFormatterFr...
-#include "gtest/gtest.h"                     // for Eq, Message, TestPartResult
-#include "structs/hardware_system_data.hpp"  // for hardware_system_data
-#include "structs/window_data.hpp"           // for window_data, window_data...
-#include "systems/hardware_system.hpp"       // for hardware_system, systems
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+
+#include "SDL.h"    // for SDL_INIT_VIDEO, SDL_INIT_AUDIO
+#include "SDL_video.h"  // for SDL_WINDOW_OPENGL, SDL_WINDOW...
+
+#include "defines.hpp"                  // for u32
+#include "structs/window_data.hpp"      // for window_data, window_data::WIN...
+#include "systems/hardware_system.hpp"  // for hardware_system, systems
 
 using namespace testing;
 using namespace raptor_enigne::systems;

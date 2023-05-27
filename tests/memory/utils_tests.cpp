@@ -1,9 +1,10 @@
 #include <cstddef>  // for size_t
 #include <memory>   // for allocator
 
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+
 #include "defines.hpp"       // for u8
-#include "gmock/gmock.h"     // for MakePredicateFormatterFromMatcher, ASSER...
-#include "gtest/gtest.h"     // for Eq, Test, Message, TestPartResult, TEST
 #include "memory/utils.hpp"  // for get_adjustment, utils
 
 using namespace testing;

@@ -1,6 +1,7 @@
+#include <utility>  // for swap
+
 #include "window_data.hpp"
 
-#include <utility>  // for swap
 
 using namespace raptor_engine::structs;
 

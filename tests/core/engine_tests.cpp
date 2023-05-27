@@ -1,13 +1,12 @@
-#include <SDL2/SDL_video.h>  // for SDL_WINDOWPOS_CENTERED
-
 #include <cstddef>     // for size_t
 #include <functional>  // for function
 #include <memory>      // for make_shared, __shared_pt...
 #include <utility>     // for move
 
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
+
 #include "core/engine.hpp"                   // for engine
-#include "gmock/gmock.h"                     // for MakePredicateFormatterFr...
-#include "gtest/gtest.h"                     // for Test, Eq, Message, TestP...
 #include "structs/engine_data.hpp"           // for engine_data, engine_data...
 #include "structs/hardware_system_data.hpp"  // for hardware_system_data
 #include "structs/window_data.hpp"           // for window_data, window_data...
@@ -20,7 +19,7 @@ class test_raptor_engine : public Test {
  public:
   static constexpr std::size_t WIDTH{1080U};
   static constexpr std::size_t HEIGHT{810U};
-  static constexpr char TITLE[]{"Engine test window"};
+  static constexpr char TITLE[] = "Engine test window";
 
  protected:
   void SetUp() {
