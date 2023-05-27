@@ -1,4 +1,5 @@
-#include "gtest/gtest.h" // for Test, TestInfo (ptr only), TEST, testing
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #include <cstddef>     // for size_t
 #include <functional>  // for function
@@ -18,7 +19,7 @@ class test_raptor_engine : public Test {
  public:
   static constexpr std::size_t WIDTH{1080U};
   static constexpr std::size_t HEIGHT{810U};
-  static constexpr char TITLE[]{"Engine test window"};
+  static constexpr char TITLE[] = "Engine test window";
 
  protected:
   void SetUp() {
