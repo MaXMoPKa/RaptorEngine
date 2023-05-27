@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>  // for allocator, string
 
 #include "SDL2/SDL_video.h"  // for SDL_WINDOWPOS_CENTERED, SDL_WINDOW_OPENGL
@@ -14,11 +15,14 @@ struct window_data {
   static constexpr char WINDOW_TITLE[]{"Raptor engine window"};
 
  public:
-  window_data(const std::string& title = WINDOW_TITLE,
-              int x_pos = SDL_WINDOWPOS_CENTERED,
-              int y_pos = SDL_WINDOWPOS_CENTERED,
-              int width = WINDOW_PIXEL_WIDTH, int height = WINDOW_PIXEL_HEIGHT,
-              u32 flags = SDL_WINDOW_OPENGL);
+  window_data();
+
+  window_data(const std::string& title /*= WINDOW_TITLE*/,
+              int x_pos /*= SDL_WINDOWPOS_CENTERED*/,
+              int y_pos /*= SDL_WINDOWPOS_CENTERED*/,
+              int width /*= WINDOW_PIXEL_WIDTH*/,
+              int height /*= WINDOW_PIXEL_HEIGHT*/,
+              u32 flags /*= SDL_WINDOW_OPENGL*/);
 
   ~window_data() = default;
 
@@ -31,7 +35,11 @@ struct window_data {
   u32 flags;
 };
 
-void swap(window_data& first_data, window_data& second_data);
+using window_data_uptr = std::unique_ptr<window_data>;
+using window_data_sptr = std::shared_ptr<window_data>;
+using window_data_wptr = std::weak_ptr<window_data>;
+
+void swap(window_data_sptr& first_data, window_data_sptr& second_data);
 
 }  // namespace structs
 }  // namespace raptor_engine
