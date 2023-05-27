@@ -1,10 +1,10 @@
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
-
 #include <cstddef>     // for size_t
 #include <functional>  // for function
 #include <memory>      // for make_shared, __shared_pt...
 #include <utility>     // for move
+
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 #include "core/engine.hpp"                   // for engine
 #include "structs/engine_data.hpp"           // for engine_data, engine_data...

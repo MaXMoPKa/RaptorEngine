@@ -1,6 +1,3 @@
-#include "SDL.h"    // for SDL_INIT_VIDEO, SDL_INIT_AUDIO
-#include "SDL_video.h"  // for SDL_WINDOW_OPENGL, SDL_WINDOW...
-
 #include <cstddef>     // for size_t
 #include <functional>  // for function
 #include <memory>      // for __shared_ptr_access, mak...
@@ -8,6 +5,9 @@
 
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+
+#include "SDL.h"    // for SDL_INIT_VIDEO, SDL_INIT_AUDIO
+#include "SDL_video.h"  // for SDL_WINDOW_OPENGL, SDL_WINDOW...
 
 #include "defines.hpp"                  // for u32
 #include "structs/window_data.hpp"      // for window_data, window_data::WIN...

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SDL_video.h>  // for SDL_Window
-
 #include <memory>  // for unique_ptr
+
+#include "SDL_video.h"  // for SDL_Window
 
 #include "defines.hpp"  // for u32
 #include "structs/hardware_system_data.hpp"
