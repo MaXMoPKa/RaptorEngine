@@ -5,6 +5,7 @@ project(raptor_engine)
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/cmake/")
 
 add_subdirectory(src)
+add_subdirectory(third_party)
 
 set(TESTS ON CACHE BOOL "" ${REWRITE_FORCE})
 

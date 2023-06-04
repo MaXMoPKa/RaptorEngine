@@ -62,5 +62,6 @@ elseif(WIN32)
     add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC raptor_engine)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

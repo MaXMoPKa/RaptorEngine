@@ -1,11 +1,7 @@
 #pragma once
 
-#include <memory>  // for unique_ptr
-
-#include "SDL_video.h"  // for SDL_Window
-
-#include "defines.hpp"  // for u32
-#include "structs/hardware_system_data.hpp"
+#include "structs/sdl_hardware_system_data.hpp"
+#include "systems/base_hardware_system.hpp"
 
 using namespace raptor_engine::structs;
 
@@ -18,7 +14,7 @@ namespace systems {
  * hardware, creating window and so on.
  *
  */
-class hardware_system {
+class sdl_hardware_system : public base_hardware_system {
  public:
   /**
    * @brief Construct a new hardware system object with empty @see
@@ -26,7 +22,7 @@ class hardware_system {
    * create(const hardware_system_data_sptr& hardware_system_info) method.
    *
    */
-  hardware_system();
+	 sdl_hardware_system();
 
   // TODO: think about exceptions if initialization failed.
   /**
@@ -37,18 +33,18 @@ class hardware_system {
    * @param hardware_system_info is a base info for initialization of window and
    * another systems.
    */
-  hardware_system(const hardware_system_data_sptr& hardware_system_info);
+	 sdl_hardware_system(const sdl_hardware_system_data_sptr& hardware_system_info);
 
   /**
    * @brief Construct a new hardware system object from anpother hardware_system
    */
-  hardware_system(hardware_system&& system) noexcept;
-  hardware_system& operator=(hardware_system&& system) noexcept;
+	 sdl_hardware_system(sdl_hardware_system&& system) noexcept;
+	 sdl_hardware_system& operator=(sdl_hardware_system&& system) noexcept;
 
-  hardware_system(const hardware_system&) = delete;
-  hardware_system& operator=(const hardware_system&) = delete;
+  sdl_hardware_system(const sdl_hardware_system&)		= delete;
+	 sdl_hardware_system& operator=(const sdl_hardware_system&) = delete;
 
-  ~hardware_system();
+  ~sdl_hardware_system();
 
  public:
   /**
@@ -57,13 +53,13 @@ class hardware_system {
    * @param hardware_system_info is a base info for initialization of window and
    * another systems.
    */
-  void create(const hardware_system_data_sptr& hardware_system_info);
+  void create(const sdl_hardware_system_data_sptr& hardware_system_info);
 
   /**
    * @brief swap is the method for swap two hardware_system objects with all
    * their data.
    */
-  void swap(hardware_system& system) noexcept;
+  void swap(sdl_hardware_system& system) noexcept;
 
   /**
    * @brief reset merhod exchange this hardware_system on uninitialized and this
@@ -73,8 +69,6 @@ class hardware_system {
   void reset() noexcept;
 
  public:
-
-  void update();
   /**
    * @return the raw pointer on @see SDL_Window object.
    */
@@ -91,13 +85,14 @@ class hardware_system {
   [[nodiscard]] window_data_sptr get_window_data() const noexcept;
 
  private:
-  class hardware_system_pimpl;
-  std::unique_ptr<hardware_system_pimpl> pimpl;
+
+  class sdl_hardware_system_pimpl;
+  std::unique_ptr<sdl_hardware_system_pimpl> pimpl;
 };
 
-using hardware_system_uptr = std::unique_ptr<hardware_system>;
-using hardware_system_sptr = std::shared_ptr<hardware_system>;
-using hardware_system_wptr = std::weak_ptr<hardware_system>;
+using sdl_hardware_system_uptr = std::unique_ptr<sdl_hardware_system>;
+using sdl_hardware_system_sptr = std::shared_ptr<sdl_hardware_system>;
+using sdl_hardware_system_wptr = std::weak_ptr<sdl_hardware_system>;
 
 }  // namespace systems
 }  // namespace raptor_enigne
