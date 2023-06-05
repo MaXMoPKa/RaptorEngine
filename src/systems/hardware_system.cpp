@@ -13,16 +13,14 @@ class hardware_system::hardware_system_pimpl {
  public:
   hardware_system_pimpl()
       : hardware_system_info{std::make_shared<hardware_system_data>()},
-        window{nullptr}, gl_context{nullptr} { }
+        window{nullptr} {}
 
   hardware_system_pimpl(const hardware_system_data_sptr& hardware_system_info)
-	  : hardware_system_info {hardware_system_info}, window {nullptr}, gl_context {nullptr}
-  {
+      : hardware_system_info{hardware_system_info}, window{nullptr} {
     init();
   }
 
   ~hardware_system_pimpl() {
-	SDL_GL_DeleteContext(gl_context);
     SDL_DestroyWindow(window);
     SDL_Quit();
   }
@@ -39,7 +37,6 @@ class hardware_system::hardware_system_pimpl {
     }
     std::swap(this->hardware_system_info, pimpl.hardware_system_info);
     std::swap(this->window, pimpl.window);
-	std::swap(this->gl_context, pimpl.gl_context);
   }
 
   void reset() noexcept {
@@ -48,12 +45,6 @@ class hardware_system::hardware_system_pimpl {
   }
 
  public:
-
-  void update()
-  {
-	SDL_GL_SwapWindow(this->window);
-  }
-
   inline SDL_Window const* get_window() const noexcept { return this->window; }
 
   inline u32 get_sdl_init_flags() const noexcept {
@@ -94,13 +85,10 @@ class hardware_system::hardware_system_pimpl {
                       SDL_GetError());
       return;
     }
-
-    gl_context = SDL_GL_CreateContext(this->window);
   }
 
  private:
   SDL_Window* window;
-  SDL_GLContext gl_context;
   hardware_system_data_sptr hardware_system_info;
 };
 
@@ -128,11 +116,6 @@ void hardware_system::swap(hardware_system& system) noexcept {
 }
 
 void hardware_system::reset() noexcept { this->pimpl->reset(); }
-
-void hardware_system::update()
-{
-  this->pimpl->update();
-}
 
 SDL_Window const* hardware_system::get_window() const noexcept {
   return this->pimpl->get_window();

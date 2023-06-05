@@ -73,8 +73,6 @@ class hardware_system {
   void reset() noexcept;
 
  public:
-
-  void update();
   /**
    * @return the raw pointer on @see SDL_Window object.
    */
