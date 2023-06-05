@@ -27,5 +27,6 @@ elseif(WIN32)
     target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES})
 endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -13,10 +13,12 @@ class hardware_system::hardware_system_pimpl {
  public:
   hardware_system_pimpl()
       : hardware_system_info{std::make_shared<hardware_system_data>()},
-        window{nullptr} {}
+        window{nullptr}, gl_context {nullptr}
+  {}
 
   hardware_system_pimpl(const hardware_system_data_sptr& hardware_system_info)
-      : hardware_system_info{hardware_system_info}, window{nullptr} {
+	  : hardware_system_info {hardware_system_info}, window {nullptr}, gl_context {nullptr}
+  {
     init();
   }
 
@@ -37,6 +39,7 @@ class hardware_system::hardware_system_pimpl {
     }
     std::swap(this->hardware_system_info, pimpl.hardware_system_info);
     std::swap(this->window, pimpl.window);
+	std::swap(this->gl_context, pimpl.gl_context);
   }
 
   void reset() noexcept {
@@ -89,6 +92,7 @@ class hardware_system::hardware_system_pimpl {
 
  private:
   SDL_Window* window;
+  SDL_GLContext	gl_context;
   hardware_system_data_sptr hardware_system_info;
 };
 
