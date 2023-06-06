@@ -8,17 +8,16 @@
 
 #include "render/base_render_api.hpp"
 
-#include "defines.hpp"
-
 namespace raptor_engine {
 namespace render {
 
 class ogl_render_api : public base_render_api
 {
 public:
-	ogl_render_api() : window {}, gl_context {nullptr} { }
 
-	ogl_render_api(sdl_window_sptr& window_ptr) : window {window_ptr}, gl_context {nullptr} 
+	ogl_render_api() : base_render_api {}, gl_context {nullptr} { }
+
+	ogl_render_api(sdl_window_sptr& window_ptr) : base_render_api {window_ptr}, gl_context {nullptr} 
 	{ 
 		init();
 	}
@@ -32,11 +31,10 @@ public:
 	virtual ~ogl_render_api() { }
 
 public:
-	void create(sdl_window_sptr& window_ptr) 
+	void create(sdl_window_sptr& window_ptr) override
 	{
 		ogl_render_api tmp(window_ptr);
 		this->swap(tmp);
-
 	}
 
 	void swap(ogl_render_api& api) noexcept
@@ -46,18 +44,19 @@ public:
 			return;
 		}
 
-		std::swap(this->window, api.window);
+		base_render_api::swap(api);
+
 		std::swap(this->gl_context, api.gl_context);
 	}
 
-	void reset() noexcept
+	void reset() noexcept override
 	{
 		ogl_render_api tmp {};
 		this->swap(tmp);
 	}
 
 public:
-	void swap_window() 
+	void swap_window() override
 	{ 
 		SDL_GL_SwapWindow(this->window.lock().get());
 	}
@@ -73,7 +72,6 @@ private:
 	}
 
 private:
-	sdl_window_wptr window;
 	SDL_GLContext gl_context;
 };
 
