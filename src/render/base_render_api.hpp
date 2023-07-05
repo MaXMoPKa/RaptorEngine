@@ -10,7 +10,7 @@ class base_render_api
 public:
 	base_render_api() : window {} { }
 
-	base_render_api(sdl_window_sptr& window_ptr) : window {window_ptr} { }
+	base_render_api(const sdl_window_sptr& window_ptr) : window {window_ptr} { }
 
 	base_render_api(base_render_api&& api) noexcept			   = default;
 	base_render_api& operator=(base_render_api&& api) noexcept = default;
@@ -21,7 +21,8 @@ public:
 	virtual ~base_render_api() { }
 
 public:
-	virtual void create(sdl_window_sptr& window_ptr) 
+
+	virtual void create(const sdl_window_sptr& window_ptr) 
 	{
 		base_render_api tmp {};
 		this->swap(tmp);
@@ -44,9 +45,18 @@ public:
 	}
 
 public:
+	virtual void clear_color() { }
+
+	virtual void use_shader_program() { }
+
+	virtual void bind_vao() { }
+
+	virtual void draw_arrays() { }
+
 	virtual void swap_window() { }
 
 protected:
+
 	sdl_window_wptr window;
 
 };

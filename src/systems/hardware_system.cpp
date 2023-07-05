@@ -23,7 +23,7 @@ class hardware_system::hardware_system_pimpl {
   }
 
   ~hardware_system_pimpl() {
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(window.get());
     SDL_Quit();
   }
 
@@ -48,7 +48,34 @@ class hardware_system::hardware_system_pimpl {
   }
 
  public:
-  inline SDL_Window const* get_window() const noexcept { return this->window; }
+  void process_events(bool& window_should_close) noexcept
+  {
+      SDL_Event event;
+	  while (SDL_PollEvent(&event)) {
+	      switch (event.type) {
+		      case SDL_QUIT: {
+		 	     window_should_close = true;
+			     break;
+		      }
+		      case SDL_KEYDOWN: {
+			      switch (event.key.keysym.sym) {
+			          case SDLK_ESCAPE: {
+				 	      window_should_close = true;
+				 	      break;
+				      }
+			      }
+			      break;
+		      }
+	      }
+	  }
+  }
+
+ public:
+
+  inline sdl_window_sptr get_window() noexcept
+  {
+	  return this->window;
+  }
 
   inline u32 get_sdl_init_flags() const noexcept {
     return this->hardware_system_info->sdl_init_flags;
@@ -75,15 +102,15 @@ class hardware_system::hardware_system_pimpl {
   }
 
   void create_window() {
-    this->window =
-        SDL_CreateWindow(this->hardware_system_info->window_info->title.c_str(),
-                         this->hardware_system_info->window_info->x_pos,
-                         this->hardware_system_info->window_info->y_pos,
-                         this->hardware_system_info->window_info->width,
-                         this->hardware_system_info->window_info->height,
-                         this->hardware_system_info->window_info->flags);
+	this->window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(this->hardware_system_info->window_info->title.c_str(),
+																 this->hardware_system_info->window_info->x_pos,
+																 this->hardware_system_info->window_info->y_pos,
+																 this->hardware_system_info->window_info->width,
+																 this->hardware_system_info->window_info->height,
+																 this->hardware_system_info->window_info->flags),
+												                 SDL_DestroyWindow);
 
-    if (this->window == nullptr) {
+    if (this->window.get() == nullptr) {
       SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Could not create window: %s\n",
                       SDL_GetError());
       return;
@@ -91,7 +118,7 @@ class hardware_system::hardware_system_pimpl {
   }
 
  private:
-  SDL_Window* window;
+  sdl_window_sptr window;
   SDL_GLContext	gl_context;
   hardware_system_data_sptr hardware_system_info;
 };
@@ -121,7 +148,13 @@ void hardware_system::swap(hardware_system& system) noexcept {
 
 void hardware_system::reset() noexcept { this->pimpl->reset(); }
 
-SDL_Window const* hardware_system::get_window() const noexcept {
+void hardware_system::process_events(bool& window_should_close) noexcept
+{
+  this->pimpl->process_events(window_should_close);
+}
+
+sdl_window_sptr hardware_system::get_window() noexcept
+{
   return this->pimpl->get_window();
 }
 u32 hardware_system::get_sdl_init_flags() const noexcept {

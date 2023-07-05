@@ -13,16 +13,38 @@
 
 #include "defines.hpp"                  // for u32
 #include "structs/window_data.hpp"      // for window_data, window_data::WIN...
-#include "systems/hardware_system.hpp"  // for hardware_system, systems
+#include "core/engine.hpp"  // for hardware_system, systems
 
 using namespace testing;
 using namespace raptor_enigne::systems;
 using namespace raptor_engine::structs;
+using namespace raptor_engine;
 
 TEST(learn_opengl, colored_triangle)
 {
-  GTEST_SKIP() << "Skipping single test";
-  u32 sdl_init_flags{SDL_INIT_AUDIO | SDL_INIT_VIDEO};
+  //GTEST_SKIP() << "Skipping single test";
+
+  static const std::size_t WIDTH {1080U};
+  static const std::size_t HEIGHT {810U};
+  static const char		   TITLE[] {"Engine test window"};
+
+  window_data_sptr window_info = std::make_shared<window_data>(TITLE,
+															   SDL_WINDOWPOS_CENTERED,
+															   SDL_WINDOWPOS_CENTERED,
+															   WIDTH,
+															   HEIGHT,
+															   SDL_WINDOW_OPENGL);
+
+  hardware_system_data_sptr hardware_system_info =
+	  std::make_shared<hardware_system_data>(32U, window_info);
+
+  engine_data_sptr engine_info = std::make_shared<engine_data>(hardware_system_info);
+
+  engine engine{engine_info};
+
+ engine.run();
+
+ /* u32 sdl_init_flags {SDL_INIT_AUDIO | SDL_INIT_VIDEO};
 
   const char title[]{"Test title"};
   const auto x_pos{SDL_WINDOWPOS_UNDEFINED};
@@ -61,9 +83,9 @@ TEST(learn_opengl, colored_triangle)
 									 "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 									 "}\n\0";
 
-  if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-	  EXPECT_TRUE(false) << "Failed to initialize GLAD";
-  }
+  //if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+	//  EXPECT_TRUE(false) << "Failed to initialize GLAD";
+  //}
 
   // build and compile our shader program
   // ------------------------------------
@@ -169,7 +191,9 @@ TEST(learn_opengl, colored_triangle)
 							  // so to keep things a bit more organized
 	  glDrawArrays(GL_TRIANGLES, 0, 3);
 
-	  hardware_sys.update();
+	  engine.get_render_engine()->post_update();
+
+	  //hardware_sys.update();
   }
 
   // optional: de-allocate all resources once they've outlived their purpose:
@@ -179,5 +203,5 @@ TEST(learn_opengl, colored_triangle)
   glDeleteProgram(shaderProgram);
 
   // SDL2: terminate, clearing all previously allocated SDL2 resources.
-  // ------------------------------------------------------------------
+  // ------------------------------------------------------------------*/
 }

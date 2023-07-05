@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/base_render_api.hpp"
+#include "render/ogl_render_api.hpp"
 
 namespace raptor_engine {
 namespace render { 
@@ -8,10 +8,11 @@ namespace render {
 class base_renderer
 {
 public:
-
 	base_renderer() { }
 
-	base_renderer(base_render_api_sptr& render_api_ptr) : render_api {render_api_ptr} { }
+	base_renderer(const sdl_window_sptr& window_ptr)
+		: render_api {std::make_shared<ogl_render_api>(window_ptr)}
+	{ }
 
 	base_renderer(base_renderer&& renderer) noexcept            = default;
 	base_renderer& operator=(base_renderer&& renderer) noexcept = default;
@@ -20,21 +21,30 @@ public:
 	base_renderer& operator=(const base_renderer&) = delete;
 
 	virtual ~base_renderer() { }
+
 public:
 
-	virtual void create(base_render_api_sptr& render_api_ptr)
+	virtual void pre_update() { }
+
+	virtual void update() { }
+
+	virtual void post_update() { }
+
+public:
+
+	virtual void create(const sdl_window_sptr& window_ptr)
 	{
-		base_renderer tmp {};
+		base_renderer tmp {window_ptr};
 		this->swap(tmp);
 	}
 
-	virtual void swap(base_renderer& api) noexcept
+	virtual void swap(base_renderer& renderer) noexcept
 	{
-		if (this == &api) {
+		if (this == &renderer) {
 			return;
 		}
 
-		std::swap(this->render_api, api.render_api);
+		std::swap(this->render_api, renderer.render_api);
 	}
 
 	virtual void reset() noexcept
@@ -43,7 +53,7 @@ public:
 		this->swap(tmp);
 	}
 
-private:
+protected:
 	base_render_api_sptr render_api;
 };
 

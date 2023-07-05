@@ -2,9 +2,11 @@
 
 #include "structs/engine_data.hpp"
 #include "systems/hardware_system.hpp"
+#include "core/render_engine.hpp"
 
 using namespace raptor_enigne::systems;
 using namespace raptor_engine::structs;
+using namespace raptor_engine::render;
 
 namespace raptor_engine {
 
@@ -63,6 +65,9 @@ class engine {
    */
   void reset() noexcept;
 
+public:
+  void run() noexcept;
+
  public:
   /**
    * @return the shared_ptr on @see engine_data with base info about engine.
@@ -73,6 +78,8 @@ class engine {
    * @return the shared_ptr on @see hardware_system object.
    */
   [[nodiscard]] hardware_system_sptr get_hardware_system() const;
+
+  [[nodiscard]] render_engine* get_render_engine() ;
 
  private:
   class engine_pimpl;

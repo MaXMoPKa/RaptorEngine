@@ -71,10 +71,13 @@ class hardware_system {
   void reset() noexcept;
 
  public:
+  void process_events(bool& window_should_close) noexcept;
+
+ public:
   /**
    * @return the raw pointer on @see SDL_Window object.
    */
-  [[nodiscard]] SDL_Window const* get_window() const noexcept;
+  [[nodiscard]] sdl_window_sptr get_window() noexcept;
 
   // TODO: think about another way for return init flags.
   /**
