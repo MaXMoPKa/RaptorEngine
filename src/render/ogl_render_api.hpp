@@ -97,8 +97,7 @@ private:
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to create GL Context");
 		}
 
-		int result = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress);
-		if (result == 0) {
+		if (int result = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress) == 0) {
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
 
