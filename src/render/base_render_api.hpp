@@ -8,57 +8,42 @@ namespace render {
 class base_render_api
 {
 public:
-	base_render_api() : window {} { }
+	base_render_api();
 
-	base_render_api(const sdl_window_sptr& window_ptr) : window {window_ptr} { }
+	base_render_api(const sdl_window_sptr& window_ptr);
 
-	base_render_api(base_render_api&& api) noexcept			   = default;
-	base_render_api& operator=(base_render_api&& api) noexcept = default;
+	base_render_api(base_render_api&& api) noexcept;
+	base_render_api& operator=(base_render_api&& api) noexcept;
 
-	base_render_api(const base_render_api&)			  = delete;
+	base_render_api(const base_render_api&)			   = delete;
 	base_render_api& operator=(const base_render_api&) = delete;
 
-	virtual ~base_render_api() { }
+	virtual ~base_render_api();
 
 public:
+	virtual void create(const sdl_window_sptr& window_ptr);
 
-	virtual void create(const sdl_window_sptr& window_ptr) 
-	{
-		base_render_api tmp {};
-		this->swap(tmp);
-	}
+	virtual void swap(base_render_api& api) noexcept;
 
-	virtual void swap(base_render_api& api) noexcept
-	{
-		if (this == &api) 
-		{
-			return;
-		}
-
-		std::swap(this->window, api.window);
-	}
-
-	virtual void reset() noexcept 
-	{
-		base_render_api tmp {};
-		this->swap(tmp);
-	}
+	virtual void reset() noexcept;
 
 public:
-	virtual void clear_color() { }
+	virtual void clear_color();
 
-	virtual void use_shader_program() { }
+	virtual void use_shader_program();
 
-	virtual void bind_vao() { }
+	virtual void bind_vao();
 
-	virtual void draw_arrays() { }
+	virtual void draw_arrays();
 
-	virtual void swap_window() { }
+	virtual void swap_window();
+
+public:
+	[[nodiscard]] sdl_window_wptr get_window() const;
 
 protected:
-
-	sdl_window_wptr window;
-
+	class base_render_api_pimpl;
+	std::unique_ptr<base_render_api_pimpl> pimpl;
 };
 
 using base_render_api_uptr = std::unique_ptr<base_render_api>;

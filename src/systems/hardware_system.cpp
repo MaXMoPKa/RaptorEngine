@@ -72,7 +72,7 @@ class hardware_system::hardware_system_pimpl {
 
  public:
 
-  inline sdl_window_sptr get_window() noexcept
+  inline sdl_window_sptr get_window() const noexcept
   {
 	  return this->window;
   }
@@ -153,7 +153,7 @@ void hardware_system::process_events(bool& window_should_close) noexcept
   this->pimpl->process_events(window_should_close);
 }
 
-sdl_window_sptr hardware_system::get_window() noexcept
+sdl_window_sptr hardware_system::get_window() const noexcept
 {
   return this->pimpl->get_window();
 }

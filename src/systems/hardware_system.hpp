@@ -77,7 +77,7 @@ class hardware_system {
   /**
    * @return the raw pointer on @see SDL_Window object.
    */
-  [[nodiscard]] sdl_window_sptr get_window() noexcept;
+  [[nodiscard]] sdl_window_sptr get_window() const noexcept;
 
   // TODO: think about another way for return init flags.
   /**

@@ -79,7 +79,7 @@ public:
    */
   [[nodiscard]] hardware_system_sptr get_hardware_system() const;
 
-  [[nodiscard]] render_engine* get_render_engine() ;
+  [[nodiscard]] render_engine_sptr get_render_engine() ;
 
  private:
   class engine_pimpl;

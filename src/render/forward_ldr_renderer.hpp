@@ -2,65 +2,39 @@
 
 #include "render/base_renderer.hpp"
 
+using namespace raptor_engine::structs;
+
 namespace raptor_engine {
 namespace render {
 
 class forward_ldr_renderer : public base_renderer
 {
 public:
-	forward_ldr_renderer() { }
+	forward_ldr_renderer();
 
-	forward_ldr_renderer(const sdl_window_sptr& window_ptr) : base_renderer(window_ptr) { }
+	forward_ldr_renderer(const high_level_renderer_data_sptr& renderer_data);
 
-	forward_ldr_renderer(forward_ldr_renderer&& renderer) noexcept	   = default;
-	forward_ldr_renderer& operator=(forward_ldr_renderer&& renderer) noexcept = default;
+	forward_ldr_renderer(forward_ldr_renderer&& renderer) noexcept;
+	forward_ldr_renderer& operator=(forward_ldr_renderer&& renderer) noexcept;
 
 	forward_ldr_renderer(const forward_ldr_renderer&) = delete;
 	forward_ldr_renderer& operator=(const forward_ldr_renderer&) = delete;
 
-	virtual ~forward_ldr_renderer() { }
+	~forward_ldr_renderer() override;
 
 public:
+	void pre_update() override;
 
-	void pre_update() override
-	{
-		render_api->clear_color();
-	}
+	void update() override;
 
-	void update() override
-	{
-		render_api->use_shader_program();
-		render_api->bind_vao();
-		render_api->draw_arrays();
-	}
-
-	void post_update() override
-	{
-		render_api->swap_window();
-	}
+	void post_update() override;
 
 public:
+	void create(const high_level_renderer_data_sptr& renderer_data) override;
 
-	void create(const sdl_window_sptr& window_ptr) override
-	{
-		forward_ldr_renderer tmp {window_ptr};
-		this->swap(tmp);
-	}
+	void swap(base_renderer& renderer) noexcept;
 
-	void swap(base_renderer& renderer) noexcept override
-	{
-		if (this == &renderer) {
-			return;
-		}
-
-		base_renderer::swap(renderer);
-	}
-
-	void reset() noexcept override
-	{
-		forward_ldr_renderer tmp {};
-		this->swap(tmp);
-	}
+	void reset() noexcept;
 };
 
 using forward_ldr_renderer_uptr = std::unique_ptr<forward_ldr_renderer>;

@@ -1,6 +1,10 @@
 #pragma once 
 
-#include "render/forward_ldr_renderer.hpp"
+#include "structs/render_engine_data.hpp"
+
+#include "render/base_renderer.hpp"
+
+using namespace raptor_engine::structs;
 
 namespace raptor_engine {
 namespace render {
@@ -8,61 +12,39 @@ namespace render {
 class render_engine
 {
 public:
-	render_engine() { }
+	render_engine();
 
-	render_engine(const sdl_window_sptr& window_ptr) : renderer {std::make_shared<forward_ldr_renderer>(window_ptr)} { }
+	render_engine(const render_engine_data_sptr& render_engine_data);
 
-	render_engine(render_engine&& renderer) noexcept			= default;
-	render_engine& operator=(render_engine&& renderer) noexcept = default;
+	render_engine(render_engine&& renderer) noexcept;
+	render_engine& operator=(render_engine&& renderer) noexcept;
 
 	render_engine(const render_engine&)			   = delete;
 	render_engine& operator=(const render_engine&) = delete;
 
-	~render_engine() { }
+	~render_engine();
 
 public:
 
-	void pre_update()
-	{
-		renderer->pre_update();
-	}
+	void create(const render_engine_data_sptr& render_engine_data);
 
-	void update() 
-	{
-		renderer->update();
-	}
+	void swap(render_engine& render_eng) noexcept;
 
-	void post_update()
-	{
-		renderer->post_update();
-	}
+	void reset() noexcept;
 
 public:
+	void pre_update();
 
-	void create(const sdl_window_sptr& window_ptr)
-	{
-		render_engine tmp {window_ptr};
-		this->swap(tmp);
-	}
+	void update();
 
-	void swap(render_engine& render_engine) noexcept
-	{
-		if (this == &render_engine) {
-			return;
-		}
+	void post_update();
 
-		// std::swap(this->data, render_engine.data);
-	}
-
-	void reset() noexcept
-	{
-		render_engine tmp {};
-		this->swap(tmp);
-	}
+public:
+	[[nodiscard]] base_renderer_sptr get_renderer() const;
 
 private:
-	// render_engine_data_sptr data;
-	base_renderer_sptr renderer;
+	class render_engine_pimpl;
+	std::unique_ptr<render_engine_pimpl> pimpl;
 };
 
 using render_engine_uptr = std::unique_ptr<render_engine>;

@@ -1,6 +1,7 @@
 #include "engine.hpp"
 
 using namespace raptor_engine;
+using namespace render;
 
 class engine::engine_pimpl
 {
@@ -9,8 +10,9 @@ public:
 	engine_pimpl() : hardware_sys(std::make_shared<hardware_system>()) { }
 
 	engine_pimpl(const engine_data_sptr& engine_info)
-		: engine_info {engine_info}, hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)}, 
-		render_engine {this->hardware_sys->get_window()}
+		: engine_info {engine_info}, 
+		hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)}, 
+		render_eng {std::make_shared<render_engine>(std::make_shared<render_engine_data>(std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window())))}
 	{
 	}
 
@@ -29,7 +31,7 @@ public:
 		}
 
 		std::swap(this->hardware_sys, pimpl.hardware_sys);
-		std::swap(this->render_engine, pimpl.render_engine);
+		std::swap(this->render_eng, pimpl.render_eng);
 		std::swap(this->engine_info, pimpl.engine_info);
 	}
 
@@ -48,9 +50,9 @@ public:
 		{ 
 			this->hardware_sys->process_events(window_should_close);
 
-			this->render_engine.pre_update();
-			this->render_engine.update();
-			this->render_engine.post_update();
+			this->render_eng->pre_update();
+			this->render_eng->update();
+			this->render_eng->post_update();
 		}
 	}
 
@@ -63,17 +65,17 @@ public:
     return this->hardware_sys;
   }
 
-  [[nodiscard]] render_engine* get_render_engine()
+  [[nodiscard]] render_engine_sptr get_render_engine()
   {
-	return &this->render_engine;
+	return this->render_eng;
   }
 
  private:
   engine_data_sptr engine_info;
 
-  hardware_system_sptr hardware_sys{};
+  hardware_system_sptr hardware_sys {};
 
-  render::render_engine render_engine {};
+  render_engine_sptr render_eng {};
 };
 
 engine::engine() : pimpl{std::make_unique<engine_pimpl>()} {}
@@ -108,7 +110,7 @@ hardware_system_sptr engine::get_hardware_system() const {
 }
 
 
-render_engine* engine::get_render_engine()
+render_engine_sptr engine::get_render_engine()
 {
   return this->pimpl->get_render_engine();
 }
