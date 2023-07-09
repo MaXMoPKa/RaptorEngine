@@ -1,5 +1,7 @@
 #include "render/ogl_render_api.hpp"
 
+#include "render/shader.hpp"
+
 using namespace raptor_engine::render;
 
 class ogl_render_api::ogl_render_api_pimpl
@@ -7,7 +9,7 @@ class ogl_render_api::ogl_render_api_pimpl
 public:
 	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {} { }
 
-	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr) : shader_program{}, vao{}, vbo{}
+	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr) : vao{}, vbo{}
 	{
 		gl_context = SDL_GL_CreateContext(window_ptr.get());
 		if (this->gl_context == 0) {
@@ -18,56 +20,9 @@ public:
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
 
-		const char* vertex_shader_source = "#version 330 core\n"
-										   "layout (location = 0) in vec3 aPos;\n"
-										   "void main()\n"
-										   "{\n"
-										   "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-										   "}\0";
-		const char* fragment_shader_source = "#version 330 core\n"
-										     "out vec4 FragColor;\n"
-										     "void main()\n"
-										     "{\n"
-										     "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-										     "}\n\0";
-
-		// build and compile our shader program
-		// ------------------------------------
-		// vertex shader
-		unsigned int vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex_shader, 1, &vertex_shader_source, NULL);
-		glCompileShader(vertex_shader);
-		// check for shader compile errors
-		int	 success;
-		char infoLog[512];
-		glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(vertex_shader, 512, NULL, infoLog);
-			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ERROR::SHADER::VERTEX::COMPILATION_FAILED: %s", infoLog);
-		}
-		// fragment shader
-		unsigned int fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragment_shader, 1, &fragment_shader_source, NULL);
-		glCompileShader(fragment_shader);
-		// check for shader compile errors
-		glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-		if (!success) {
-			glGetShaderInfoLog(fragment_shader, 512, NULL, infoLog);
-			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED: %s", infoLog);
-		}
-		// link shaders
-		shader_program = glCreateProgram();
-		glAttachShader(shader_program, vertex_shader);
-		glAttachShader(shader_program, fragment_shader);
-		glLinkProgram(shader_program);
-		// check for linking errors
-		glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-		if (!success) {
-			glGetProgramInfoLog(shader_program, 512, NULL, infoLog);
-			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ERROR::SHADER::PROGRAM::LINKING_FAILED: %s", infoLog);
-		}
-		glDeleteShader(vertex_shader);
-		glDeleteShader(fragment_shader);
+		shader_program = std::make_shared<shader>(std::make_shared<shader_data>(
+			"../../examples/1. colored_triangle/colored_triangle.vs", 
+			"../../examples/1. colored_triangle/colored_triangle.fs"));
 
 		float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
@@ -97,7 +52,6 @@ public:
 	{
 		glDeleteVertexArrays(1, &vao);
 		glDeleteBuffers(1, &vbo);
-		glDeleteProgram(shader_program);
 	}
 
 public:
@@ -131,7 +85,7 @@ public:
 
 	void use_shader_program()
 	{
-		glUseProgram(shader_program);
+		shader_program->use();
 	}
 
 	void bind_vao()
@@ -152,7 +106,7 @@ public:
 private:
 	SDL_GLContext gl_context;
 
-	unsigned int shader_program;
+	shader_sptr	 shader_program;
 	unsigned int vao, vbo;
 };
 
