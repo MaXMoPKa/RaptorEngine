@@ -8,8 +8,12 @@ add_subdirectory(src)
 add_subdirectory(third_party)
 
 set(TESTS ON CACHE BOOL "" ${REWRITE_FORCE})
+set(EXAMPLES ON CACHE BOOL "" ${REWRITE_FORCE})
 
 if(${TESTS})
     enable_testing()
     add_subdirectory(tests)
+endif()
+if(${EXAMPLES})
+    add_subdirectory(examples)
 endif()

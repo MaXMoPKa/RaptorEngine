@@ -21,8 +21,8 @@ public:
 		}
 
 		shader_program = std::make_shared<shader>(std::make_shared<shader_data>(
-			"../../examples/1. colored_triangle/colored_triangle.vs", 
-			"../../examples/1. colored_triangle/colored_triangle.fs"));
+			"colored_triangle.vs", 
+			"colored_triangle.fs"));
 
 		float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
