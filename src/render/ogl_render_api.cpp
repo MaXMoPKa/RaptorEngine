@@ -1,6 +1,8 @@
 #include "render/ogl_render_api.hpp"
 
 #include "render/shader.hpp"
+#include "render/vertex_array_object.hpp"
+#include "render/vertex_buffer_object.hpp"
 
 using namespace raptor_engine::render;
 
@@ -9,7 +11,7 @@ class ogl_render_api::ogl_render_api_pimpl
 public:
 	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {} { }
 
-	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr) : vao{}, vbo{}
+	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr) : vao {}, vbo {}
 	{
 		gl_context = SDL_GL_CreateContext(window_ptr.get());
 		if (this->gl_context == 0) {
@@ -26,33 +28,19 @@ public:
 
 		float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
 
-		glGenVertexArrays(1, &vao);
-		glGenBuffers(1, &vbo);
-		// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex
-		// attributes(s).
-		glBindVertexArray(vao);
+		vao = std::make_shared<vertex_array_object>();
+		vao->use();
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		vbo = std::make_shared<vertex_buffer_object>(std::make_shared<vertex_buffer_object_data>(sizeof(vertices), vertices, GL_STATIC_DRAW, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-
-		// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound
-		// vertex buffer object so afterwards we can safely unbind
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 		// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely
 		// happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs
 		// (nor VBOs) when it's not directly necessary.
 		glBindVertexArray(0);
 	}
 
-	~ogl_render_api_pimpl()
-	{
-		glDeleteVertexArrays(1, &vao);
-		glDeleteBuffers(1, &vbo);
-	}
+	~ogl_render_api_pimpl() = default;
 
 public:
 	void create(const sdl_window_sptr& window_ptr)
@@ -90,7 +78,7 @@ public:
 
 	void bind_vao()
 	{
-		glBindVertexArray(vao);
+		vao->use();
 	}
 
 	void draw_arrays()
@@ -106,8 +94,10 @@ public:
 private:
 	SDL_GLContext gl_context;
 
-	shader_sptr	 shader_program;
-	unsigned int vao, vbo;
+	shader_sptr	shader_program;
+
+	vertex_array_object_sptr vao;
+	vertex_buffer_object_sptr vbo;
 };
 
 ogl_render_api::ogl_render_api() : base_render_api(), pimpl{std::make_unique<ogl_render_api_pimpl>()} { }
