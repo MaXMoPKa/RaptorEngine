@@ -21,6 +21,7 @@ public:
 	virtual ~base_render_api();
 
 public:
+
 	virtual void create(const sdl_window_sptr& window_ptr);
 
 	virtual void swap(base_render_api& api) noexcept;

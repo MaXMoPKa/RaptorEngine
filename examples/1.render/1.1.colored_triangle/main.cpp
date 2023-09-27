@@ -21,9 +21,20 @@ int main()
 	      std::make_shared<hardware_system_data>(32U, window_info);
 
     engine_data_sptr engine_info = std::make_shared<engine_data>(hardware_system_info);
+	// D:/hobby/raptor_engine/examples/1.render/1.1.colored_triangle/
+	render_objects objects = {
+		{
+			// path from folder src/render/
+			"D:/hobby/raptor_engine/examples/1.render/1.1.colored_triangle/colored_triangle.vs",
+			"D:/hobby/raptor_engine/examples/1.render/1.1.colored_triangle/colored_triangle.fs", 
+			{-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f}
+		}
+	 };
 
-    engine engine{engine_info};
+	scene_data_sptr	 scene_info =
+		std::make_shared<scene_data>(objects);
 
+    engine engine{engine_info, scene_info};
     engine.run();
 
     return 0;

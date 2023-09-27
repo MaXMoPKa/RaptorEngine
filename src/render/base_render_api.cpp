@@ -7,7 +7,8 @@ class base_render_api::base_render_api_pimpl
 public:
 	base_render_api_pimpl() : window {} { }
 
-	base_render_api_pimpl(const sdl_window_sptr& window_ptr) : window {window_ptr} { }
+	base_render_api_pimpl(const sdl_window_sptr& window_ptr)
+		: window {window_ptr} { }
 
 	~base_render_api_pimpl() = default;
 
@@ -15,7 +16,7 @@ public:
 
 	void create(const sdl_window_sptr& window_ptr)
 	{
-		base_render_api_pimpl tmp {};
+		base_render_api_pimpl tmp {window_ptr};
 		this->swap(tmp);
 	}
 
@@ -67,7 +68,7 @@ base_render_api& base_render_api::operator=(base_render_api&& api) noexcept = de
 
 base_render_api::~base_render_api() = default;
 
-void base_render_api::create(const sdl_window_sptr& window_ptr) 
+void base_render_api::create(const sdl_window_sptr& window_ptr)
 {
 	this->pimpl->create(window_ptr);
 }

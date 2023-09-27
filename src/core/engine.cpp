@@ -9,18 +9,21 @@ public:
 
 	engine_pimpl() : hardware_sys(std::make_shared<hardware_system>()) { }
 
-	engine_pimpl(const engine_data_sptr& engine_info)
+	engine_pimpl(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info)
 		: engine_info {engine_info}, 
 		hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)}, 
-		render_eng {std::make_shared<render_engine>(std::make_shared<render_engine_data>(std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window())))}
+		render_eng {std::make_shared<render_engine>(std::make_shared<render_engine_data>(
+			  std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window()),
+			  high_level_renderer_type::FORWARD_LDR_RENDERER,
+			  scene_info))}
 	{
 	}
 
 public:
 
-	void create(const engine_data_sptr& engine_info)
+	void create(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info)
 	{
-		engine_pimpl tmp {engine_info};
+		engine_pimpl tmp {engine_info, scene_info};
 		this->swap(tmp);
 	}
 
@@ -80,16 +83,18 @@ public:
 
 engine::engine() : pimpl{std::make_unique<engine_pimpl>()} {}
 
-engine::engine(const engine_data_sptr& engine_info)
-    : pimpl{std::make_unique<engine_pimpl>(engine_info)} {}
+engine::engine(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info)
+	: pimpl {std::make_unique<engine_pimpl>(engine_info, scene_info)}
+{ }
 
 engine::engine(engine&& engine) noexcept = default;
 engine& engine::operator=(engine&& engine) noexcept = default;
 
 engine::~engine() = default;
 
-void engine::create(const engine_data_sptr& engine_info) {
-  this->pimpl->create(engine_info);
+void engine::create(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info)
+{
+  this->pimpl->create(engine_info, scene_info);
 }
 
 void engine::swap(engine& engine) noexcept { this->pimpl.swap(engine.pimpl); }

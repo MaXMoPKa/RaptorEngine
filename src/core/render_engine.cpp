@@ -16,7 +16,7 @@ public:
 		{
 			case high_level_renderer_type::FORWARD_LDR_RENDERER:
 			{
-				renderer = std::make_shared<forward_ldr_renderer>(render_engine_data->renderer_data);
+				renderer = std::make_shared<forward_ldr_renderer>(render_engine_data->renderer_data, render_engine_data->scene_data);
 				break;
 			}
 			case high_level_renderer_type::FORWARD_HDR_RENDERER:

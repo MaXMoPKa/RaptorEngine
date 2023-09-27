@@ -32,9 +32,9 @@ function(create_project_from_sources type example)
         set(NAME ${replaced})
     else()
         set(NAME "${type}__${example}")
-    endif()
+    endif() 
     add_executable(${NAME} ${SOURCE})
-    target_link_libraries(${NAME} ${LIBS})
+    target_link_libraries(${NAME} PUBLIC ${LIBS})
 
     # copy shaders
     file(GLOB SHADERS

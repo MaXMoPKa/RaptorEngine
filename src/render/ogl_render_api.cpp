@@ -11,7 +11,7 @@ class ogl_render_api::ogl_render_api_pimpl
 public:
 	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {} { }
 
-	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr) : vao {}, vbo {}
+	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info) : vao {}, vbo {}
 	{
 		gl_context = SDL_GL_CreateContext(window_ptr.get());
 		if (this->gl_context == 0) {
@@ -22,30 +22,39 @@ public:
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
 
-		shader_program = std::make_shared<shader>(std::make_shared<shader_data>(
-			"colored_triangle.vs", 
-			"colored_triangle.fs"));
+		for (auto& object : scene_info->objects) 
+		{
+			shader_program = std::make_shared<shader>(std::make_shared<shader_data>(object.vs_path, object.fs_path));
 
-		float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+			vao = std::make_shared<vertex_array_object>();
+			vao->use();
 
-		vao = std::make_shared<vertex_array_object>();
-		vao->use();
+			vbo = std::make_shared<vertex_buffer_object>(
+				std::make_shared<vertex_buffer_object_data>(object.vertices.size() * sizeof(float),
+															object.vertices.data(),
+															GL_STATIC_DRAW,
+															0,
+															3,
+															GL_FLOAT,
+															GL_FALSE,
+															3 * sizeof(float),
+															(void*)0));
 
-		vbo = std::make_shared<vertex_buffer_object>(std::make_shared<vertex_buffer_object_data>(sizeof(vertices), vertices, GL_STATIC_DRAW, 0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0));
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely
-		// happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs
-		// (nor VBOs) when it's not directly necessary.
-		glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely
+			// happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally don't unbind
+			// VAOs (nor VBOs) when it's not directly necessary.
+			glBindVertexArray(0);
+		}
 	}
 
 	~ogl_render_api_pimpl() = default;
 
 public:
-	void create(const sdl_window_sptr& window_ptr)
+
+	void create(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info)
 	{
-		ogl_render_api_pimpl tmp(window_ptr);
+		ogl_render_api_pimpl tmp(window_ptr, scene_info);
 		this->swap(tmp);
 	}
 
@@ -102,8 +111,8 @@ private:
 
 ogl_render_api::ogl_render_api() : base_render_api(), pimpl{std::make_unique<ogl_render_api_pimpl>()} { }
 
-ogl_render_api::ogl_render_api(const sdl_window_sptr& window_ptr)
-	: base_render_api(window_ptr), pimpl {std::make_unique<ogl_render_api_pimpl>(window_ptr)} { }
+ogl_render_api::ogl_render_api(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info)
+	: base_render_api(window_ptr), pimpl {std::make_unique<ogl_render_api_pimpl>(window_ptr, scene_info)} { }
 
 ogl_render_api::ogl_render_api(ogl_render_api&& api) noexcept = default;
 
@@ -111,9 +120,9 @@ ogl_render_api& ogl_render_api::operator=(ogl_render_api&& api) noexcept = defau
 
 ogl_render_api::~ogl_render_api() = default;
 
-void ogl_render_api::create(const sdl_window_sptr& window_ptr)
+void ogl_render_api::create(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info)
 {
-	this->pimpl->create(window_ptr);
+	this->pimpl->create(window_ptr, scene_info);
 }
 
 void ogl_render_api::swap(ogl_render_api& api) noexcept 

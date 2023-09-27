@@ -3,6 +3,7 @@
 #include "structs/high_level_renderer_data.hpp"
 
 #include "render/ogl_render_api.hpp"
+#include "structs/scene_data.hpp"
 
 using namespace raptor_engine::structs;
 
@@ -14,7 +15,7 @@ class base_renderer
 public:
 	base_renderer();
 
-	base_renderer(const high_level_renderer_data_sptr& renderer_data);
+	base_renderer(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info);
 
 	base_renderer(base_renderer&& renderer) noexcept;
 	base_renderer& operator=(base_renderer&& renderer) noexcept;
@@ -25,7 +26,8 @@ public:
 	virtual ~base_renderer();
 
 public:
-	virtual void create(const high_level_renderer_data_sptr& renderer_data);
+
+	virtual void create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info);
 
 	virtual void swap(base_renderer& renderer) noexcept;
 

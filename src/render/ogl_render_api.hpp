@@ -8,6 +8,10 @@
 
 #include "render/base_render_api.hpp"
 
+#include "structs/scene_data.hpp"
+
+using namespace raptor_engine::structs;
+
 namespace raptor_engine {
 namespace render {
 
@@ -16,7 +20,7 @@ class ogl_render_api : public base_render_api
 public:
 	ogl_render_api();
 
-	ogl_render_api(const sdl_window_sptr& window_ptr);
+	ogl_render_api(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info);
 
 	ogl_render_api(ogl_render_api&& api) noexcept;
 	ogl_render_api& operator=(ogl_render_api&& api) noexcept;
@@ -27,7 +31,8 @@ public:
 	~ogl_render_api() override;
 
 public:
-	void create(const sdl_window_sptr& window_ptr) override;
+
+	void create(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info);
 
 	void swap(ogl_render_api& api) noexcept;
 

@@ -15,7 +15,7 @@ file(GLOB_RECURSE SOURCE_CODE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
 
 set(SOURCES ${HEADER_FILES} ${SOURCE_CODE_FILES})
 
-add_library(${PROJECT_NAME} ${SOURCES})
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 if(UNIX)
     find_program(IWYU_PATH NAMES include-what-you-use include_what_you_use iwyu REQUIRED)

@@ -7,11 +7,11 @@ class base_renderer::base_renderer_pimpl
 public:
 	base_renderer_pimpl() : render_api {} { }
 
-	base_renderer_pimpl(const high_level_renderer_data_sptr& renderer_data)
+	base_renderer_pimpl(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
 	{ 
 		switch (renderer_data->low_level_render_api) {
 			case low_level_render_api_type::OPENGL: {
-				render_api = std::make_shared<ogl_render_api>(renderer_data->window_ptr);
+				render_api = std::make_shared<ogl_render_api>(renderer_data->window_ptr, scene_info);
 				break;
 			}
 			case low_level_render_api_type::DIRECTX:
@@ -26,9 +26,10 @@ public:
 	~base_renderer_pimpl() { }
 
 public:
-	void create(const high_level_renderer_data_sptr& renderer_data)
+
+	void create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
 	{
-		base_renderer_pimpl tmp {renderer_data};
+		base_renderer_pimpl tmp {renderer_data, scene_info};
 		this->swap(tmp);
 	}
 
@@ -66,8 +67,8 @@ private:
 
 base_renderer::base_renderer() : pimpl{std::make_unique<base_renderer_pimpl>()} { }
 
-base_renderer::base_renderer(const high_level_renderer_data_sptr& renderer_data)
-	: pimpl {std::make_unique<base_renderer_pimpl>(renderer_data)}
+base_renderer::base_renderer(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
+	: pimpl {std::make_unique<base_renderer_pimpl>(renderer_data, scene_info)}
 { }
 
 base_renderer::base_renderer(base_renderer&& renderer) noexcept = default;
@@ -76,9 +77,9 @@ base_renderer& base_renderer::operator=(base_renderer&& renderer) noexcept = def
 
 base_renderer::~base_renderer() = default;
 
-void base_renderer::create(const high_level_renderer_data_sptr& renderer_data)
+void base_renderer::create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
 {
-	this->pimpl->create(renderer_data);
+	this->pimpl->create(renderer_data, scene_info);
 }
 
 void base_renderer::swap(base_renderer& renderer) noexcept

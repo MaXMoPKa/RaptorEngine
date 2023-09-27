@@ -32,7 +32,7 @@ class engine {
    *
    * @param engine_info is a base info for engine initialization.
    */
-  engine(const engine_data_sptr& engine_info);
+  engine(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info);
 
   /**
    * @brief Construct a new engine object from another engine object.
@@ -51,7 +51,7 @@ class engine {
    *
    * @param engine_info is a base info for engine initialization.
    */
-  void create(const engine_data_sptr& engine_info);
+   void create(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info);
 
   /**
    * @brief swap is the method for swap two engine's object info.

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "structs/high_level_renderer_data.hpp"
+#include "structs/scene_data.hpp"
 
 namespace raptor_engine {
 namespace structs {
@@ -22,12 +23,14 @@ class render_engine_data {
  public:
 	render_engine_data();
 	render_engine_data(const high_level_renderer_data_sptr& renderer_info,
-					   const high_level_renderer_type& renderer_type = high_level_renderer_type::FORWARD_LDR_RENDERER);
+					   const high_level_renderer_type& renderer_type = high_level_renderer_type::FORWARD_LDR_RENDERER,
+					   const scene_data_sptr& scene_data = nullptr);
 	~render_engine_data();
 
  public:
   high_level_renderer_data_sptr renderer_data;
-  high_level_renderer_type	high_level_renderer;
+  high_level_renderer_type		high_level_renderer;
+  scene_data_sptr				scene_data;
 };
 
 using render_engine_data_uptr = std::unique_ptr<render_engine_data>;

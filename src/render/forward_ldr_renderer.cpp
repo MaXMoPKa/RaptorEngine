@@ -4,17 +4,18 @@ using namespace raptor_engine::render;
 
 forward_ldr_renderer::forward_ldr_renderer() : base_renderer() { }
 
-forward_ldr_renderer::forward_ldr_renderer(const high_level_renderer_data_sptr& renderer_data)
-	: base_renderer(renderer_data) { }
+forward_ldr_renderer::forward_ldr_renderer(const high_level_renderer_data_sptr& renderer_data,
+										   const scene_data_sptr&					scene_info)
+	: base_renderer(renderer_data, scene_info) { }
 
 forward_ldr_renderer::forward_ldr_renderer(forward_ldr_renderer&& renderer) noexcept = default;
 forward_ldr_renderer& forward_ldr_renderer::operator=(forward_ldr_renderer&& renderer) noexcept = default;
 
 forward_ldr_renderer::~forward_ldr_renderer() = default;
 
-void forward_ldr_renderer::create(const high_level_renderer_data_sptr& renderer_data)
+void forward_ldr_renderer::create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
 {
-	forward_ldr_renderer tmp {renderer_data};
+	forward_ldr_renderer tmp {renderer_data, scene_info};
 	this->swap(tmp);
 }
 

@@ -12,7 +12,7 @@ class forward_ldr_renderer : public base_renderer
 public:
 	forward_ldr_renderer();
 
-	forward_ldr_renderer(const high_level_renderer_data_sptr& renderer_data);
+	forward_ldr_renderer(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info);
 
 	forward_ldr_renderer(forward_ldr_renderer&& renderer) noexcept;
 	forward_ldr_renderer& operator=(forward_ldr_renderer&& renderer) noexcept;
@@ -30,7 +30,8 @@ public:
 	void post_update() override;
 
 public:
-	void create(const high_level_renderer_data_sptr& renderer_data) override;
+
+	void create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info) override;
 
 	void swap(base_renderer& renderer) noexcept;
 
