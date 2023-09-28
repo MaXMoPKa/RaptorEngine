@@ -5,28 +5,40 @@ project(raptor_engine)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
-file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp
-                               ${PROJECT_SOURCE_DIR}/*.h)
-file(GLOB_RECURSE SOURCE_CODE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
+if(WIN32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTOR ${CMAKE_BINARY_DIR}/bin)
+endif(WIN32)
 
-set(SOURCES ${HEADER_FILES} ${SOURCE_CODE_FILES})
+link_directories(${CMAKE_SOURCE_DIR}/third_party/lib)
 
-add_library(${PROJECT_NAME} STATIC ${SOURCES})
+find_package(SDL2 REQUIRED)
+message(STATUS "Found SDL2 in ${SLD2_INCLUDE_DIR}")
 
-if(UNIX)
-    find_program(IWYU_PATH NAMES include-what-you-use include_what_you_use iwyu REQUIRED)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH})
+if(WIN32)
+    set(LIBS SDL2)
+else()
+    set(LIBS )
+endif(WIN32)
 
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2) 
-elseif(WIN32)
-    find_package(SDL2 REQUIRED)
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES})
-endif()
-target_link_libraries(${PROJECT_NAME} PUBLIC glad)
+configure_file(${CMAKE_SOURCE_DIR}/configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(GLAD STATIC "${CMAKE_SOURCE_DIR}/src/third_party/glad.c")
+set(LIBS ${LIBS} GLAD)
+
+file(GLOB_RECURSE SOURCE "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.h"
+                         "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.hpp"
+                         "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.cpp")
+
+add_library(${PROJECT_NAME} STATIC ${SOURCE})
+target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+file(GLOB DLLS "${CMAKE_SOURCE_DIR}/third_party/dlls/*.dll")
+if(WIN32)
+    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DLLS} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+endif(WIN32)
+
+include_directories(${CMAKE_SOURCE_DIR}/third_party/includes 
+                    ${CMAKE_SOURCE_DIR}/src/raptor_engine)

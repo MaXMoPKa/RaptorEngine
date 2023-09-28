@@ -4,7 +4,7 @@
 
 #include <memory>
 
-#include "SDL_log.h"
+#include "SDL2/SDL_log.h"
 
 #include "render/base_render_api.hpp"
 

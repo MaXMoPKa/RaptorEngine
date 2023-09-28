@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "SDL_log.h"
+#include "SDL2/SDL_log.h"
 
 namespace raptor_engine {
 namespace render {

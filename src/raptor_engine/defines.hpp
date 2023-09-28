@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "SDL_video.h"
+#include "SDL2/SDL_video.h"
 
 using u8  = uint8_t;
 using u16 = uint16_t;
