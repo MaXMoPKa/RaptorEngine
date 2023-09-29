@@ -1,9 +1,9 @@
 #pragma once
 
 #include "structs/high_level_renderer_data.hpp"
+#include "structs/scene_data.hpp"
 
 #include "render/ogl_render_api.hpp"
-#include "structs/scene_data.hpp"
 
 using namespace raptor_engine::structs;
 
@@ -26,7 +26,6 @@ public:
 	virtual ~base_renderer();
 
 public:
-
 	virtual void create(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info);
 
 	virtual void swap(base_renderer& renderer) noexcept;

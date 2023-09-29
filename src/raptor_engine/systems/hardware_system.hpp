@@ -3,6 +3,7 @@
 #include <memory>  // for unique_ptr
 
 #include "defines.hpp"  // for u32
+
 #include "structs/hardware_system_data.hpp"
 
 using namespace raptor_engine::structs;
@@ -84,6 +85,7 @@ class hardware_system {
    * @return the sdl flags for initialization, but only by one number.
    */
   [[nodiscard]] u32 get_sdl_init_flags() const noexcept;
+
   /**
    * @return the shared_ptr on @see window_data with base info about window.
    */

@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "structs/render_engine_data.hpp"
+#include "structs/init_render_engine_data.hpp"
 
 #include "render/base_renderer.hpp"
 
@@ -14,7 +14,7 @@ class render_engine
 public:
 	render_engine();
 
-	render_engine(const render_engine_data_sptr& render_engine_data);
+	render_engine(const init_render_engine_data_sptr& init_render_engine_data);
 
 	render_engine(render_engine&& renderer) noexcept;
 	render_engine& operator=(render_engine&& renderer) noexcept;
@@ -25,8 +25,7 @@ public:
 	~render_engine();
 
 public:
-
-	void create(const render_engine_data_sptr& render_engine_data);
+	void create(const init_render_engine_data_sptr& init_render_engine_data);
 
 	void swap(render_engine& render_eng) noexcept;
 

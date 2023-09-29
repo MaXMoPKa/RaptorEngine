@@ -10,13 +10,13 @@ public:
 
 	render_engine_pimpl() : renderer {} { }
 
-	render_engine_pimpl(const render_engine_data_sptr& render_engine_data)
+	render_engine_pimpl(const init_render_engine_data_sptr& init_render_engine_data)
 	{ 
-		switch (render_engine_data->high_level_renderer)
+		switch (init_render_engine_data->high_level_renderer)
 		{
 			case high_level_renderer_type::FORWARD_LDR_RENDERER:
 			{
-				renderer = std::make_shared<forward_ldr_renderer>(render_engine_data->renderer_data, render_engine_data->scene_data);
+				renderer = std::make_shared<forward_ldr_renderer>(init_render_engine_data->renderer_data, init_render_engine_data->scene_data);
 				break;
 			}
 			case high_level_renderer_type::FORWARD_HDR_RENDERER:
@@ -33,9 +33,9 @@ public:
 
 public:
 
-	void create(const render_engine_data_sptr& render_engine_data)
+	void create(const init_render_engine_data_sptr& init_render_engine_data)
 	{
-		render_engine_pimpl tmp {render_engine_data};
+		render_engine_pimpl tmp {init_render_engine_data};
 		this->swap(tmp);
 	}
 
@@ -84,8 +84,8 @@ private:
 
 render_engine::render_engine() : pimpl {std::make_unique<render_engine_pimpl>()} { }
 
-render_engine::render_engine(const render_engine_data_sptr& render_engine_data)
-	: pimpl {std::make_unique<render_engine_pimpl>(render_engine_data)}
+render_engine::render_engine(const init_render_engine_data_sptr& init_render_engine_data)
+	: pimpl {std::make_unique<render_engine_pimpl>(init_render_engine_data)}
 { }
 
 render_engine::render_engine(render_engine&& render_eng) noexcept = default;
@@ -94,9 +94,9 @@ render_engine& render_engine::operator=(render_engine&& render_eng) noexcept = d
 
 render_engine::~render_engine() = default;
 
-void render_engine::create(const render_engine_data_sptr& render_engine_data)
+void render_engine::create(const init_render_engine_data_sptr& init_render_engine_data)
 {
-	this->pimpl->create(render_engine_data);
+	this->pimpl->create(init_render_engine_data);
 }
 
 void render_engine::swap(render_engine& render_eng) noexcept

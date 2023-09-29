@@ -4,6 +4,7 @@
 #include <string>  // for allocator, string
 
 #include "SDL2/SDL_video.h"  // for SDL_WINDOWPOS_CENTERED, SDL_WINDOW_OPENGL
+
 #include "defines.hpp"  // for u32
 
 namespace raptor_engine {

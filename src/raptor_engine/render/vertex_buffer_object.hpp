@@ -18,6 +18,7 @@ public:
 		  attrib_pointer_normalized {}, attrib_pointer_stride {},
 		  attrib_pointer_pointer {}
 	{ }
+
 	vertex_buffer_object_data(unsigned int size, const void* data, unsigned int usage,
 							  unsigned int	attrib_pointer_index,
 							  unsigned int	attrib_pointer_size,

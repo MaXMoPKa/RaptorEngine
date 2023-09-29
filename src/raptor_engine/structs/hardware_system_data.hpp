@@ -8,9 +8,10 @@ namespace structs {
 struct hardware_system_data {
  public:
   hardware_system_data();
+
   hardware_system_data(u32 sdl_init_flags /*SDL_INIT_VIDEO*/,
-                       const window_data_sptr&
-                           window_info /*= std::make_shared<window_data>()*/);
+                       const window_data_sptr& window_info);
+
   ~hardware_system_data() = default;
 
  public:

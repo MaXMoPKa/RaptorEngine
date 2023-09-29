@@ -11,7 +11,9 @@ struct render_object_data
 {
 public:
 	render_object_data();
+
 	render_object_data(const std::string& path_vs_, const std::string& path_fs_, const std::vector<float>& vertices_);
+	
 	~render_object_data();
 
 public:

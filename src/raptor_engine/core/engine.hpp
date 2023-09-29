@@ -1,7 +1,9 @@
 #pragma once
 
-#include "structs/engine_data.hpp"
+#include "structs/init_engine_data.hpp"
+
 #include "systems/hardware_system.hpp"
+
 #include "core/render_engine.hpp"
 
 using namespace raptor_enigne::systems;
@@ -18,21 +20,21 @@ namespace raptor_engine {
 class engine {
  public:
   /**
-   * @brief Construct a new engine object with empty @see engine_data and
+   * @brief Construct a new engine object with empty @see init_engine_data and
    * uninitialized systems. For initialization use @see create(const
-   * engine_data_sptr& engine_info) method.
+   * init_engine_data_sptr& engine_info) method.
    *
    */
   engine();
 
   /**
-   * @brief Construct a new engine object eoth transferred @see engine_data and
+   * @brief Construct a new engine object eoth transferred @see init_engine_data and
    * this contrucor will initialize systems if it is possible, or write error
    * ,essage in log.
    *
    * @param engine_info is a base info for engine initialization.
    */
-  engine(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info);
+  engine(const init_engine_data_sptr& engine_info);
 
   /**
    * @brief Construct a new engine object from another engine object.
@@ -51,7 +53,7 @@ class engine {
    *
    * @param engine_info is a base info for engine initialization.
    */
-   void create(const engine_data_sptr& engine_info, const scene_data_sptr& scene_info);
+   void create(const init_engine_data_sptr& engine_info);
 
   /**
    * @brief swap is the method for swap two engine's object info.
@@ -60,7 +62,7 @@ class engine {
 
   /**
    * @brief reset method exchange this engine object on uninitialized and this
-   * engine_data will be destroyed.
+   * init_engine_data will be destroyed.
    *
    */
   void reset() noexcept;
@@ -70,9 +72,9 @@ public:
 
  public:
   /**
-   * @return the shared_ptr on @see engine_data with base info about engine.
+   * @return the shared_ptr on @see init_engine_data with base info about engine.
    */
-  [[nodiscard]] engine_data_sptr get_engine_data() const;
+  [[nodiscard]] init_engine_data_sptr get_init_engine_data() const;
 
   /**
    * @return the shared_ptr on @see hardware_system object.

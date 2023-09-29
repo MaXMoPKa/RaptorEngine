@@ -33,7 +33,7 @@ file(GLOB_RECURSE SOURCE "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.h"
                          "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.cpp")
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE})
-target_link_libraries(${PROJECT_NAME} ${LIBS})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBS})
 
 file(GLOB DLLS "${CMAKE_SOURCE_DIR}/third_party/dlls/*.dll")
 if(WIN32)

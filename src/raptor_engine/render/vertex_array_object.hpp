@@ -28,7 +28,6 @@ public:
 	}
 
 public:
-
 	void create()
 	{
 		vertex_array_object tmp {};

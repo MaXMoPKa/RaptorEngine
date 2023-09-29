@@ -18,21 +18,17 @@ int main()
 															    SDL_WINDOW_OPENGL);
 
     hardware_system_data_sptr hardware_system_info =
-	      std::make_shared<hardware_system_data>(32U, window_info);
+		std::make_shared<hardware_system_data>(32U /*SDL_INIT_VIDEO*/, window_info);
 
-    engine_data_sptr engine_info = std::make_shared<engine_data>(hardware_system_info);
-	render_objects objects = {
-		{
-			"colored_triangle.vs",
-			"colored_triangle.fs", 
-			{-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f}
-		}
-	 };
+    render_objects objects = {
+		{"colored_triangle.vs", "colored_triangle.fs", {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f}}
+	};
 
-	scene_data_sptr	 scene_info =
-		std::make_shared<scene_data>(objects);
+	scene_data_sptr scene_info = std::make_shared<scene_data>(objects);
 
-    engine engine{engine_info, scene_info};
+    init_engine_data_sptr engine_info = std::make_shared<init_engine_data>(hardware_system_info, scene_info);
+
+    engine engine{engine_info};
     engine.run();
 
     return 0;

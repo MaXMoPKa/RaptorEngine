@@ -2,7 +2,6 @@
 
 #include "window_data.hpp"
 
-
 using namespace raptor_engine::structs;
 
 window_data::window_data()

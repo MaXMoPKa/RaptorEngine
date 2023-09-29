@@ -31,7 +31,6 @@ public:
 	~ogl_render_api() override;
 
 public:
-
 	void create(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info);
 
 	void swap(ogl_render_api& api) noexcept;

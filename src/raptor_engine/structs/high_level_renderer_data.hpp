@@ -21,10 +21,11 @@ enum class low_level_render_api_type : u8
 class high_level_renderer_data
 {
  public:
-
 	high_level_renderer_data();
+
 	high_level_renderer_data(const sdl_window_sptr&		sdl_window_ptr,
 					   const low_level_render_api_type& render_api	 = low_level_render_api_type::OPENGL);
+	
 	~high_level_renderer_data();
 
  public:

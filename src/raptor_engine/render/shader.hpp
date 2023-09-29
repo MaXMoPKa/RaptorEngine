@@ -105,9 +105,9 @@ public:
 	}
 
 public:
-	void create(/*const shader_data_sptr& shader_data*/)
+	void create(const shader_data_sptr& shader_data)
 	{
-		shader tmp {};
+		shader tmp {shader_data};
 		this->swap(tmp);
 	}
 

@@ -9,7 +9,9 @@ struct scene_data
 {
 public:
 	scene_data();
+
 	scene_data(const render_objects& render_objects_);
+	
 	~scene_data();
 
 public:
