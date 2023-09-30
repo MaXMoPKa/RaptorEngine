@@ -36,6 +36,8 @@ public:
 
 	virtual void draw_arrays();
 
+	virtual void draw_elements();
+
 	virtual void swap_window();
 
 public:

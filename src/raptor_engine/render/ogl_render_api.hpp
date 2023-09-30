@@ -46,6 +46,8 @@ public:
 
 	void draw_arrays() override;
 
+	void draw_elements() override;
+
 	void swap_window() override;
 
 private:

@@ -43,7 +43,7 @@ void forward_ldr_renderer::update()
 {
 	this->get_render_api()->use_shader_program();
 	this->get_render_api()->bind_vao();
-	this->get_render_api()->draw_arrays();
+	this->get_render_api()->draw_elements();
 }
 
 void forward_ldr_renderer::post_update()

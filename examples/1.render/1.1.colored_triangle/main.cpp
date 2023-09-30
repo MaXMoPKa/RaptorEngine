@@ -21,10 +21,20 @@ int main()
 		std::make_shared<hardware_system_data>(32U /*SDL_INIT_VIDEO*/, window_info);
 
     render_objects objects = {
-		{"colored_triangle.vs", "colored_triangle.fs", {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f}}
+		{"colored_triangle.vs", 
+         "colored_triangle.fs", 
+         { 0.5f,  0.5f, 0.0f,
+           0.5f, -0.5f, 0.0f,
+          -0.5f, -0.5f, 0.0f,
+          -0.5f,  0.5f, 0.0f},
+		 {0U, 1U, 3U, 
+          1U, 2U, 3U}
+         }
 	};
 
-	scene_data_sptr scene_info = std::make_shared<scene_data>(objects);
+    draw_config_sptr draw_cfg = std::make_shared<draw_config>(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, false);
+
+	scene_data_sptr scene_info = std::make_shared<scene_data>(objects, draw_cfg);
 
     init_engine_data_sptr engine_info = std::make_shared<init_engine_data>(hardware_system_info, scene_info);
 

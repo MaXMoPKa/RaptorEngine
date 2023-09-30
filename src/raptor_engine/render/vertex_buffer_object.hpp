@@ -56,22 +56,11 @@ class vertex_buffer_object
 {
 public:
 
-	vertex_buffer_object() : vbo {} { }
+	vertex_buffer_object() : vbo {}, vbo_data {} { }
 
-	vertex_buffer_object(const vertex_buffer_object_data_sptr& vbo_data) 
-	{
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vbo_data->size, vbo_data->data, vbo_data->usage);
-
-		glVertexAttribPointer(vbo_data->attrib_pointer_index,
-							  vbo_data->attrib_pointer_size,
-							  vbo_data->attrib_pointer_type,
-							  vbo_data->attrib_pointer_normalized,
-							  vbo_data->attrib_pointer_stride,
-							  vbo_data->attrib_pointer_pointer);
-		glEnableVertexAttribArray(0);
-	}
+	vertex_buffer_object(const vertex_buffer_object_data_sptr& vbo_data_) 
+		: vbo {}, vbo_data {vbo_data_}
+	{ }
 
 	vertex_buffer_object(vertex_buffer_object&& vbo) noexcept			 = default;
 	vertex_buffer_object& operator=(vertex_buffer_object&& vbo) noexcept = default;
@@ -86,9 +75,9 @@ public:
 
 public:
 
-	void create(const vertex_buffer_object_data_sptr& vbo_data)
+	void create(const vertex_buffer_object_data_sptr& vbo_data_)
 	{
-		vertex_buffer_object tmp {vbo_data};
+		vertex_buffer_object tmp {vbo_data_};
 		this->swap(tmp);
 	}
 
@@ -108,8 +97,32 @@ public:
 		this->swap(tmp);
 	}
 
+public:
+	void generate_buffer()
+	{
+		glGenBuffers(1, &vbo);
+	}
+
+	void set_buffer_data()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, vbo_data->size, vbo_data->data, vbo_data->usage);
+	}
+
+	void set_attrib_pointers()
+	{
+		glVertexAttribPointer(vbo_data->attrib_pointer_index,
+							  vbo_data->attrib_pointer_size,
+							  vbo_data->attrib_pointer_type,
+							  vbo_data->attrib_pointer_normalized,
+							  vbo_data->attrib_pointer_stride,
+							  vbo_data->attrib_pointer_pointer);
+		glEnableVertexAttribArray(0);
+	}
+
 private:
 	unsigned int vbo;
+	vertex_buffer_object_data_sptr vbo_data;
 };
 
 using vertex_buffer_object_uptr = std::unique_ptr<vertex_buffer_object>;

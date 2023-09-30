@@ -11,10 +11,9 @@ namespace render {
 class vertex_array_object
 {
 public:
-	vertex_array_object()
-	{
-		glGenVertexArrays(1, &vao);
-	}
+
+	vertex_array_object() : vao {}
+	{ }
 
 	vertex_array_object(vertex_array_object&& vao) noexcept = default;
 	vertex_array_object& operator=(vertex_array_object&& vao) noexcept = default;
@@ -51,6 +50,11 @@ public:
 	}
 
 public:
+	void generate_array()
+	{
+		glGenVertexArrays(1, &vao);
+	}
+
 	void use()
 	{
 		glBindVertexArray(vao);

@@ -44,6 +44,8 @@ public:
 
 	void draw_arrays() { }
 
+	void draw_elements() { }
+
 	void swap_window() { }
 
 public:
@@ -101,6 +103,11 @@ void base_render_api::bind_vao()
 void base_render_api::draw_arrays()
 {
 	this->pimpl->draw_arrays();
+}
+
+void base_render_api::draw_elements()
+{
+	this->pimpl->draw_elements();
 }
 
 void base_render_api::swap_window()

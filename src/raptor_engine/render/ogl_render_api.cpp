@@ -3,15 +3,18 @@
 #include "render/shader.hpp"
 #include "render/vertex_array_object.hpp"
 #include "render/vertex_buffer_object.hpp"
+#include "render/element_buffer_object.hpp"
 
 using namespace raptor_engine::render;
 
 class ogl_render_api::ogl_render_api_pimpl
 {
 public:
-	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {} { }
 
-	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info) : vao {}, vbo {}
+	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {}, ebo {}, draw_config {} { }
+
+	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info)
+		: vao {}, vbo {}, ebo {}, draw_config {scene_info->draw_config}
 	{
 		gl_context = SDL_GL_CreateContext(window_ptr.get());
 		if (this->gl_context == 0) {
@@ -26,19 +29,37 @@ public:
 		{
 			shader_program = std::make_shared<shader>(std::make_shared<shader_data>(object.vs_path, object.fs_path));
 
+			// creation
+			// VAO
 			vao = std::make_shared<vertex_array_object>();
-			vao->use();
+			vao->generate_array();
 
-			vbo = std::make_shared<vertex_buffer_object>(
-				std::make_shared<vertex_buffer_object_data>(object.vertices.size() * sizeof(float),
-															object.vertices.data(),
-															GL_STATIC_DRAW,
-															0,
-															3,
-															GL_FLOAT,
-															GL_FALSE,
-															3 * sizeof(float),
-															(void*)0));
+			//VBO
+			auto vbo_data = std::make_shared<vertex_buffer_object_data>(object.vertices.size() * sizeof(float),
+																		object.vertices.data(),
+																		GL_STATIC_DRAW,
+																		0,
+																		3,
+																		GL_FLOAT,
+																		GL_FALSE,
+																		3 * sizeof(float),
+																		(void*)0);
+			vbo			  = std::make_shared<vertex_buffer_object>(vbo_data);
+			vbo->generate_buffer();
+
+			// EBO
+			auto ebo_data = std::make_shared<element_buffer_object_data>(object.indices.size() * sizeof(unsigned int),
+																		 object.indices.data(),
+																		 GL_STATIC_DRAW);
+
+			ebo = std::make_shared<element_buffer_object>(ebo_data);
+			ebo->generate_buffer();
+
+			// initialization
+			vao->use();
+			vbo->set_buffer_data();
+			ebo->set_buffer_data();
+			vbo->set_attrib_pointers();
 
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely
@@ -82,6 +103,14 @@ public:
 
 	void use_shader_program()
 	{
+		if (draw_config->wireframe)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		} 
+		else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 		shader_program->use();
 	}
 
@@ -95,6 +124,11 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
+	void draw_elements()
+	{
+		glDrawElements(draw_config->mode, draw_config->count, draw_config->type, draw_config->indices);
+	}
+
 	void swap_window(const sdl_window_sptr& window_ptr)
 	{
 		SDL_GL_SwapWindow(window_ptr.get());
@@ -105,8 +139,11 @@ private:
 
 	shader_sptr	shader_program;
 
-	vertex_array_object_sptr vao;
-	vertex_buffer_object_sptr vbo;
+	vertex_array_object_sptr   vao;
+	vertex_buffer_object_sptr  vbo;
+	element_buffer_object_sptr ebo;
+
+	draw_config_sptr draw_config;
 };
 
 ogl_render_api::ogl_render_api() : base_render_api(), pimpl{std::make_unique<ogl_render_api_pimpl>()} { }
@@ -154,6 +191,11 @@ void ogl_render_api::bind_vao()
 void ogl_render_api::draw_arrays()
 {
 	this->pimpl->draw_arrays();
+}
+
+void ogl_render_api::draw_elements()
+{
+	this->pimpl->draw_elements();
 }
 
 void ogl_render_api::swap_window()
