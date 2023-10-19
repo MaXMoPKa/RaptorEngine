@@ -5,50 +5,13 @@ project(raptor_engine_tests)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/third_party/SDL2/cmake/")
+if(WIN32)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+endif(WIN32)
 
-file(GLOB_RECURSE HEADER_FILES ${PROJECT_SOURCE_DIR}/*.hpp
-                               ${PROJECT_SOURCE_DIR}/*.h)
-file(GLOB_RECURSE SOURCE_CODE_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
+link_directories(${CMAKE_SOURCE_DIR}/third_party/lib)
 
-set(SOURCES ${HEADER_FILES} ${SOURCE_CODE_FILES})
-
-add_executable(${PROJECT_NAME} ${SOURCES})
-
-if(UNIX)
-    find_program(IWYU_PATH NAMES include-what-you-use include_what_you_use iwyu REQUIRED)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${IWYU_PATH})
-
-    target_link_libraries(${PROJECT_NAME} PRIVATE gtest)
-    target_link_libraries(${PROJECT_NAME} PRIVATE gmock)
-    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2)
-elseif(WIN32)
-    find_package(SDL2 REQUIRED)
-    target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
-    
-    if (EXISTS ${CMAKE_BINARY_DIR}/tests/Debug/)
-        # DO NOTHING
-    else ()
-        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/tests/Debug/)
-    endif ()
-    if (EXISTS ${CMAKE_BINARY_DIR}/tests/Release/)
-        # DO NOTHING
-    else ()
-        file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/tests/Release/)
-    endif ()
-
-    add_custom_target(SDL2CopyBinaries
-        # todo: check if debug and release folder exist
-        # debug version
-        COMMAND ${CMAKE_COMMAND} -E copy ${SDL2_BINDIR}/SDL2.dll ${CMAKE_BINARY_DIR}/tests/Debug/
-        COMMAND ${CMAKE_COMMAND} -E copy ${SDL2_BINDIR}/SDL2.dll ${CMAKE_BINARY_DIR}/tests/Release/
-
-        # Output Message
-        COMMENT "Copying SDL2 binaries from '${SDL2_BINDIR}/' to '${CMAKE_BINARY_DIR}/'" VERBATIM
-    )
-    add_dependencies(${PROJECT_NAME} SDL2CopyBinaries)
-
+if(WIN32)
     include(FetchContent)
     FetchContent_Declare(
         googletest
@@ -58,10 +21,66 @@ elseif(WIN32)
     )
     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(googletest)
-    target_link_libraries(${PROJECT_NAME} PRIVATE gtest_main gtest gmock gmock_main)
     add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-endif()
-target_link_libraries(${PROJECT_NAME} PUBLIC raptor_engine)
-target_link_libraries(${PROJECT_NAME} PUBLIC glad)
+endif(WIN32)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+if(WIN32)
+    set(LIBS raptor_engine gtest_main gtest gmock gmock_main)
+else()
+    set(LIBS )
+endif(WIN32)
+
+set(TYPES 
+    render)
+
+set(render
+    shader_manager)
+
+function(create_project_from_sources type test)
+    file(GLOB SOURCE main.cpp
+                     "${type}/${test}/*.hpp"
+                     "${type}/${test}/*.cpp"
+                     "${type}/${test}/*.vs"
+                     "${type}/${test}/*.fs")
+
+    if(test STREQUAL "")
+        set(replaced "")
+        string(REPLACE "/" "_" replaced ${type})
+        set(NAME ${replaced})
+    else()
+        set(NAME "${type}__${test}")
+    endif() 
+
+    add_executable(${NAME} ${SOURCE})
+    target_link_libraries(${NAME} PUBLIC ${LIBS})
+
+    if(WIN32)
+        set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/tests/${type}")
+        set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/tests/${type}/Debug")
+    endif(WIN32)
+
+    file(GLOB SHADERS
+            "${type}/${test}/*.vs"
+            "${type}/${test}/*.fs")
+
+    file(GLOB DLLS "${CMAKE_SOURCE_DIR}/third_party/dlls/*.dll")
+    foreach(SHADER ${SHADERS})
+        if(WIN32)
+            add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
+            add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${DLLS} $<TARGET_FILE_DIR:${NAME}>)
+        endif(WIN32)
+    endforeach(SHADER)
+
+    if(MSVC)
+        configure_file(${CMAKE_SOURCE_DIR}/configuration/visualstudio.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.vcxproj.user @ONLY)
+    endif(MSVC)
+endfunction()
+
+foreach(TYPE ${TYPES})
+    foreach(TEST ${${TYPE}})
+		create_project_from_sources(${TYPE} ${TEST})
+    endforeach(TEST)
+endforeach(TYPE)
+
+include_directories(${CMAKE_SOURCE_DIR}/third_party/includes 
+                    ${CMAKE_SOURCE_DIR}/src/raptor_engine)

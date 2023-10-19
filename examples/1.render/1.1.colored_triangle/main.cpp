@@ -29,7 +29,7 @@ int main()
           -0.5f,  0.5f, 0.0f},
 		 {0U, 1U, 3U, 
           1U, 2U, 3U}
-         }
+        }
 	};
 
     draw_config_sptr draw_cfg = std::make_shared<draw_config>(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, false);

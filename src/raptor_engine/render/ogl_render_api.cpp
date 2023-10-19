@@ -1,14 +1,29 @@
 #include "render/ogl_render_api.hpp"
 
+#include <string>
+#include <array>
+
 #include "render/shader.hpp"
 #include "render/vertex_array_object.hpp"
 #include "render/vertex_buffer_object.hpp"
 #include "render/element_buffer_object.hpp"
 
+#include "SDL2/SDL_timer.h"
+
 using namespace raptor_engine::render;
+
+static enum class SHADER_UNIFORMS : u32
+{
+	TIME,
+
+	COUNT
+};
+
+static constexpr std::array<std::string_view, static_cast<u32>(SHADER_UNIFORMS::COUNT)> SHADER_UNIFORMS_NAME = { "g_time" };
 
 class ogl_render_api::ogl_render_api_pimpl
 {
+
 public:
 
 	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {}, ebo {}, draw_config {} { }
@@ -112,6 +127,14 @@ public:
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 		shader_program->use();
+	}
+
+	void update_uniform()
+	{
+		u64 time				  = SDL_GetTicks64();
+		float greenValue		  = static_cast<float>(sin(time) / 2.0 + 0.5);
+		int	  vertexColorLocation = glGetUniformLocation(shader_program->get_id(), "ourColor");
+		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 	}
 
 	void bind_vao()

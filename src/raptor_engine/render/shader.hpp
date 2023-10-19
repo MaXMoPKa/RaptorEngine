@@ -133,6 +133,11 @@ public:
 		glUseProgram(shader_program);
 	}
 
+	unsigned int get_id()
+	{
+		return shader_program;
+	}
+
 private:
 	void check_compile_errors(GLuint shader, std::string type)
 	{
