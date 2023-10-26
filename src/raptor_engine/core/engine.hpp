@@ -63,7 +63,6 @@ class engine {
   /**
    * @brief reset method exchange this engine object on uninitialized and this
    * init_engine_data will be destroyed.
-   *
    */
   void reset() noexcept;
 

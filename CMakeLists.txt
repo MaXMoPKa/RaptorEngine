@@ -12,7 +12,6 @@ set(TESTS ON CACHE BOOL "" ${REWRITE_FORCE})
 
 if(${TESTS})
     enable_testing()
-    add_compile_definitions(TESTS)
     add_subdirectory(tests)
 endif()
 

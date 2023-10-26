@@ -1,3 +1,5 @@
+#include "glad/glad.h"
+
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
@@ -6,8 +8,9 @@
 #include "render/shader_manager.hpp"
 
 using namespace testing; 
+using namespace raptor_engine::render;
 
-class test_shader_manager : public Test
+class test_low_level_initializer : public Test
 {
 public:
 
@@ -46,8 +49,6 @@ protected:
 		if (int result = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress) == 0) {
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
-
-		manager = shader_manager{"test.vs", "test.fs"};
 	}
 
 	void TearDown() 
@@ -55,8 +56,6 @@ protected:
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 	}
-
-	shader_manager manager;
 
 private:
 	SDL_Window* window = nullptr;
@@ -70,22 +69,29 @@ TEST(shader_manager, create_shader_manager_instance_with_default_constructor)
 	ASSERT_EQ(manager.get_shader_program(), 0);
 }
 
+TEST_F(test_low_level_initializer, try_open_shader_files)
+{
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
+	ASSERT_EQ(manager.get_is_vs_file_opened(), true);
+	ASSERT_EQ(manager.get_is_fs_file_opened(), true);
+}
+
 TEST(shader_manager, try_open_non_existent_shader_files)
 {
-	shader_manager manager {"non_existent_test.vs", "non_existent_test.fs"};
+	shader_manager manager;
+	manager.add_shaders("non_existent_test.vs", "non_existent_test.fs");
 
 	ASSERT_EQ(manager.get_is_vs_file_opened(), false);
 	ASSERT_EQ(manager.get_is_fs_file_opened(), false);
 }
 
-TEST_F(test_shader_manager, try_open_shader_files)
+TEST_F(test_low_level_initializer, read_data_from_shader_files)
 {
-	ASSERT_EQ(manager.get_is_vs_file_opened(), true);
-	ASSERT_EQ(manager.get_is_fs_file_opened(), true);
-}
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
 
-TEST_F(test_shader_manager, read_data_from_shader_files)
-{
 	std::string vs_code{"#version 330 core\n\n"
 						"layout (location = 0) in vec3 aPos;\n\n"
 						"void main()\n"
@@ -106,29 +112,75 @@ TEST_F(test_shader_manager, read_data_from_shader_files)
 	ASSERT_EQ(manager.get_fs_code(), fs_code);
 }
 
-TEST_F(test_shader_manager, create_shaders_from_read_sources)
+TEST_F(test_low_level_initializer, create_shaders_from_read_sources)
 {
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
 	ASSERT_NE(manager.get_vs_id(), 0);
 	ASSERT_NE(manager.get_fs_id(), 0);
 }
 
-TEST_F(test_shader_manager, compile_shaders)
+TEST_F(test_low_level_initializer, compile_shaders)
 {
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
 	ASSERT_EQ(manager.get_is_vs_compiled_successful(), true);
 	ASSERT_EQ(manager.get_is_fs_compiled_successful(), true);
 }
 
-TEST_F(test_shader_manager, link_shaders)
+TEST_F(test_low_level_initializer, link_shaders)
 {
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
 	ASSERT_EQ(manager.get_is_shader_program_linked_successful(), true);
 }
 
-TEST_F(test_shader_manager, create_shader_manager_instance_with_parametrized_constructor)
+TEST_F(test_low_level_initializer, create_shader_manager_instance_with_parametrized_constructor)
 {
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
 	ASSERT_NE(manager.get_shader_program(), 0);
 }
 
-TEST_F(test_shader_manager, get_shaders_uniforms)
+TEST_F(test_low_level_initializer, get_shaders_uniforms)
 {
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
 	ASSERT_NE(manager.get_global_uniforms_count(), 0);
+}
+
+TEST_F(test_low_level_initializer, create_shader_manager_with_create_method)
+{
+	shader_manager manager;
+	manager.create();
+
+	ASSERT_EQ(manager.get_shader_program(), 0);
+}
+
+TEST_F(test_low_level_initializer, swap_two_shader_manager_instances_with_swap_method)
+{
+	shader_manager first_manager;
+	
+	shader_manager second_manager;
+	second_manager.add_shaders("test.vs", "test.fs");
+
+	first_manager.swap(second_manager);
+
+	ASSERT_NE(first_manager.get_shader_program(), 0);
+	ASSERT_EQ(second_manager.get_shader_program(), 0);
+}
+
+TEST_F(test_low_level_initializer, clear_shader_manager_instance_with_reset_method)
+{
+	shader_manager manager;
+	manager.add_shaders("test.vs", "test.fs");
+
+	manager.reset();
+
+	ASSERT_EQ(manager.get_shader_program(), 0);
 }

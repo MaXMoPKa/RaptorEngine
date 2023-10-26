@@ -23,7 +23,7 @@ else()
 endif(WIN32)
 
 configure_file(${CMAKE_SOURCE_DIR}/configuration/root_directory.h.in configuration/root_directory.h)
-include_directories(${CMAKE_BINARY_DIR}/configuration)
+include_directories(${CMAKE_BINARY_DIR}/configuration) 
 
 add_library(GLAD STATIC "${CMAKE_SOURCE_DIR}/src/third_party/glad.c")
 set(LIBS ${LIBS} GLAD)
@@ -42,3 +42,7 @@ endif(WIN32)
 
 include_directories(${CMAKE_SOURCE_DIR}/third_party/includes 
                     ${CMAKE_SOURCE_DIR}/src/raptor_engine)
+
+if(${TESTS})
+     target_compile_definitions(${PROJECT_NAME} PUBLIC TESTS=1)
+endif()

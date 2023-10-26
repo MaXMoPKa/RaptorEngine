@@ -34,7 +34,8 @@ set(TYPES
     render)
 
 set(render
-    shader_manager)
+    shader_manager
+    shader_program)
 
 function(create_project_from_sources type test)
     file(GLOB SOURCE main.cpp
