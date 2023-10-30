@@ -70,7 +70,10 @@ public:
 
 	~vertex_buffer_object()
 	{
-		glDeleteBuffers(1, &vbo);
+		if (vbo) 
+		{
+			glDeleteBuffers(1, &vbo);
+		}
 	}
 
 public:
@@ -118,6 +121,12 @@ public:
 							  vbo_data->attrib_pointer_stride,
 							  vbo_data->attrib_pointer_pointer);
 		glEnableVertexAttribArray(0);
+	}
+
+public:
+	unsigned int get_id() const
+	{
+		return this->vbo;
 	}
 
 private:

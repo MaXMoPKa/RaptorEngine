@@ -23,7 +23,10 @@ public:
 
 	~vertex_array_object()
 	{
-		glDeleteVertexArrays(1, &vao);
+		if (vao) 
+		{
+			glDeleteVertexArrays(1, &vao);
+		}
 	}
 
 public:
@@ -58,6 +61,12 @@ public:
 	void use()
 	{
 		glBindVertexArray(vao);
+	}
+
+public:
+	unsigned int get_id() const
+	{
+		return this->vao;
 	}
 
 private:

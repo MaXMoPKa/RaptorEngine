@@ -52,7 +52,10 @@ public:
 
 	~element_buffer_object()
 	{
-		glDeleteBuffers(1, &ebo);
+		if (ebo) 
+		{
+			glDeleteBuffers(1, &ebo);
+		}
 	}
 
 public:
@@ -80,7 +83,6 @@ public:
 	}
 
 public:
-
 	void generate_buffer()
 	{
 		glGenBuffers(1, &ebo);
@@ -90,6 +92,12 @@ public:
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, ebo_data->size, ebo_data->data, ebo_data->usage);
+	}
+
+public:
+	unsigned int get_id() const
+	{
+		return this->ebo;
 	}
 
 private:
