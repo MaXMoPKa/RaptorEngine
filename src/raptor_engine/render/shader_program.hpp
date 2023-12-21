@@ -40,5 +40,9 @@ private:
 	std::unique_ptr<shader_program_pimpl> pimpl;
 };
 
+using shader_program_uptr = std::unique_ptr<shader_program>;
+using shader_program_sptr = std::shared_ptr<shader_program>;
+using shader_program_wptr = std::weak_ptr<shader_program>;
+
 } // namespace render
 } // namespace raptor_engine

@@ -1,6 +1,7 @@
 #include "core/render_engine.hpp"
 
 #include "render/forward_ldr_renderer.hpp"
+#include "render/renderable_object.hpp"
 
 using namespace raptor_engine::render;
 
@@ -64,13 +65,20 @@ public:
 
 	void update()
 	{
-		this->renderer->update();
+		this->renderer->update(renderable_objects);
 	}
 
 	void post_update()
 	{
 		this->renderer->post_update();
 	}
+
+public:
+	void set_renderable_objects(const std::vector<renderable_object_sptr>& renderable_objects_)
+	{
+		renderable_objects = std::move(renderable_objects_);
+	}
+
 
 public:
 	inline base_renderer_sptr get_renderer() const
@@ -80,6 +88,8 @@ public:
 
 private:
 	base_renderer_sptr renderer;
+
+	std::vector<renderable_object_sptr> renderable_objects;
 };
 
 render_engine::render_engine() : pimpl {std::make_unique<render_engine_pimpl>()} { }
@@ -122,6 +132,12 @@ void render_engine::update()
 void render_engine::post_update()
 {
 	this->pimpl->post_update();
+}
+
+void raptor_engine::render::render_engine::set_renderable_objects(
+	const std::vector<renderable_object_sptr>& renderable_objects_)
+{ 
+	this->pimpl->set_renderable_objects(renderable_objects_);
 }
 
 base_renderer_sptr render_engine::get_renderer() const

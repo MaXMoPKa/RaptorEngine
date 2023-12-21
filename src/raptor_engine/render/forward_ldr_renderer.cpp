@@ -1,5 +1,7 @@
 #include "render/forward_ldr_renderer.hpp"
 
+#include "render/renderable_object.hpp"
+
 using namespace raptor_engine::render;
 
 forward_ldr_renderer::forward_ldr_renderer() : base_renderer() { }
@@ -39,11 +41,14 @@ void forward_ldr_renderer::pre_update()
 	this->get_render_api()->clear_color();
 }
 
-void forward_ldr_renderer::update()
+void forward_ldr_renderer::update(const std::vector<renderable_object_sptr>& renderable_objects_)
 {
-	this->get_render_api()->use_shader_program();
-	this->get_render_api()->bind_vao();
-	this->get_render_api()->draw_elements();
+	for (const auto& renderable_obj : renderable_objects_)
+	{
+		this->get_render_api()->use_shader_program(renderable_obj->get_shader_program()->get_id());
+		this->get_render_api()->bind_vao(renderable_obj->get_geometry_object()->get_vao()->get_id());
+		this->get_render_api()->draw_elements(renderable_obj->get_draw_config());
+	}
 }
 
 void forward_ldr_renderer::post_update()

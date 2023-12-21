@@ -34,7 +34,7 @@ public:
 	void reset() noexcept;
 
 public:
-	void add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_);
+	geometry_object_sptr add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_);
 
 public:
 	const std::vector<geometry_object_sptr>& get_geometry_objects() const noexcept;
@@ -45,6 +45,10 @@ private:
 	class geometry_manager_pimpl;
 	std::unique_ptr<geometry_manager_pimpl> pimpl;
 };
+
+using geometry_manager_uptr = std::unique_ptr<geometry_manager>;
+using geometry_manager_sptr = std::shared_ptr<geometry_manager>;
+using geometry_manager_wptr = std::weak_ptr<geometry_manager>;
 
 } // namespace render
 } // namespace raptor_engine

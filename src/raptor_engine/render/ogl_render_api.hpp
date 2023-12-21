@@ -40,13 +40,13 @@ public:
 public:
 	void clear_color() override;
 
-	void use_shader_program() override;
+	void use_shader_program(u32 shader_id) override;
 
-	void bind_vao() override;
+	void bind_vao(u32 vao_id) override;
 
 	void draw_arrays() override;
 
-	void draw_elements() override;
+	void draw_elements(draw_config_sptr draw_config) override;
 
 	void swap_window() override;
 

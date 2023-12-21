@@ -2,8 +2,11 @@
 
 #include "glad/glad.h"
 
+#include "render/shader_program.hpp"
+
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace raptor_engine::render;
 
@@ -13,7 +16,7 @@ class shader_manager::shader_manager_pimpl
 {
 public:
 	shader_manager_pimpl()
-		: shader_program {0}
+		: shader_programs {}
 #if TESTS
 		  ,
 		  is_vs_file_opened {false}, is_fs_file_opened {false}, vs_code {""}, fs_code {""}, vs_id {0}, fs_id {0},
@@ -36,7 +39,7 @@ public:
 			return;
 		}
 
-		std::swap(this->shader_program, pimpl.shader_program);
+		std::swap(this->shader_programs, pimpl.shader_programs);
 
 #if TESTS
 		std::swap(this->is_vs_file_opened, pimpl.is_vs_file_opened);
@@ -59,7 +62,8 @@ public:
 	}
 
 public:
-	void add_shaders(const std::string& vs_path, const std::string& fs_path)
+
+	shader_program_sptr add_shaders(const std::string& vs_path, const std::string& fs_path)
 	{
 		std::string	  vertex_code;
 		std::string	  fragment_code;
@@ -93,7 +97,7 @@ public:
 #endif
 		} catch (std::ifstream::failure& e) {
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: %s", e.what());
-			return;
+			return std::make_shared<shader_program>();
 		}
 		const char* vertex_shader_code	 = vertex_code.c_str();
 		const char* fragment_shader_code = fragment_code.c_str();
@@ -114,13 +118,13 @@ public:
 		glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
 		bool is_fs_compiled = check_compile_errors(fragment_shader, "FRAGMENT");
 		// link shaders
-		shader_program = glCreateProgram();
-		glAttachShader(shader_program, vertex_shader);
-		glAttachShader(shader_program, fragment_shader);
-		glLinkProgram(shader_program);
+		u32 sh_program = glCreateProgram();
+		glAttachShader(sh_program, vertex_shader);
+		glAttachShader(sh_program, fragment_shader);
+		glLinkProgram(sh_program);
 		// check for linking errors
-		glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-		bool is_shader_program_linked = check_link_errors(shader_program, "PROGRAM");
+		glGetProgramiv(sh_program, GL_LINK_STATUS, &success);
+		bool is_shader_program_linked = check_link_errors(sh_program, "PROGRAM");
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);
 
@@ -135,7 +139,7 @@ public:
 #endif
 		i32 uniform_location = -1;
 		for (std::size_t i = 0; i < static_cast<size_t>(SHADER_GLOBAL_UNIFORMS::COUNT); ++i) {
-			uniform_location = glGetUniformLocation(shader_program, uniforms_names[i].c_str());
+			uniform_location = glGetUniformLocation(sh_program, uniforms_names[i].c_str());
 
 #if TESTS
 			if (uniform_location != -1) {
@@ -143,12 +147,16 @@ public:
 			}
 #endif
 		}
+
+		shader_programs.emplace_back(std::make_shared<shader_program>(sh_program, std::vector<u32>(0)));
+
+		return shader_programs.back();
 	}
 
 public:
-	u32 get_shader_program() const
+	shader_program_sptr get_shader_program() const
 	{
-		return shader_program;
+		return shader_programs.back();
 	}
 
 private:
@@ -232,7 +240,7 @@ public:
 
 	unsigned int get_shader_program_id() const
 	{
-		return shader_program;
+		return shader_programs.back()->get_id();
 	}
 	bool get_is_shader_program_linked_successful() const
 	{
@@ -247,7 +255,7 @@ public:
 
 private:
 
-	u32 shader_program;
+	std::vector<shader_program_sptr> shader_programs;
 
 #if TESTS
 	bool is_vs_file_opened;
@@ -295,12 +303,12 @@ void shader_manager::reset() noexcept
 	this->pimpl->reset();
 }
 
-void shader_manager::add_shaders(const std::string& vs_path, const std::string& fs_path) 
+shader_program_sptr shader_manager::add_shaders(const std::string& vs_path, const std::string& fs_path) 
 {
-	this->pimpl->add_shaders(vs_path, fs_path);
+	return this->pimpl->add_shaders(vs_path, fs_path);
 }
 
-u32 shader_manager::get_shader_program() const
+shader_program_sptr shader_manager::get_shader_program() const
 {
 	return this->pimpl->get_shader_program();
 }

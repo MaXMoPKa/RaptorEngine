@@ -38,13 +38,13 @@ public:
 public:
 	void clear_color() { }
 
-	void use_shader_program() { }
+	void use_shader_program(u32 shader_id) { }
 
-	void bind_vao() { }
+	void bind_vao(u32 vao_id) { }
 
 	void draw_arrays() { }
 
-	void draw_elements() { }
+	void draw_elements(draw_config_sptr draw_config) { }
 
 	void swap_window() { }
 
@@ -90,14 +90,14 @@ void base_render_api::clear_color()
 	this->pimpl->clear_color();
 }
 
-void base_render_api::use_shader_program() 
+void base_render_api::use_shader_program(u32 shader_id)
 {
-	this->pimpl->use_shader_program();
+	this->pimpl->use_shader_program(shader_id);
 }
 
-void base_render_api::bind_vao()
+void base_render_api::bind_vao(u32 vao_id)
 {
-	this->pimpl->bind_vao();
+	this->pimpl->bind_vao(vao_id);
 }
 
 void base_render_api::draw_arrays()
@@ -105,9 +105,9 @@ void base_render_api::draw_arrays()
 	this->pimpl->draw_arrays();
 }
 
-void base_render_api::draw_elements()
+void base_render_api::draw_elements(draw_config_sptr draw_config)
 {
-	this->pimpl->draw_elements();
+	this->pimpl->draw_elements(draw_config);
 }
 
 void base_render_api::swap_window()

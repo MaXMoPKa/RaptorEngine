@@ -4,6 +4,8 @@
 
 #include "render/base_renderer.hpp"
 
+#include "render/renderable_object.hpp"
+
 using namespace raptor_engine::structs;
 
 namespace raptor_engine {
@@ -37,6 +39,10 @@ public:
 	void update();
 
 	void post_update();
+
+public:
+
+	void set_renderable_objects(const std::vector<renderable_object_sptr>& renderable_objects_);
 
 public:
 	[[nodiscard]] base_renderer_sptr get_renderer() const;

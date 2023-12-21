@@ -36,7 +36,7 @@ public:
 	}
 
 public:
-	void add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_)
+	geometry_object_sptr add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_)
 	{
 		vertex_array_object_sptr vao = std::make_shared<vertex_array_object>();
 		vao->generate_array();
@@ -69,6 +69,8 @@ public:
 		vbo->set_attrib_pointers();
 
 		geometry_objects.emplace_back(std::make_shared<geometry_object>(vao, vbo, ebo));
+	     
+		return geometry_objects.back();
 	}
 
 public:
@@ -115,10 +117,10 @@ void geometry_manager::reset() noexcept
 	this->pimpl->reset();
 }
 
-void geometry_manager::add_geometry(const std::vector<float>&		vertices_,
+geometry_object_sptr geometry_manager::add_geometry(const std::vector<float>&		vertices_,
 									const std::vector<unsigned int>& indices_)
 {
-	this->pimpl->add_geometry(vertices_, indices_);
+	return this->pimpl->add_geometry(vertices_, indices_);
 }
 
 const std::vector<geometry_object_sptr>& geometry_manager::get_geometry_objects() const noexcept

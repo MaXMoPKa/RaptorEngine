@@ -40,7 +40,7 @@ public:
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
 
-		for (auto& object : scene_info->objects) 
+		/*for (auto& object : scene_info->objects) 
 		{
 			shader_program = std::make_shared<shader>(std::make_shared<shader_data>(object.vs_path, object.fs_path));
 
@@ -81,7 +81,7 @@ public:
 			// happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally don't unbind
 			// VAOs (nor VBOs) when it's not directly necessary.
 			glBindVertexArray(0);
-		}
+		}*/
 	}
 
 	~ogl_render_api_pimpl() = default;
@@ -116,7 +116,7 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void use_shader_program()
+	void use_shader_program(u32 shader_id)
 	{
 		if (draw_config->wireframe)
 		{
@@ -126,7 +126,7 @@ public:
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-		shader_program->use();
+		glUseProgram(shader_id);
 	}
 
 	void update_uniform()
@@ -137,9 +137,9 @@ public:
 		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 	}
 
-	void bind_vao()
+	void bind_vao(u32 vao_id)
 	{
-		vao->use();
+		glBindVertexArray(vao_id);
 	}
 
 	void draw_arrays()
@@ -147,9 +147,9 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 	}
 
-	void draw_elements()
+	void draw_elements(draw_config_sptr draw_config_)
 	{
-		glDrawElements(draw_config->mode, draw_config->count, draw_config->type, draw_config->indices);
+		glDrawElements(draw_config_->mode, draw_config_->count, draw_config_->type, draw_config_->indices);
 	}
 
 	void swap_window(const sdl_window_sptr& window_ptr)
@@ -201,14 +201,14 @@ void ogl_render_api::clear_color()
 	this->pimpl->clear_color();
 }
 
-void ogl_render_api::use_shader_program()
+void ogl_render_api::use_shader_program(u32 shader_id)
 {
-	this->pimpl->use_shader_program();
+	this->pimpl->use_shader_program(shader_id);
 }
 
-void ogl_render_api::bind_vao()
+void ogl_render_api::bind_vao(u32 vao_id)
 {
-	this->pimpl->bind_vao();
+	this->pimpl->bind_vao(vao_id);
 }
 
 void ogl_render_api::draw_arrays()
@@ -216,9 +216,9 @@ void ogl_render_api::draw_arrays()
 	this->pimpl->draw_arrays();
 }
 
-void ogl_render_api::draw_elements()
+void ogl_render_api::draw_elements(draw_config_sptr draw_config)
 {
-	this->pimpl->draw_elements();
+	this->pimpl->draw_elements(draw_config);
 }
 
 void ogl_render_api::swap_window()

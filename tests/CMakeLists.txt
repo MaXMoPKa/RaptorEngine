@@ -37,7 +37,8 @@ set(render
     shader_manager
     shader_program
     geometry_manager
-    geometry_object)
+    geometry_object
+    renderable_object)
 
 function(create_project_from_sources type test)
     file(GLOB SOURCE main.cpp

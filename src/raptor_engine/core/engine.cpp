@@ -1,5 +1,10 @@
 #include "engine.hpp"
 
+#include "render/geometry_manager.hpp"
+#include "render/shader_manager.hpp"
+#include "render/shader.hpp"
+#include "render/renderable_object.hpp"
+
 using namespace raptor_engine;
 using namespace render;
 
@@ -15,8 +20,25 @@ public:
 		  render_eng {std::make_shared<render_engine>(std::make_shared<init_render_engine_data>(
 					  std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window()),
 					  high_level_renderer_type::FORWARD_LDR_RENDERER,
-					  engine_info->scene_info))}
+					  engine_info->scene_info))},
+		  sh_manager {std::make_shared<shader_manager>()}, 
+		  geom_manager {std::make_shared<geometry_manager>()}
 	{
+		  auto scene_info = engine_info->scene_info;
+
+		  std::vector<renderable_object_sptr> renderable_objects;
+
+		  for (auto& object : scene_info->objects) 
+		  {
+			  shader_program_sptr sh_program = sh_manager->add_shaders(object.vs_path, object.fs_path);
+			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.vertices, object.indices);
+		  
+			  renderable_objects.emplace_back(
+				  std::make_shared<renderable_object>(geom_object, sh_program, scene_info->draw_config));
+		  }
+
+		  render_eng->set_renderable_objects(renderable_objects);
+
 	}
 
 public:
@@ -74,11 +96,15 @@ public:
   }
 
  private:
-  init_engine_data_sptr engine_info;
+    init_engine_data_sptr engine_info;
 
-  hardware_system_sptr hardware_sys {};
+    hardware_system_sptr hardware_sys {};
 
-  render_engine_sptr render_eng {};
+    render_engine_sptr render_eng {};
+
+    shader_manager_sptr sh_manager {};
+
+	geometry_manager_sptr geom_manager {};
 };
 
 engine::engine() : pimpl{std::make_unique<engine_pimpl>()} {}

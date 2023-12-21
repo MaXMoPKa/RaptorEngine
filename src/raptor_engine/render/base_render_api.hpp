@@ -2,6 +2,8 @@
 
 #include "defines.hpp"
 
+#include "render/draw_config.hpp"
+
 namespace raptor_engine {
 namespace render {
 
@@ -30,13 +32,13 @@ public:
 public:
 	virtual void clear_color();
 
-	virtual void use_shader_program();
+	virtual void use_shader_program(u32 shader_id);
 
-	virtual void bind_vao();
+	virtual void bind_vao(u32 vao_id);
 
 	virtual void draw_arrays();
 
-	virtual void draw_elements();
+	virtual void draw_elements(draw_config_sptr draw_config);
 
 	virtual void swap_window();
 

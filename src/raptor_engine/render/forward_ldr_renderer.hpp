@@ -25,7 +25,7 @@ public:
 public:
 	void pre_update() override;
 
-	void update() override;
+	void update(const std::vector<renderable_object_sptr>& renderable_objects_) override;
 
 	void post_update() override;
 

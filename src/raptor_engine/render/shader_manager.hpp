@@ -2,10 +2,13 @@
 
 #include <iostream>
 #include <array>
+#include <memory>
 
 #include "SDL2/SDL_log.h"
 
 #include "defines.hpp"
+
+#include "render/shader_program.hpp"
 
 namespace raptor_engine
 {
@@ -65,13 +68,13 @@ public:
 	 * 
 	 * @param fs_path is a path to fragment shader.
 	 */
-	void add_shaders(const std::string& vs_path, const std::string& fs_path);
+	shader_program_sptr add_shaders(const std::string& vs_path, const std::string& fs_path);
 
 public:
 	/**
 	 * @return the id of the shader program.
 	 */
-	u32 get_shader_program() const;
+	shader_program_sptr get_shader_program() const;
 
 #if TESTS
 	/**
@@ -130,6 +133,10 @@ private:
 	class shader_manager_pimpl;
 	std::unique_ptr<shader_manager_pimpl> pimpl;
 };
+
+using shader_manager_uptr = std::unique_ptr<shader_manager>;
+using shader_manager_sptr = std::shared_ptr<shader_manager>;
+using shader_manager_wptr = std::weak_ptr<shader_manager>;
 
 } // namespace render
 } // namespace raptor_engine
