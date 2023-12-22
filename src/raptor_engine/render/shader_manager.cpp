@@ -138,9 +138,12 @@ public:
 		is_shader_program_linked_successful = is_shader_program_linked;
 #endif
 		i32 uniform_location = -1;
+		std::vector<u32> g_uniforms;
+		g_uniforms.reserve(uniforms_names.size());
 		for (std::size_t i = 0; i < static_cast<size_t>(SHADER_GLOBAL_UNIFORMS::COUNT); ++i) {
 			uniform_location = glGetUniformLocation(sh_program, uniforms_names[i].c_str());
 
+			g_uniforms.push_back(uniform_location);
 #if TESTS
 			if (uniform_location != -1) {
 				++global_uniforms_count;
@@ -148,7 +151,7 @@ public:
 #endif
 		}
 
-		shader_programs.emplace_back(std::make_shared<shader_program>(sh_program, std::vector<u32>(0)));
+		shader_programs.emplace_back(std::make_shared<shader_program>(sh_program, g_uniforms));
 
 		return shader_programs.back();
 	}

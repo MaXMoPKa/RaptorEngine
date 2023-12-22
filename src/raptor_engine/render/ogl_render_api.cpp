@@ -129,11 +129,20 @@ public:
 		glUseProgram(shader_id);
 	}
 
+	void bind_g_uniforms(const std::vector<u32>& g_uniforms_)
+	{
+		for (const auto& g_uniform_location : g_uniforms_)
+		{
+			u64 time = SDL_GetTicks64();
+			glUniform1f(g_uniform_location, time);
+		}
+	}
+
 	void update_uniform()
 	{
 		u64 time				  = SDL_GetTicks64();
 		float greenValue		  = static_cast<float>(sin(time) / 2.0 + 0.5);
-		int	  vertexColorLocation = glGetUniformLocation(shader_program->get_id(), "ourColor");
+		int	  vertexColorLocation = glGetUniformLocation(shader_program->get_id(), "our_color");
 		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 	}
 
@@ -204,6 +213,11 @@ void ogl_render_api::clear_color()
 void ogl_render_api::use_shader_program(u32 shader_id)
 {
 	this->pimpl->use_shader_program(shader_id);
+}
+
+void ogl_render_api::bind_g_uniforms(const std::vector<u32>& g_uniforms_) 
+{
+	this->pimpl->bind_g_uniforms(g_uniforms_);
 }
 
 void ogl_render_api::bind_vao(u32 vao_id)

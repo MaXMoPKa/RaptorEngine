@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "defines.hpp"
 
 #include "render/draw_config.hpp"
@@ -33,6 +35,8 @@ public:
 	virtual void clear_color();
 
 	virtual void use_shader_program(u32 shader_id);
+
+	virtual void bind_g_uniforms(const std::vector<u32>& g_uniforms_);
 
 	virtual void bind_vao(u32 vao_id);
 

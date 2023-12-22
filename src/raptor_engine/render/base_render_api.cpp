@@ -40,6 +40,8 @@ public:
 
 	void use_shader_program(u32 shader_id) { }
 
+	void bind_g_uniforms(const std::vector<u32>& g_uniforms_) { }
+
 	void bind_vao(u32 vao_id) { }
 
 	void draw_arrays() { }
@@ -93,6 +95,11 @@ void base_render_api::clear_color()
 void base_render_api::use_shader_program(u32 shader_id)
 {
 	this->pimpl->use_shader_program(shader_id);
+}
+
+void base_render_api::bind_g_uniforms(const std::vector<u32>& g_uniforms_) 
+{
+	this->pimpl->bind_g_uniforms(g_uniforms_);
 }
 
 void base_render_api::bind_vao(u32 vao_id)
