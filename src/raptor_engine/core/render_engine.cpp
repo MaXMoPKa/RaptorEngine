@@ -63,9 +63,9 @@ public:
 		this->renderer->pre_update();
 	}
 
-	void update()
+	void update(u64 time_)
 	{
-		this->renderer->update(renderable_objects);
+		this->renderer->update(renderable_objects, time_);
 	}
 
 	void post_update()
@@ -124,9 +124,9 @@ void render_engine::pre_update()
 	this->pimpl->pre_update();
 }
 
-void render_engine::update()
+void render_engine::update(u64 time_)
 {
-	this->pimpl->update();
+	this->pimpl->update(time_);
 }
 
 void render_engine::post_update()

@@ -37,7 +37,7 @@ public:
 public:
 	virtual void pre_update();
 
-	virtual void update(const std::vector<renderable_object_sptr>& renderable_objects_);
+	virtual void update(const std::vector<renderable_object_sptr>& renderable_objects_, u64 time_);
 
 	virtual void post_update();
 

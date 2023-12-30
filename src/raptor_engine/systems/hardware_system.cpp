@@ -13,7 +13,8 @@ class hardware_system::hardware_system_pimpl {
  public:
   hardware_system_pimpl()
       : hardware_system_info{std::make_shared<hardware_system_data>()},
-        window{nullptr}, gl_context {nullptr}
+        window{nullptr}, 
+        gl_context {nullptr}
   {}
 
   hardware_system_pimpl(const hardware_system_data_sptr& hardware_system_info)
@@ -68,6 +69,11 @@ class hardware_system::hardware_system_pimpl {
 		      }
 	      }
 	  }
+  }
+
+  u64 get_time() const noexcept
+  {
+      return SDL_GetTicks64(); 
   }
 
  public:
@@ -151,6 +157,11 @@ void hardware_system::reset() noexcept { this->pimpl->reset(); }
 void hardware_system::process_events(bool& window_should_close) noexcept
 {
   this->pimpl->process_events(window_should_close);
+}
+
+u64 raptor_enigne::systems::hardware_system::get_time() const noexcept
+{
+  return this->pimpl->get_time();
 }
 
 sdl_window_sptr hardware_system::get_window() const noexcept

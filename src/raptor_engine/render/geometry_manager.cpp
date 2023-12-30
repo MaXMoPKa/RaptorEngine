@@ -36,21 +36,38 @@ public:
 	}
 
 public:
-	geometry_object_sptr add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_)
+
+	geometry_object_sptr add_geometry(const std::vector<float>&		   vertices_,
+									  const std::vector<unsigned int>& indices_)
 	{
 		vertex_array_object_sptr vao = std::make_shared<vertex_array_object>();
 		vao->generate_array();
 
+		vertex_attribute_pointer vertex_attrib_pointer_0 {vertices_.size() * sizeof(float),
+														  vertices_.data(),
+														  GL_STATIC_DRAW,
+														  0,
+														  3,
+														  GL_FLOAT,
+														  GL_FALSE,
+														  6 * sizeof(float),
+														  (void*)0};
+
+		vertex_attribute_pointer vertex_attrib_pointer_1 {vertices_.size() * sizeof(float),
+														  vertices_.data(),
+														  GL_STATIC_DRAW,
+														  1,
+														  3,
+														  GL_FLOAT,
+														  GL_FALSE,
+														  6 * sizeof(float),
+														  (void*)(3 * sizeof(float))};
+
+		std::vector<vertex_attribute_pointer> vertex_attribute_pointers {vertex_attrib_pointer_0,
+																		 vertex_attrib_pointer_1};
+
 		vertex_buffer_object_data_sptr vbo_data =
-			std::make_shared<vertex_buffer_object_data>(vertices_.size() * sizeof(float),
-														vertices_.data(),
-														GL_STATIC_DRAW,
-														0,
-														3,
-														GL_FLOAT,
-														GL_FALSE,
-														3 * sizeof(float),
-														(void*)0);
+			std::make_shared<vertex_buffer_object_data>(vertex_attribute_pointers);
 		vertex_buffer_object_sptr vbo = std::make_shared<vertex_buffer_object>(vbo_data);
 		vbo->generate_buffer();
 
@@ -117,8 +134,8 @@ void geometry_manager::reset() noexcept
 	this->pimpl->reset();
 }
 
-geometry_object_sptr geometry_manager::add_geometry(const std::vector<float>&		vertices_,
-									const std::vector<unsigned int>& indices_)
+geometry_object_sptr geometry_manager::add_geometry(const std::vector<float>&		 vertices_,
+									                const std::vector<unsigned int>& indices_)
 {
 	return this->pimpl->add_geometry(vertices_, indices_);
 }

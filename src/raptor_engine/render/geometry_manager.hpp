@@ -34,7 +34,8 @@ public:
 	void reset() noexcept;
 
 public:
-	geometry_object_sptr add_geometry(const std::vector<float>& vertices_, const std::vector<unsigned int>& indices_);
+	geometry_object_sptr add_geometry(const std::vector<float>&		   vertices_,
+									  const std::vector<unsigned int>& indices_);
 
 public:
 	const std::vector<geometry_object_sptr>& get_geometry_objects() const noexcept;

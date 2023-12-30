@@ -36,7 +36,7 @@ public:
 public:
 	void pre_update();
 
-	void update();
+	void update(u64 time_);
 
 	void post_update();
 

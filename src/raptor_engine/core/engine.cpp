@@ -74,9 +74,11 @@ public:
 		while (!window_should_close) 
 		{ 
 			this->hardware_sys->process_events(window_should_close);
-
+			
+			u64 time = this->hardware_sys->get_time();
+			
 			this->render_eng->pre_update();
-			this->render_eng->update();
+			this->render_eng->update(time);
 			this->render_eng->post_update();
 		}
 	}

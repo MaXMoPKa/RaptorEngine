@@ -74,6 +74,9 @@ class hardware_system {
  public:
   void process_events(bool& window_should_close) noexcept;
 
+public:
+  u64 get_time() const noexcept;
+
  public:
   /**
    * @return the raw pointer on @see SDL_Window object.

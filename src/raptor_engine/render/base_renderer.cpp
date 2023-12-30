@@ -51,7 +51,7 @@ public:
 public:
 	void pre_update() { }
 
-	void update(const std::vector<renderable_object_sptr>& renderable_objects_) { }
+	void update(const std::vector<renderable_object_sptr>& renderable_objects_, u64 time_) { }
 
 	void post_update() { }
 
@@ -97,9 +97,9 @@ void base_renderer::pre_update()
 	this->pimpl->pre_update();
 }
 
-void base_renderer::update(const std::vector<renderable_object_sptr>& renderable_objects_)
+void base_renderer::update(const std::vector<renderable_object_sptr>& renderable_objects_, u64 time_)
 {
-	this->pimpl->update(renderable_objects_);
+	this->pimpl->update(renderable_objects_, time_);
 }
 
 void base_renderer::post_update()

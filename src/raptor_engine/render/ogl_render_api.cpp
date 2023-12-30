@@ -39,49 +39,6 @@ public:
 		if (int result = gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress) == 0) {
 			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Failed to initialize GLAD with error code: %n", &result);
 		}
-
-		/*for (auto& object : scene_info->objects) 
-		{
-			shader_program = std::make_shared<shader>(std::make_shared<shader_data>(object.vs_path, object.fs_path));
-
-			// creation
-			// VAO
-			vao = std::make_shared<vertex_array_object>();
-			vao->generate_array();
-
-			//VBO
-			auto vbo_data = std::make_shared<vertex_buffer_object_data>(object.vertices.size() * sizeof(float),
-																		object.vertices.data(),
-																		GL_STATIC_DRAW,
-																		0,
-																		3,
-																		GL_FLOAT,
-																		GL_FALSE,
-																		3 * sizeof(float),
-																		(void*)0);
-			vbo			  = std::make_shared<vertex_buffer_object>(vbo_data);
-			vbo->generate_buffer();
-
-			// EBO
-			auto ebo_data = std::make_shared<element_buffer_object_data>(object.indices.size() * sizeof(unsigned int),
-																		 object.indices.data(),
-																		 GL_STATIC_DRAW);
-
-			ebo = std::make_shared<element_buffer_object>(ebo_data);
-			ebo->generate_buffer();
-
-			// initialization
-			vao->use();
-			vbo->set_buffer_data();
-			ebo->set_buffer_data();
-			vbo->set_attrib_pointers();
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			// You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely
-			// happens. Modifying other VAOs requires a call to glBindVertexArray anyways so we generally don't unbind
-			// VAOs (nor VBOs) when it's not directly necessary.
-			glBindVertexArray(0);
-		}*/
 	}
 
 	~ogl_render_api_pimpl() = default;
@@ -129,12 +86,11 @@ public:
 		glUseProgram(shader_id);
 	}
 
-	void bind_g_uniforms(const std::vector<u32>& g_uniforms_)
+	void bind_g_uniforms(const std::vector<u32>& g_uniforms_, u64 time_)
 	{
 		for (const auto& g_uniform_location : g_uniforms_)
 		{
-			u64 time = SDL_GetTicks64();
-			glUniform1f(g_uniform_location, time);
+			glUniform1f(g_uniform_location, time_);
 		}
 	}
 
@@ -215,9 +171,9 @@ void ogl_render_api::use_shader_program(u32 shader_id)
 	this->pimpl->use_shader_program(shader_id);
 }
 
-void ogl_render_api::bind_g_uniforms(const std::vector<u32>& g_uniforms_) 
+void ogl_render_api::bind_g_uniforms(const std::vector<u32>& g_uniforms_, u64 time_) 
 {
-	this->pimpl->bind_g_uniforms(g_uniforms_);
+	this->pimpl->bind_g_uniforms(g_uniforms_, time_);
 }
 
 void ogl_render_api::bind_vao(u32 vao_id)

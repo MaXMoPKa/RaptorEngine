@@ -2,50 +2,44 @@
 
 #include "glad/glad.h"
 
+#include "defines.hpp"
+
 #include <utility>
 #include <memory>
 
 namespace raptor_engine {
 namespace render {
 
+struct vertex_attribute_pointer
+{
+	unsigned int size;
+	const void*	 data;
+	unsigned int usage;
+
+	unsigned int  attrib_pointer_index;
+	unsigned int  attrib_pointer_size;
+	unsigned int  attrib_pointer_type;
+	unsigned char attrib_pointer_normalized;
+	int			  attrib_pointer_stride;
+	const void*	  attrib_pointer_pointer;
+};
+
 struct vertex_buffer_object_data
 {
 public:
 
-	vertex_buffer_object_data()
-		: size {}, data {}, usage {}, attrib_pointer_index {},
-		  attrib_pointer_size {}, attrib_pointer_type {},
-		  attrib_pointer_normalized {}, attrib_pointer_stride {},
-		  attrib_pointer_pointer {}
+	vertex_buffer_object_data() 
+		: vertex_attribute_pointers {}
 	{ }
 
-	vertex_buffer_object_data(unsigned int size, const void* data, unsigned int usage,
-							  unsigned int	attrib_pointer_index,
-							  unsigned int	attrib_pointer_size,
-							  unsigned int	attrib_pointer_type,
-							  unsigned char attrib_pointer_normalized,
-							  int			attrib_pointer_stride,
-							  const void*	attrib_pointer_pointer)
-		: size {size}, data {data}, usage {usage}, attrib_pointer_index {attrib_pointer_index},
-		  attrib_pointer_size {attrib_pointer_size}, attrib_pointer_type {attrib_pointer_type},
-		  attrib_pointer_normalized {attrib_pointer_normalized}, attrib_pointer_stride {attrib_pointer_stride},
-		  attrib_pointer_pointer {attrib_pointer_pointer}
+	vertex_buffer_object_data(std::vector<vertex_attribute_pointer>& vertex_attribute_pointers_)
+		: vertex_attribute_pointers {vertex_attribute_pointers_}
 	{ }
 
 	~vertex_buffer_object_data() = default;
 
 public:
-	unsigned int size;
-	const void* data;
-	unsigned int usage;
-
-	unsigned int attrib_pointer_index;
-	unsigned int attrib_pointer_size;
-	unsigned int attrib_pointer_type;
-	unsigned char attrib_pointer_normalized;
-	int			  attrib_pointer_stride;
-	const void*	  attrib_pointer_pointer;
-
+	std::vector<vertex_attribute_pointer> vertex_attribute_pointers;
 };
 
 using vertex_buffer_object_data_uptr = std::unique_ptr<vertex_buffer_object_data>;
@@ -109,18 +103,25 @@ public:
 	void set_buffer_data()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, vbo_data->size, vbo_data->data, vbo_data->usage);
+		glBufferData(GL_ARRAY_BUFFER,
+					 vbo_data->vertex_attribute_pointers[0].size,
+					 vbo_data->vertex_attribute_pointers[0].data,
+					 vbo_data->vertex_attribute_pointers[0].usage);
 	}
 
 	void set_attrib_pointers()
 	{
-		glVertexAttribPointer(vbo_data->attrib_pointer_index,
-							  vbo_data->attrib_pointer_size,
-							  vbo_data->attrib_pointer_type,
-							  vbo_data->attrib_pointer_normalized,
-							  vbo_data->attrib_pointer_stride,
-							  vbo_data->attrib_pointer_pointer);
-		glEnableVertexAttribArray(0);
+		u64 vertex_attrib_index = 0;
+		for (const auto& vbo_attrib_pointer : vbo_data->vertex_attribute_pointers) 
+		{
+			glVertexAttribPointer(vbo_attrib_pointer.attrib_pointer_index,
+								  vbo_attrib_pointer.attrib_pointer_size,
+								  vbo_attrib_pointer.attrib_pointer_type,
+								  vbo_attrib_pointer.attrib_pointer_normalized,
+								  vbo_attrib_pointer.attrib_pointer_stride,
+								  vbo_attrib_pointer.attrib_pointer_pointer);
+			glEnableVertexAttribArray(vertex_attrib_index++);
+		}
 	}
 
 public:

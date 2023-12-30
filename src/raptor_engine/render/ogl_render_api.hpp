@@ -42,7 +42,7 @@ public:
 
 	void use_shader_program(u32 shader_id) override;
 
-	void bind_g_uniforms(const std::vector<u32>& g_uniforms_) override;
+	void bind_g_uniforms(const std::vector<u32>& g_uniforms_, u64 time_) override;
 
 	void bind_vao(u32 vao_id) override;
 
