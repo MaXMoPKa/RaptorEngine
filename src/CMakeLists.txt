@@ -23,10 +23,13 @@ else()
 endif(WIN32)
 
 configure_file(${CMAKE_SOURCE_DIR}/configuration/root_directory.h.in configuration/root_directory.h)
-include_directories(${CMAKE_BINARY_DIR}/configuration) 
+include_directories(${CMAKE_BINARY_DIR}/src/configuration) 
 
-add_library(GLAD STATIC "${CMAKE_SOURCE_DIR}/src/third_party/glad.c")
+add_library(GLAD STATIC "${CMAKE_SOURCE_DIR}/src/third_party/glad/glad.c")
 set(LIBS ${LIBS} GLAD)
+
+add_library(STB_IMAGE STATIC "${CMAKE_SOURCE_DIR}/src/third_party/stb_image/stb_image.cpp")
+set(LIBS ${LIBS} STB_IMAGE)
 
 file(GLOB_RECURSE SOURCE "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.h"
                          "${CMAKE_SOURCE_DIR}/src/raptor_engine/*.hpp"

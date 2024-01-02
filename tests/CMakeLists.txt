@@ -30,6 +30,9 @@ else()
     set(LIBS )
 endif(WIN32)
 
+configure_file(${CMAKE_SOURCE_DIR}/configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/tests/configuration) 
+
 set(TYPES 
     render)
 
@@ -38,7 +41,9 @@ set(render
     shader_program
     geometry_manager
     geometry_object
-    renderable_object)
+    renderable_object
+    texture_manager
+    texture_program)
 
 function(create_project_from_sources type test)
     file(GLOB SOURCE main.cpp

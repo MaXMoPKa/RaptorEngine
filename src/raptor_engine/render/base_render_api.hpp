@@ -40,6 +40,8 @@ public:
 
 	virtual void bind_vao(u32 vao_id);
 
+	virtual void bind_texture(u32 texture_id_);
+
 	virtual void draw_arrays();
 
 	virtual void draw_elements(draw_config_sptr draw_config);

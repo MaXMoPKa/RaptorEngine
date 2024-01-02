@@ -44,6 +44,8 @@ public:
 
 	void bind_vao(u32 vao_id) { }
 
+	void bind_texture(u32 texture_id_) { }
+
 	void draw_arrays() { }
 
 	void draw_elements(draw_config_sptr draw_config) { }
@@ -105,6 +107,11 @@ void base_render_api::bind_g_uniforms(const std::vector<u32>& g_uniforms_, u64 t
 void base_render_api::bind_vao(u32 vao_id)
 {
 	this->pimpl->bind_vao(vao_id);
+}
+
+void base_render_api::bind_texture(u32 texture_id_) 
+{ 
+	this->pimpl->bind_texture(texture_id_);
 }
 
 void base_render_api::draw_arrays()

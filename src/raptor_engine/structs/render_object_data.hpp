@@ -15,7 +15,8 @@ public:
 	render_object_data(const std::string&				path_vs_,
 					   const std::string&				path_fs_,
 					   const std::vector<float>&		vertices_,
-					   const std::vector<unsigned int>& indices_);
+					   const std::vector<unsigned int>& indices_,
+		               const std::vector<std::string>& textures_);
 	
 	~render_object_data();
 

@@ -2,6 +2,7 @@
 
 #include "defines.hpp"
 
+#include "render/texture_program.hpp"
 #include "render/geometry_object.hpp"
 #include "render/shader_program.hpp"
 #include "render/draw_config.hpp"
@@ -15,24 +16,32 @@ class renderable_object
 {
 public:
 	renderable_object() 
-		: geometry_object {}, 
-		  shader_program {}, 
-		  draw_config {}
+		: texture {}
+		, geometry_object {}
+		, shader_program {}
+		, draw_config {}
 	{
 
 	}
 
 	renderable_object(geometry_object_sptr geometry_object_,
 		              shader_program_sptr shader_program_,
-		              draw_config_sptr draw_config_) 
-		: geometry_object {geometry_object_}, 
-		  shader_program {shader_program_}, 
-		  draw_config {draw_config_}
+		              draw_config_sptr draw_config_,
+		              texture_program_sptr texture_ = nullptr) 
+		: texture(texture_)
+		, geometry_object {geometry_object_}
+		, shader_program {shader_program_}
+		, draw_config {draw_config_}
 	{
 
 	}
 
 public:
+	texture_program_sptr get_texture() const
+	{
+		return this->texture;
+	}
+
 	geometry_object_sptr get_geometry_object() const
 	{
 		return geometry_object;
@@ -49,6 +58,7 @@ public:
 	}
 
 private:
+	texture_program_sptr texture;
 	geometry_object_sptr geometry_object;
 	shader_program_sptr	 shader_program;
 	draw_config_sptr	 draw_config;

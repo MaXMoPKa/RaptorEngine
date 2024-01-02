@@ -46,6 +46,8 @@ public:
 
 	void bind_vao(u32 vao_id) override;
 
+	void bind_texture(u32 texture_id_) override;
+
 	void draw_arrays() override;
 
 	void draw_elements(draw_config_sptr draw_config) override;
