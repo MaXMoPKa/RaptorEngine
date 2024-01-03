@@ -29,8 +29,9 @@ int main()
          -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
 		{0U, 1U, 3U,
          1U, 2U, 3U},
-		{"resources/textures/container.jpg", 
-         "resources/textures/awesomeface.png"}
+        // 0x1907 -- GL_RGB, 0x1908 -- GL_RGBA
+		{std::make_shared<texture_config>("resources/textures/container.jpg", 0x1907, 0x1907), 
+         std::make_shared<texture_config>("resources/textures/awesomeface.png", 0x1908, 0x1908)}
         }
 	};
 

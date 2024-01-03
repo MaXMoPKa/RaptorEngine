@@ -17,7 +17,7 @@ render_object_data::render_object_data(const std::string& vs_path_,
 									   const std::string& fs_path_,
 									   const std::vector<float>& vertices_,
 									   const std::vector<unsigned int>& indices_,
-	                                   const std::vector<std::string>& textures_)
+									   const std::vector<texture_config_sptr>& textures_)
 	: vs_path {vs_path_}
 	, fs_path {fs_path_}
 	, vertices {vertices_}

@@ -33,6 +33,9 @@ public:
 		  for (auto& object : scene_info->objects) 
 		  {
 			  shader_program_sptr sh_program = sh_manager->add_shaders(object.vs_path, object.fs_path);
+			  this->render_eng->get_renderer()->get_render_api()->use_shader_program(sh_program->get_id());
+			  sh_manager->set_int(sh_program->get_id(), "texture1", 0);
+			  sh_manager->set_int(sh_program->get_id(), "texture2", 1);
 			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.vertices, object.indices);
 			  
 			  std::vector<texture_program_sptr> textures;

@@ -4,6 +4,8 @@
 #include <memory>
 #include <string>
 
+#include "render/texture_config.hpp"
+
 namespace raptor_engine {
 namespace structs {
 
@@ -16,7 +18,7 @@ public:
 					   const std::string&				path_fs_,
 					   const std::vector<float>&		vertices_,
 					   const std::vector<unsigned int>& indices_,
-					   const std::vector<std::string>&	textures_ = std::vector<std::string> {});
+					   const std::vector<texture_config_sptr>& textures_ = std::vector<texture_config_sptr> {});
 	
 	~render_object_data();
 
@@ -26,7 +28,7 @@ public:
 	std::string fs_path;
 	std::vector<float> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<std::string>  textures;
+	std::vector<texture_config_sptr> textures;
 };
 
 using render_object_data_uptr = std::unique_ptr<render_object_data>;

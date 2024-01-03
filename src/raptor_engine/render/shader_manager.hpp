@@ -76,6 +76,8 @@ public:
 	 */
 	shader_program_sptr get_shader_program() const;
 
+	void set_int(u32 shader_program_id_, const std::string& uniform_name_, i32 uniform_value_);
+
 #if TESTS
 	/**
 	 * @return true if vertex shader file was opened successful and false in another way.

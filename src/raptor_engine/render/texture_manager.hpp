@@ -40,15 +40,17 @@ public:
 	~texture_manager() = default;
 
 public:
-	texture_program_sptr add_texture(const std::string& texture_path_)
+	texture_program_sptr add_texture(const texture_config_sptr& texture_)
 	{
 		int width, height, nrChannels;
-		std::string path = file_system::get_path(texture_path_).c_str();
+		std::string	   path = file_system::get_path(texture_->get_texture_name()).c_str();
 		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 
 		if (!data) 
 		{
-			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "ERROR::TEXTURE::FILE_NOT_SUCCESSFULLY_READ: can't read from file %s", texture_path_);
+			SDL_LogCritical(SDL_LOG_CATEGORY_ERROR,
+							"ERROR::TEXTURE::FILE_NOT_SUCCESSFULLY_READ: can't read from file %s",
+							texture_->get_texture_name());
 			return std::make_shared<texture_program>();
 		}
 		#if TESTS
@@ -67,7 +69,15 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D,
+					 0,
+					 texture_->get_internal_format(),
+					 width,
+					 height,
+					 0,
+					 texture_->get_format(),
+					 GL_UNSIGNED_BYTE,
+					 data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);

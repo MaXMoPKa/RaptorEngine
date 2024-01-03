@@ -162,6 +162,11 @@ public:
 		return shader_programs.back();
 	}
 
+	void set_int(u32 shader_program_id, const std::string& uniform_name, i32 uniform_value) 
+	{
+		glUniform1i(glGetUniformLocation(shader_program_id, uniform_name.c_str()), uniform_value);
+	}
+
 private:
 	bool check_compile_errors(GLuint shader, std::string type)
 	{
@@ -314,6 +319,11 @@ shader_program_sptr shader_manager::add_shaders(const std::string& vs_path, cons
 shader_program_sptr shader_manager::get_shader_program() const
 {
 	return this->pimpl->get_shader_program();
+}
+
+void shader_manager::set_int(u32 shader_program_id_, const std::string& uniform_name_, i32 uniform_value_)
+{
+	this->pimpl->set_int(shader_program_id_, uniform_name_, uniform_value_);
 }
 
 #if TESTS
