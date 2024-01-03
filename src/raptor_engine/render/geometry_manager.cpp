@@ -43,28 +43,39 @@ public:
 		vertex_array_object_sptr vao = std::make_shared<vertex_array_object>();
 		vao->generate_array();
 
-		vertex_attribute_pointer vertex_attrib_pointer_0 {vertices_.size() * sizeof(float),
-														  vertices_.data(),
-														  GL_STATIC_DRAW,
-														  0,
-														  3,
-														  GL_FLOAT,
-														  GL_FALSE,
-														  6 * sizeof(float),
-														  (void*)0};
+		vertex_attribute_pointer vertex_attrib_pointer_pos {vertices_.size() * sizeof(float),
+														    vertices_.data(),
+														    GL_STATIC_DRAW,
+														    0,
+														    3,
+														    GL_FLOAT,
+														    GL_FALSE,
+														    8 * sizeof(float),
+														    (void*)0};
 
-		vertex_attribute_pointer vertex_attrib_pointer_1 {vertices_.size() * sizeof(float),
-														  vertices_.data(),
-														  GL_STATIC_DRAW,
-														  1,
-														  3,
-														  GL_FLOAT,
-														  GL_FALSE,
-														  6 * sizeof(float),
-														  (void*)(3 * sizeof(float))};
+		vertex_attribute_pointer vertex_attrib_pointer_color {vertices_.size() * sizeof(float),
+														      vertices_.data(),
+														      GL_STATIC_DRAW,
+														      1,
+														      3,
+														      GL_FLOAT,
+														      GL_FALSE,
+														      8 * sizeof(float),
+														      (void*)(3 * sizeof(float))};
 
-		std::vector<vertex_attribute_pointer> vertex_attribute_pointers {vertex_attrib_pointer_0,
-																		 vertex_attrib_pointer_1};
+		vertex_attribute_pointer vertex_attrib_pointer_uv {vertices_.size() * sizeof(float),
+														   vertices_.data(),
+														   GL_STATIC_DRAW,
+														   2,
+														   3,
+														   GL_FLOAT,
+														   GL_FALSE,
+														   8 * sizeof(float),
+														   (void*)(6 * sizeof(float))};
+
+		std::vector<vertex_attribute_pointer> vertex_attribute_pointers {vertex_attrib_pointer_pos,
+																		 vertex_attrib_pointer_color,
+																		 vertex_attrib_pointer_uv};
 
 		vertex_buffer_object_data_sptr vbo_data =
 			std::make_shared<vertex_buffer_object_data>(vertex_attribute_pointers);

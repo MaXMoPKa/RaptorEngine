@@ -1,5 +1,6 @@
 #include "engine.hpp"
 
+#include "render/texture_manager.hpp"
 #include "render/geometry_manager.hpp"
 #include "render/shader_manager.hpp"
 #include "render/shader.hpp"
@@ -15,14 +16,15 @@ public:
 	engine_pimpl() : hardware_sys(std::make_shared<hardware_system>()) { }
 
 	engine_pimpl(const init_engine_data_sptr& engine_info)
-		: engine_info {engine_info}, 
-		  hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)}, 
-		  render_eng {std::make_shared<render_engine>(std::make_shared<init_render_engine_data>(
+		: engine_info {engine_info}
+		, hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)} 
+		, render_eng {std::make_shared<render_engine>(std::make_shared<init_render_engine_data>(
 					  std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window()),
 					  high_level_renderer_type::FORWARD_LDR_RENDERER,
-					  engine_info->scene_info))},
-		  sh_manager {std::make_shared<shader_manager>()}, 
-		  geom_manager {std::make_shared<geometry_manager>()}
+					  engine_info->scene_info))}
+		, sh_manager {std::make_shared<shader_manager>()} 
+		, geom_manager {std::make_shared<geometry_manager>()}
+		, tex_manager {std::make_shared<texture_manager>()}
 	{
 		  auto scene_info = engine_info->scene_info;
 
@@ -32,9 +34,18 @@ public:
 		  {
 			  shader_program_sptr sh_program = sh_manager->add_shaders(object.vs_path, object.fs_path);
 			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.vertices, object.indices);
-		  
+			  
+			  std::vector<texture_program_sptr> textures;
+			  if (!object.textures.empty())
+			  {
+				  for (auto& tex : object.textures) 
+				  {
+					  textures.emplace_back(tex_manager->add_texture(tex));
+				  }
+			  }
+
 			  renderable_objects.emplace_back(
-				  std::make_shared<renderable_object>(geom_object, sh_program, scene_info->draw_config));
+				  std::make_shared<renderable_object>(geom_object, sh_program, scene_info->draw_config, textures));
 		  }
 
 		  render_eng->set_renderable_objects(renderable_objects);
@@ -107,6 +118,8 @@ public:
     shader_manager_sptr sh_manager {};
 
 	geometry_manager_sptr geom_manager {};
+
+	texture_manager_sptr tex_manager {};
 };
 
 engine::engine() : pimpl{std::make_unique<engine_pimpl>()} {}

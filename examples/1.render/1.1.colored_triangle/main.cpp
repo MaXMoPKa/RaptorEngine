@@ -23,14 +23,17 @@ int main()
     render_objects objects = {
 		{"colored_triangle.vs", 
          "colored_triangle.fs",
-        { 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-         -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-          0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f},
-		{0U, 1U, 2U}
+        { 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+          0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+         -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+		{0U, 1U, 3U,
+         1U, 2U, 3U},
+		{"resources/textures/container.jpg"}
         }
 	};
 
-    draw_config_sptr draw_cfg = std::make_shared<draw_config>(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr, false);
+    draw_config_sptr draw_cfg = std::make_shared<draw_config>(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, false);
 
 	scene_data_sptr scene_info = std::make_shared<scene_data>(objects, draw_cfg);
 

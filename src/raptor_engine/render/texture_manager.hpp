@@ -24,7 +24,9 @@ class texture_manager
 public:
 	texture_manager() 
 		: textures {}
-		, is_texture_file_opened {false}
+		#if TESTS
+		    , is_texture_file_opened {false}
+		#endif
 	{
 
 	}

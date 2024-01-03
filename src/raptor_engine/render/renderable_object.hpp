@@ -16,7 +16,7 @@ class renderable_object
 {
 public:
 	renderable_object() 
-		: texture {}
+		: textures {}
 		, geometry_object {}
 		, shader_program {}
 		, draw_config {}
@@ -27,8 +27,8 @@ public:
 	renderable_object(geometry_object_sptr geometry_object_,
 		              shader_program_sptr shader_program_,
 		              draw_config_sptr draw_config_,
-		              texture_program_sptr texture_ = nullptr) 
-		: texture(texture_)
+					  std::vector<texture_program_sptr> textures_ = std::vector<texture_program_sptr> {}) 
+		: textures(textures_)
 		, geometry_object {geometry_object_}
 		, shader_program {shader_program_}
 		, draw_config {draw_config_}
@@ -37,9 +37,10 @@ public:
 	}
 
 public:
-	texture_program_sptr get_texture() const
+
+	std::vector<texture_program_sptr> get_textures() const
 	{
-		return this->texture;
+		return this->textures;
 	}
 
 	geometry_object_sptr get_geometry_object() const
@@ -58,7 +59,7 @@ public:
 	}
 
 private:
-	texture_program_sptr texture;
+	std::vector<texture_program_sptr> textures;
 	geometry_object_sptr geometry_object;
 	shader_program_sptr	 shader_program;
 	draw_config_sptr	 draw_config;
