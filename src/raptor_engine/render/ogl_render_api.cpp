@@ -107,8 +107,9 @@ public:
 		glBindVertexArray(vao_id);
 	}
 
-	void bind_texture(u32 texture_id_)
+	void bind_texture(u32 texture_id_, u32 active_texture_id_)
 	{
+		glActiveTexture(GL_TEXTURE0 + active_texture_id_);
 		glBindTexture(GL_TEXTURE_2D, texture_id_);
 	}
 
@@ -186,9 +187,9 @@ void ogl_render_api::bind_vao(u32 vao_id)
 	this->pimpl->bind_vao(vao_id);
 }
 
-void ogl_render_api::bind_texture(u32 texture_id_)
+void ogl_render_api::bind_texture(u32 texture_id_, u32 active_texture_id_)
 {
-	this->pimpl->bind_texture(texture_id_);
+	this->pimpl->bind_texture(texture_id_, active_texture_id_);
 }
 
 void ogl_render_api::draw_arrays()

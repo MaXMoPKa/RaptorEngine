@@ -44,7 +44,7 @@ public:
 
 	void bind_vao(u32 vao_id) { }
 
-	void bind_texture(u32 texture_id_) { }
+	void bind_texture(u32 texture_id_, u32 active_texture_id_) { }
 
 	void draw_arrays() { }
 
@@ -109,9 +109,9 @@ void base_render_api::bind_vao(u32 vao_id)
 	this->pimpl->bind_vao(vao_id);
 }
 
-void base_render_api::bind_texture(u32 texture_id_) 
+void base_render_api::bind_texture(u32 texture_id_, u32 active_texture_id_) 
 { 
-	this->pimpl->bind_texture(texture_id_);
+	this->pimpl->bind_texture(texture_id_, active_texture_id_);
 }
 
 void base_render_api::draw_arrays()

@@ -48,9 +48,10 @@ void forward_ldr_renderer::update(const std::vector<renderable_object_sptr>& ren
 		this->get_render_api()->use_shader_program(renderable_obj->get_shader_program()->get_id());
 		this->get_render_api()->bind_g_uniforms(renderable_obj->get_shader_program()->get_g_uniforms(), time_);
 		this->get_render_api()->bind_vao(renderable_obj->get_geometry_object()->get_vao()->get_id());
+		u32 active_texture_index = 0;
 		for (auto& texture : renderable_obj->get_textures())
 		{
-			this->get_render_api()->bind_texture(texture->get_id());
+			this->get_render_api()->bind_texture(texture->get_id(), active_texture_index++);
 		}
 		this->get_render_api()->draw_elements(renderable_obj->get_draw_config());
 	}

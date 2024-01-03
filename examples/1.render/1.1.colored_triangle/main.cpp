@@ -29,7 +29,8 @@ int main()
          -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
 		{0U, 1U, 3U,
          1U, 2U, 3U},
-		{"resources/textures/container.jpg"}
+		{"resources/textures/container.jpg", 
+         "resources/textures/awesomeface.png"}
         }
 	};
 
