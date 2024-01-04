@@ -75,7 +75,7 @@ public:
 
 	void use_shader_program(u32 shader_id)
 	{
-		if (draw_config->wireframe)
+		if (draw_config->get_wireframe())
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		} 
@@ -120,7 +120,10 @@ public:
 
 	void draw_elements(draw_config_sptr draw_config_)
 	{
-		glDrawElements(draw_config_->mode, draw_config_->count, draw_config_->type, draw_config_->indices);
+		glDrawElements(draw_config_->get_mode(),
+					   draw_config_->get_count(),
+					   draw_config_->get_type(),
+					   draw_config_->get_indices());
 	}
 
 	void swap_window(const sdl_window_sptr& window_ptr)

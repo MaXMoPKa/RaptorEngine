@@ -48,7 +48,7 @@ public:
 
 	void draw_arrays() { }
 
-	void draw_elements(draw_config_sptr draw_config) { }
+	void draw_elements(structs::draw_config_sptr draw_config) { }
 
 	void swap_window() { }
 
@@ -119,7 +119,7 @@ void base_render_api::draw_arrays()
 	this->pimpl->draw_arrays();
 }
 
-void base_render_api::draw_elements(draw_config_sptr draw_config)
+void base_render_api::draw_elements(structs::draw_config_sptr draw_config)
 {
 	this->pimpl->draw_elements(draw_config);
 }

@@ -44,7 +44,7 @@ public:
 
 	virtual void draw_arrays();
 
-	virtual void draw_elements(draw_config_sptr draw_config);
+	virtual void draw_elements(structs::draw_config_sptr draw_config);
 
 	virtual void swap_window();
 

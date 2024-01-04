@@ -26,7 +26,7 @@ public:
 
 	renderable_object(geometry_object_sptr geometry_object_,
 		              shader_program_sptr shader_program_,
-		              draw_config_sptr draw_config_,
+		              structs::draw_config_sptr draw_config_,
 					  std::vector<texture_program_sptr> textures_ = std::vector<texture_program_sptr> {}) 
 		: textures(textures_)
 		, geometry_object {geometry_object_}
@@ -53,16 +53,16 @@ public:
 		return shader_program;
 	}
 
-	draw_config_sptr get_draw_config() const
+	structs::draw_config_sptr get_draw_config() const
 	{
 		return draw_config;
 	}
 
 private:
 	std::vector<texture_program_sptr> textures;
-	geometry_object_sptr geometry_object;
-	shader_program_sptr	 shader_program;
-	draw_config_sptr	 draw_config;
+	geometry_object_sptr              geometry_object;
+	shader_program_sptr	              shader_program;
+	structs::draw_config_sptr		  draw_config;
 };
 
 using renderable_object_uptr = std::unique_ptr<renderable_object>;

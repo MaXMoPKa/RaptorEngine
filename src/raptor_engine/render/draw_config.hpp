@@ -2,36 +2,38 @@
 
 #include "glad/glad.h"
 
+#include "defines.hpp"
+
 #include <utility>
 #include <memory>
 
 namespace raptor_engine {
-namespace render {
+namespace structs {
 
 struct draw_config
 {
 public:
 
-	draw_config() : mode {GL_TRIANGLES}, count {0}, type {GL_UNSIGNED_INT}, indices {nullptr}, wireframe {false}
-	{ }
+	draw_config();
 
-	draw_config(unsigned int mode_,
-				int			 count_, 
-		 		unsigned int type_, 
-				void*		 indices_,
-				bool         wireframe_) 
-		: mode {mode_}, count {count_}, type {type_}, indices {indices_}, wireframe {wireframe_}
-	{ }
+	draw_config(i32 mode_, i32 count_, i32 type_, void* indices_, bool wireframe_);
 
-	~draw_config() = default;
+	~draw_config();
 
 public:
+	i32 get_mode() const;
 
-	unsigned int mode;
-	int		     count;
-	unsigned int type; 
-	void*	     indices;
-	bool		 wireframe;
+	i32 get_count() const;
+
+	i32 get_type() const;
+
+	void* get_indices() const;
+
+	bool get_wireframe() const;
+
+private:
+	class draw_config_pimpl;
+	std::unique_ptr<draw_config_pimpl> pimpl;
 };
 
 using draw_config_uptr = std::unique_ptr<draw_config>;

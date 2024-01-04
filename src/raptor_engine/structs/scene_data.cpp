@@ -2,7 +2,6 @@
 
 using namespace raptor_engine;
 using namespace raptor_engine::structs;
-using namespace raptor_engine::render;
 
 scene_data::scene_data() 
 	: objects {}, draw_config {}
