@@ -15,60 +15,29 @@ namespace render
 class renderable_object
 {
 public:
-	renderable_object() 
-		: textures {}
-		, geometry_object {}
-		, shader_program {}
-		, draw_config {}
-	{
 
-	}
+	renderable_object();
 
-	renderable_object(geometry_object_sptr geometry_object_,
-		              shader_program_sptr shader_program_,
-		              structs::draw_config_sptr draw_config_,
-					  std::vector<texture_program_sptr> textures_ = std::vector<texture_program_sptr> {}) 
-		: textures(textures_)
-		, geometry_object {geometry_object_}
-		, shader_program {shader_program_}
-		, draw_config {draw_config_}
-	{
-
-	}
+	renderable_object(geometry_object_sptr				geometry_object_,
+					  shader_program_sptr				shader_program_,
+					  structs::draw_config_sptr			draw_config_,
+					  std::vector<texture_program_sptr> textures_ = std::vector<texture_program_sptr> {});
 
 	~renderable_object();
 
 public:
 
-	std::vector<texture_program_sptr> get_textures() const
-	{
-		return this->textures;
-	}
+	const std::vector<texture_program_sptr>& get_textures() const;
 
-	geometry_object_sptr get_geometry_object() const
-	{
-		return geometry_object;
-	}
+	const geometry_object_sptr get_geometry_object() const;
 
-	shader_program_sptr get_shader_program() const
-	{
-		return shader_program;
-	}
+	const shader_program_sptr get_shader_program() const;
 
-	structs::draw_config_sptr get_draw_config() const
-	{
-		return draw_config;
-	}
-
-private:
-	std::vector<texture_program_sptr> textures;
-	geometry_object_sptr              geometry_object;
-	shader_program_sptr	              shader_program;
-	structs::draw_config_sptr		  draw_config;
+	const structs::draw_config_sptr get_draw_config() const;
 
 private:
 	class renderable_object_pimpl;
-	std::unique_ptr<renderable_object> pimpl;
+	std::unique_ptr<renderable_object_pimpl> pimpl;
 };
 
 using renderable_object_uptr = std::unique_ptr<renderable_object>;
