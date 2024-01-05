@@ -36,6 +36,8 @@ public:
 
 	}
 
+	~renderable_object();
+
 public:
 
 	std::vector<texture_program_sptr> get_textures() const
@@ -63,6 +65,10 @@ private:
 	geometry_object_sptr              geometry_object;
 	shader_program_sptr	              shader_program;
 	structs::draw_config_sptr		  draw_config;
+
+private:
+	class renderable_object_pimpl;
+	std::unique_ptr<renderable_object> pimpl;
 };
 
 using renderable_object_uptr = std::unique_ptr<renderable_object>;

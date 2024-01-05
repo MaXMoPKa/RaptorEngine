@@ -9,9 +9,9 @@ public:
 
 	base_renderer_pimpl(const high_level_renderer_data_sptr& renderer_data, const scene_data_sptr& scene_info)
 	{ 
-		switch (renderer_data->low_level_render_api) {
+		switch (renderer_data->get_render_api_type()) {
 			case low_level_render_api_type::OPENGL: {
-				render_api = std::make_shared<ogl_render_api>(renderer_data->window_ptr, scene_info);
+				render_api = std::make_shared<ogl_render_api>(renderer_data->get_window(), scene_info);
 				break;
 			}
 			case low_level_render_api_type::DIRECTX:

@@ -28,3 +28,28 @@ render_object_data::render_object_data(const std::string& vs_path_,
 }
 
 render_object_data::~render_object_data() = default;
+
+const std::string& render_object_data::get_vs_path() const
+{
+	return this->vs_path;
+}
+
+const std::string& render_object_data::get_fs_path() const 
+{
+	return this->fs_path;
+}
+
+const std::vector<float>& render_object_data::get_vertices() const 
+{
+	return this->vertices;
+}
+
+const std::vector<u32>& render_object_data::get_indices() const 
+{
+	return this->indices;
+}
+
+const std::vector<texture_config_sptr>& render_object_data::get_textures() const 
+{
+	return this->textures;
+}

@@ -9,9 +9,12 @@ hardware_system_data::hardware_system_data(u32 sdl_init_flags,
                                            const window_data_sptr& window_info)
     : sdl_init_flags{sdl_init_flags}, window_info{window_info} {}
 
-void swap(hardware_system_data_sptr& first_data,
-          hardware_system_data_sptr& second_data) 
+const window_data_sptr hardware_system_data::get_window_data() const
 {
-  std::swap(first_data->sdl_init_flags, second_data->sdl_init_flags);
-  std::swap(first_data->window_info, second_data->window_info);
+	return this->window_info;
+}
+
+u32 hardware_system_data::get_init_flags() const
+{
+	return this->sdl_init_flags;
 }

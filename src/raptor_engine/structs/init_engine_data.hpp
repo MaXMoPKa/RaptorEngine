@@ -6,18 +6,23 @@
 namespace raptor_engine {
 namespace structs {
 
-class init_engine_data {
- public:
-  init_engine_data();
+struct init_engine_data {
+public:
+    init_engine_data();
 
-  init_engine_data(const hardware_system_data_sptr& hardware_system_info_,
-				   const scene_data_sptr& scene_info_);
+    init_engine_data(const hardware_system_data_sptr& hardware_system_info_,
+	                 const scene_data_sptr& scene_info_);
   
-  ~init_engine_data();
+    ~init_engine_data();
 
- public:
-  hardware_system_data_sptr hardware_system_info;
-  scene_data_sptr		    scene_info;
+public:
+	const hardware_system_data_sptr get_hardware_system_info() const;
+
+    const scene_data_sptr get_scene_info() const;
+
+private:
+    hardware_system_data_sptr hardware_system_info;
+    scene_data_sptr		      scene_info;
 };
 
 using init_engine_data_uptr = std::unique_ptr<init_engine_data>;

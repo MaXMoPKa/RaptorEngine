@@ -23,7 +23,17 @@ public:
 	~render_object_data();
 
 public:
+	const std::string& get_vs_path() const;
 
+	const std::string& get_fs_path() const;
+
+	const std::vector<float>& get_vertices() const;
+
+	const std::vector<u32>& get_indices() const;
+
+	const std::vector<texture_config_sptr>& get_textures() const;
+
+private:
 	std::string vs_path;
 	std::string fs_path;
 	std::vector<float> vertices;

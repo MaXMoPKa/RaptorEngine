@@ -19,20 +19,27 @@ enum class high_level_renderer_type : u8
 	HIGHT_LEVEL_RENDERER_COUNT
 };
 
-class init_render_engine_data {
- public:
+struct init_render_engine_data {
+public:
 	init_render_engine_data();
 
-	init_render_engine_data(const high_level_renderer_data_sptr& renderer_info,
-					   const high_level_renderer_type& renderer_type = high_level_renderer_type::FORWARD_LDR_RENDERER,
-					   const scene_data_sptr& scene_data = nullptr);
+	init_render_engine_data(const high_level_renderer_data_sptr& renderer_info_,
+					   const high_level_renderer_type& renderer_type_ = high_level_renderer_type::FORWARD_LDR_RENDERER,
+					   const scene_data_sptr& scene_info_ = nullptr);
 	
 	~init_render_engine_data();
 
- public:
-  high_level_renderer_data_sptr renderer_data;
-  high_level_renderer_type		high_level_renderer;
-  scene_data_sptr				scene_data;
+public:
+	const high_level_renderer_data_sptr get_renderer_info() const;
+
+	high_level_renderer_type get_renderer_type() const;
+
+	const scene_data_sptr get_scene_info() const;
+
+private:
+  high_level_renderer_data_sptr renderer_info;
+  high_level_renderer_type		renderer_type;
+  scene_data_sptr				scene_info;
 };
 
 using init_render_engine_data_uptr = std::unique_ptr<init_render_engine_data>;

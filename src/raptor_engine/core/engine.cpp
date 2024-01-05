@@ -17,31 +17,31 @@ public:
 
 	engine_pimpl(const init_engine_data_sptr& engine_info)
 		: engine_info {engine_info}
-		, hardware_sys {std::make_shared<hardware_system>(engine_info->hardware_system_info)} 
+		, hardware_sys {std::make_shared<hardware_system>(engine_info->get_hardware_system_info())} 
 		, render_eng {std::make_shared<render_engine>(std::make_shared<init_render_engine_data>(
 					  std::make_shared<high_level_renderer_data>(this->hardware_sys->get_window()),
 					  high_level_renderer_type::FORWARD_LDR_RENDERER,
-					  engine_info->scene_info))}
+					  engine_info->get_scene_info()))}
 		, sh_manager {std::make_shared<shader_manager>()} 
 		, geom_manager {std::make_shared<geometry_manager>()}
 		, tex_manager {std::make_shared<texture_manager>()}
 	{
-		  auto scene_info = engine_info->scene_info;
+		  auto scene_info = engine_info->get_scene_info();
 
 		  std::vector<renderable_object_sptr> renderable_objects;
 
 		  for (auto& object : scene_info->objects) 
 		  {
-			  shader_program_sptr sh_program = sh_manager->add_shaders(object.vs_path, object.fs_path);
+			  shader_program_sptr sh_program = sh_manager->add_shaders(object.get_vs_path(), object.get_fs_path());
 			  this->render_eng->get_renderer()->get_render_api()->use_shader_program(sh_program->get_id());
 			  sh_manager->set_int(sh_program->get_id(), "texture1", 0);
 			  sh_manager->set_int(sh_program->get_id(), "texture2", 1);
-			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.vertices, object.indices);
+			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.get_vertices(), object.get_indices());
 			  
 			  std::vector<texture_program_sptr> textures;
-			  if (!object.textures.empty())
+			  if (!object.get_textures().empty())
 			  {
-				  for (auto& tex : object.textures) 
+				  for (auto& tex : object.get_textures()) 
 				  {
 					  textures.emplace_back(tex_manager->add_texture(tex));
 				  }

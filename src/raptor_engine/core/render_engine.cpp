@@ -13,11 +13,12 @@ public:
 
 	render_engine_pimpl(const init_render_engine_data_sptr& init_render_engine_data)
 	{ 
-		switch (init_render_engine_data->high_level_renderer)
+		switch (init_render_engine_data->get_renderer_type())
 		{
 			case high_level_renderer_type::FORWARD_LDR_RENDERER:
 			{
-				renderer = std::make_shared<forward_ldr_renderer>(init_render_engine_data->renderer_data, init_render_engine_data->scene_data);
+				renderer = std::make_shared<forward_ldr_renderer>(init_render_engine_data->get_renderer_info(),
+																  init_render_engine_data->get_scene_info());
 				break;
 			}
 			case high_level_renderer_type::FORWARD_HDR_RENDERER:

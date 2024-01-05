@@ -84,11 +84,11 @@ class hardware_system::hardware_system_pimpl {
   }
 
   inline u32 get_sdl_init_flags() const noexcept {
-    return this->hardware_system_info->sdl_init_flags;
+    return this->hardware_system_info->get_init_flags();
   }
 
   inline window_data_sptr get_window_data() const noexcept {
-    return this->hardware_system_info->window_info;
+    return this->hardware_system_info->get_window_data();
   }
 
  private:
@@ -98,7 +98,7 @@ class hardware_system::hardware_system_pimpl {
   }
 
   void init_sdl() {
-    const auto result = SDL_Init(this->hardware_system_info->sdl_init_flags);
+	const auto result = SDL_Init(this->hardware_system_info->get_init_flags());
 
     if (result != 0) {
       SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "Unable to initialize SDL: %s",
@@ -108,12 +108,13 @@ class hardware_system::hardware_system_pimpl {
   }
 
   void create_window() {
-	this->window = std::shared_ptr<SDL_Window>(SDL_CreateWindow(this->hardware_system_info->window_info->title.c_str(),
-																 this->hardware_system_info->window_info->x_pos,
-																 this->hardware_system_info->window_info->y_pos,
-																 this->hardware_system_info->window_info->width,
-																 this->hardware_system_info->window_info->height,
-																 this->hardware_system_info->window_info->flags),
+	this->window =
+		std::shared_ptr<SDL_Window>(SDL_CreateWindow(this->hardware_system_info->get_window_data()->title.c_str(),
+													 this->hardware_system_info->get_window_data()->x_pos,
+													 this->hardware_system_info->get_window_data()->y_pos,
+													 this->hardware_system_info->get_window_data()->width,
+													 this->hardware_system_info->get_window_data()->height,
+													 this->hardware_system_info->get_window_data()->flags),
 												                 SDL_DestroyWindow);
 
     if (this->window.get() == nullptr) {
