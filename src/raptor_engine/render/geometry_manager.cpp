@@ -1,6 +1,7 @@
 #include "render/geometry_manager.hpp"
 
 using namespace raptor_engine::render;
+using namespace raptor_engine::structs;
 
 class geometry_manager::geometry_manager_pimpl
 {
