@@ -1,27 +1,26 @@
 #pragma once
 
-#include "glad/glad.h"
-
 #include "defines.hpp"
 
 #include <utility>
 #include <memory>
+#include <vector>
 
 namespace raptor_engine {
 namespace render {
 
 struct vertex_attribute_pointer
 {
-	unsigned int size;
-	const void*	 data;
-	unsigned int usage;
+	u32         size;
+	const void*	data;
+	u32         usage;
 
-	unsigned int  attrib_pointer_index;
-	unsigned int  attrib_pointer_size;
-	unsigned int  attrib_pointer_type;
-	unsigned char attrib_pointer_normalized;
-	int			  attrib_pointer_stride;
-	const void*	  attrib_pointer_pointer;
+	u32         attrib_pointer_index;
+	u32         attrib_pointer_size;
+	u32         attrib_pointer_type;
+	u32         attrib_pointer_normalized;
+	i32			attrib_pointer_stride;
+	const void*	attrib_pointer_pointer;
 };
 
 struct vertex_buffer_object_data
@@ -50,89 +49,38 @@ class vertex_buffer_object
 {
 public:
 
-	vertex_buffer_object() : vbo {}, vbo_data {} { }
+	vertex_buffer_object();
 
-	vertex_buffer_object(const vertex_buffer_object_data_sptr& vbo_data_) 
-		: vbo {}, vbo_data {vbo_data_}
-	{ }
+	vertex_buffer_object(const vertex_buffer_object_data_sptr& vbo_data_);
 
-	vertex_buffer_object(vertex_buffer_object&& vbo) noexcept			 = default;
-	vertex_buffer_object& operator=(vertex_buffer_object&& vbo) noexcept = default;
+	vertex_buffer_object(vertex_buffer_object&& vbo) noexcept;
+	vertex_buffer_object& operator=(vertex_buffer_object&& vbo) noexcept;
 
-	vertex_buffer_object(const vertex_buffer_object&)			= delete;
+	vertex_buffer_object(const vertex_buffer_object&)			 = delete;
 	vertex_buffer_object& operator=(const vertex_buffer_object&) = delete;
 
-	~vertex_buffer_object()
-	{
-		if (vbo) 
-		{
-			glDeleteBuffers(1, &vbo);
-		}
-	}
+	~vertex_buffer_object();
 
 public:
+	void create(const vertex_buffer_object_data_sptr& vbo_data_);
 
-	void create(const vertex_buffer_object_data_sptr& vbo_data_)
-	{
-		vertex_buffer_object tmp {vbo_data_};
-		this->swap(tmp);
-	}
+	void swap(vertex_buffer_object& vbo_) noexcept;
 
-	void swap(vertex_buffer_object& vbo) noexcept
-	{
-		if (this == &vbo)
-		{
-			return;
-		}
-
-		std::swap(this->vbo, vbo.vbo);
-	}
-
-	void reset() noexcept
-	{
-		vertex_buffer_object tmp {};
-		this->swap(tmp);
-	}
+	void reset() noexcept;
 
 public:
-	void generate_buffer()
-	{
-		glGenBuffers(1, &vbo);
-	}
+	void generate_buffer();
 
-	void set_buffer_data()
-	{
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER,
-					 vbo_data->vertex_attribute_pointers[0].size,
-					 vbo_data->vertex_attribute_pointers[0].data,
-					 vbo_data->vertex_attribute_pointers[0].usage);
-	}
+	void set_buffer_data();
 
-	void set_attrib_pointers()
-	{
-		u64 vertex_attrib_index = 0;
-		for (const auto& vbo_attrib_pointer : vbo_data->vertex_attribute_pointers) 
-		{
-			glVertexAttribPointer(vbo_attrib_pointer.attrib_pointer_index,
-								  vbo_attrib_pointer.attrib_pointer_size,
-								  vbo_attrib_pointer.attrib_pointer_type,
-								  vbo_attrib_pointer.attrib_pointer_normalized,
-								  vbo_attrib_pointer.attrib_pointer_stride,
-								  vbo_attrib_pointer.attrib_pointer_pointer);
-			glEnableVertexAttribArray(vertex_attrib_index++);
-		}
-	}
+	void set_attrib_pointers();
 
 public:
-	unsigned int get_id() const
-	{
-		return this->vbo;
-	}
+	u32 get_id() const;
 
 private:
-	unsigned int vbo;
-	vertex_buffer_object_data_sptr vbo_data;
+	class vertex_buffer_object_pimpl;
+	std::unique_ptr<vertex_buffer_object_pimpl> pimpl;
 };
 
 using vertex_buffer_object_uptr = std::unique_ptr<vertex_buffer_object>;

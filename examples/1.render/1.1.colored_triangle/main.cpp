@@ -21,17 +21,16 @@ int main()
 		std::make_shared<hardware_system_data>(32U /*SDL_INIT_VIDEO*/, window_info);
 
     render_objects objects = {
-		{"colored_triangle.vs", 
-         "colored_triangle.fs",
-        { 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-          0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-         -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
-		{0U, 1U, 3U,
-         1U, 2U, 3U},
-        // 0x1907 -- GL_RGB, 0x1908 -- GL_RGBA
-		{std::make_shared<texture_config>("resources/textures/container.jpg", 0x1907, 0x1907), 
-         std::make_shared<texture_config>("resources/textures/awesomeface.png", 0x1908, 0x1908)}
+		{std::make_shared<render_object_data>("colored_triangle.vs",
+		                                      "colored_triangle.fs",
+		                                      std::vector<float> { 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 
+											                       0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 
+																  -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 
+																  -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+		                                      std::vector<u32> {0U, 1U, 3U, 1U, 2U, 3U},
+		                                      // 0x1907 -- GL_RGB, 0x1908 -- GL_RGBA
+		                                      std::vector<texture_config_sptr> {std::make_shared<texture_config>("resources/textures/container.jpg", 0x1907, 0x1907),
+			                                                                    std::make_shared<texture_config>("resources/textures/awesomeface.png", 0x1908, 0x1908)})
         }
 	};
 

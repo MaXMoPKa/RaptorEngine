@@ -9,47 +9,25 @@ namespace raptor_engine
 namespace structs
 {
 
-class texture_config
+struct texture_config
 {
 public:
-	texture_config() 
-		: texture_name {}
-		, internal_format {}
-		, format {}
-	{
+	texture_config();
 
-	}
+	texture_config(const std::string& texture_name_, i32 internal_format_, i32 format_);
 
-	texture_config(const std::string& texture_name_, 
-		           i32 internal_format_, 
-		           i32 format_) 
-		: texture_name {texture_name_}
-		, internal_format {internal_format_}
-		, format {format_}
-	{
-
-	}
+	~texture_config();
 
 public:
-	const std::string get_texture_name() const
-	{
-		return this->texture_name;
-	}
+	const std::string get_texture_name() const;
 
-	i32 get_internal_format() const
-	{
-		return this->internal_format;
-	}
+	i32 get_internal_format() const;
 
-	i32 get_format() const
-	{
-		return this->format;
-	}
+	i32 get_format() const;
 
 private:
-	std::string texture_name;
-	i32			internal_format;
-	i32			format;
+	class texture_config_pimpl;
+	std::unique_ptr<texture_config_pimpl> pimpl;
 
 };
 

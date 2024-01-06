@@ -30,25 +30,27 @@ public:
 
 		  std::vector<renderable_object_sptr> renderable_objects;
 
-		  for (auto& object : scene_info->objects) 
+		  for (auto& object : scene_info->get_objects()) 
 		  {
-			  shader_program_sptr sh_program = sh_manager->add_shaders(object.get_vs_path(), object.get_fs_path());
+			  shader_program_sptr sh_program = sh_manager->add_shaders(object->get_vs_path(), object->get_fs_path());
 			  this->render_eng->get_renderer()->get_render_api()->use_shader_program(sh_program->get_id());
 			  sh_manager->set_int(sh_program->get_id(), "texture1", 0);
 			  sh_manager->set_int(sh_program->get_id(), "texture2", 1);
-			  geometry_object_sptr geom_object = geom_manager->add_geometry(object.get_vertices(), object.get_indices());
+			  geometry_object_sptr geom_object = geom_manager->add_geometry(object->get_vertices(), object->get_indices());
 			  
 			  std::vector<texture_program_sptr> textures;
-			  if (!object.get_textures().empty())
+			  if (!object->get_textures().empty())
 			  {
-				  for (auto& tex : object.get_textures()) 
+				  for (auto& tex : object->get_textures()) 
 				  {
 					  textures.emplace_back(tex_manager->add_texture(tex));
 				  }
 			  }
 
-			  renderable_objects.emplace_back(
-				  std::make_shared<renderable_object>(geom_object, sh_program, scene_info->draw_config, textures));
+			  renderable_objects.emplace_back(std::make_shared<renderable_object>(geom_object,
+																				  sh_program,
+																				  scene_info->get_draw_config(),
+																				  textures));
 		  }
 
 		  render_eng->set_renderable_objects(renderable_objects);

@@ -16,10 +16,13 @@ public:
 	~scene_data();
 
 public:
+	const render_objects& get_objects() const;
 
-	render_objects objects;
+	const draw_config_sptr get_draw_config() const;
 
-	draw_config_sptr draw_config;
+private:
+	class scene_data_pimpl;
+	std::unique_ptr<scene_data_pimpl> pimpl;
 };
 
 using scene_data_uptr = std::unique_ptr<scene_data>;

@@ -29,7 +29,7 @@ public:
 	ogl_render_api_pimpl() : gl_context {nullptr}, shader_program {}, vao {}, vbo {}, ebo {}, draw_config {} { }
 
 	ogl_render_api_pimpl(const sdl_window_sptr& window_ptr, const scene_data_sptr& scene_info)
-		: vao {}, vbo {}, ebo {}, draw_config {scene_info->draw_config}
+		: vao {}, vbo {}, ebo {}, draw_config {scene_info->get_draw_config()}
 	{
 		gl_context = SDL_GL_CreateContext(window_ptr.get());
 		if (this->gl_context == 0) {

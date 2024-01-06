@@ -10,34 +10,24 @@ namespace render
 class texture_program
 {
 public:
-	texture_program() 
-		: texture_id {0}
-	{
+	texture_program();
 
-	}
+	texture_program(u32 texture_id_);
 
-	texture_program(u32 texture_id_) 
-		: texture_id {texture_id_}
-	{
+	texture_program(texture_program&& program_) noexcept;
+	texture_program& operator=(texture_program&& program_) noexcept;
 
-	}
-
-	texture_program(texture_program&& program_) noexcept			= default;
-	texture_program& operator=(texture_program&& program_) noexcept = default;
-
-	texture_program(const texture_program&)			  = delete;
+	texture_program(const texture_program&)			   = delete;
 	texture_program& operator=(const texture_program&) = delete;
 
-	~texture_program() = default;
+	~texture_program();
 
 public:
-	u32 get_id() const
-	{
-		return this->texture_id;
-	}
+	u32 get_id() const;
 
 private:
-	u32 texture_id;
+	class texture_program_pimpl;
+	std::unique_ptr<texture_program_pimpl> pimpl;
 };
 
 using texture_program_uptr = std::unique_ptr<texture_program>;
