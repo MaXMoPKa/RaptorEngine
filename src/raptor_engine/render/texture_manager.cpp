@@ -117,7 +117,7 @@ texture_program_sptr texture_manager::add_texture(const texture_config_sptr& tex
 #if TESTS
     bool texture_manager::get_is_texture_file_opened() const
     {
-	    return this->pimpl->get_texture_file_opened();
+	    return this->pimpl->get_is_texture_file_opened();
     }
 #endif
 
