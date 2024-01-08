@@ -8,7 +8,7 @@ namespace ecs {
 using component_type_id = type_id;
 
 template<typename T>
-class component : public icomponent
+class component : public i_component
 {
 public:
 	static const component_type_id STATIC_COMPONENT_TYPE_ID;

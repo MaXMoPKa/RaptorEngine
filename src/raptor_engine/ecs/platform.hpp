@@ -3,6 +3,9 @@
 #include <cstddef>
 #include <limits>
 
+#define ENTITY_LUT_GROW	   1024
+#define COMPONENT_LUT_GROW 1024
+
 namespace raptor_engine {
 namespace ecs {
 
