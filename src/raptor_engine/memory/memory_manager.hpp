@@ -5,6 +5,8 @@
 #include <list>
 #include <utility>
 
+#include "memory/allocators/stack_allocator.hpp"
+
 #define ECS_GLOBAL_MEMORY_CAPACITY 134217728 // 128 MB
 
 namespace raptor_engine {

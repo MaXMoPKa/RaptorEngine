@@ -5,6 +5,8 @@
 #include "ecs/component.hpp"
 #include "ecs/family_type_id.hpp"
 
+#include "memory/global_memory_user.hpp"
+
 namespace raptor_engine {
 namespace ecs {
 

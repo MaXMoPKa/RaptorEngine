@@ -1,6 +1,7 @@
 #include <memory/memory_manager.hpp>
 
 #include <algorithm>
+#include <cassert>
 
 #include "defines.hpp"
 
