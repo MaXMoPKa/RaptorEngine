@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstddef>
+#include <cassert>
 
 #include "memory/global_memory_user.hpp"
+#include "memory/allocators/pool_allocator.hpp"
 
 namespace raptor_engine {
 namespace memory {
@@ -19,7 +21,7 @@ class memory_chunk_allocator : protected global_memory_user
 
 public:
 	using allocator_type  = pool_allocator;
-	using object_list = std::list<OBJECT_TYPE*>;
+	using object_list     = std::list<OBJECT_TYPE*>;
 
 	class memory_chunk
 	{
@@ -42,7 +44,7 @@ public:
 
 	using memory_chunks = std::list<memory_chunk*>;
 
-	class iterator : public : std::iterator<std::forward_iterator_tag, OBJECT_TYPE>
+	class iterator : public std::iterator<std::forward_iterator_tag, OBJECT_TYPE>
 	{
 		typename memory_chunks::iterator current_chunk;
 		typename memory_chunks::iterator end;
@@ -51,17 +53,13 @@ public:
 
 	public:
 
-		iterator(typename memory_chunks::iterator begin_, typename memory_chunks::iterator end_) 
-			: current_chunk(begin_)
-			, end(end_)
+		iterator(typename memory_chunks::iterator begin_, typename memory_chunks::iterator end_)
+			: current_chunk(begin_), end(end_)
 		{
-			if (begin_ != end_)
-			{
+			if (begin_ != end_) {
 				assert((*this->current_chunk) != nullptr);
 				this->current_object = (*this->current_chunk)->objects.begin();
-			}
-			else
-			{
+			} else {
 				this->current_object = (*std::prev(this->end))->objects.end();
 			}
 		}
@@ -70,12 +68,10 @@ public:
 		{
 			this->current_object++;
 
-			if (this->current_object == (*this->current_chunk)->objects.end())
-			{
+			if (this->current_object == (*this->current_chunk)->objects.end()) {
 				this->current_chunk++;
 
-				if (this->current_chunk != this->end)
-				{
+				if (this->current_chunk != this->end) {
 					assert((*this->current_chunk) != nullptr);
 					this->current_object = (*this->current_chunk)->objects.begin();
 				}
@@ -101,7 +97,7 @@ public:
 		{
 			return ((this->current_chunk != other_.current_chunk) && (this->current_object != other_.current_object));
 		}
-	}
+	};
 
 public: 
 	memory_chunk_allocator(const char* allocator_tag_ = nullptr)
@@ -127,7 +123,7 @@ public:
 
 			free((void*)chunk->allocator->get_memory_address());
 			delete chunk->allocator;
-			chnk->allocator = nullptr;
+			chunk->allocator = nullptr;
 
 			delete chunk;
 			chunk = nullptr;
@@ -155,7 +151,7 @@ public:
 
 		if (slot == nullptr)
 		{
-			allocator_type* allocator = new allocator_type(ALLOCATE_SIZe,
+			allocator_type* allocator = new allocator_type(ALLOCATE_SIZE,
 														   allocator_type(ALLOCATE_SIZE, this->allocator_tag),
 														   sizeof(OBJECT_TYPE),
 														   alignof(OBJECT_TYPE));

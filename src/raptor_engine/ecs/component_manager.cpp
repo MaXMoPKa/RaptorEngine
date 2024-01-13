@@ -55,7 +55,7 @@ void component_manager::remove_all_components(const entity_id entity_id_)
 
 void component_manager::release_component_id(component_id comp_id_)
 {
-	assert((id != INVALID_COMPONENT_ID && comp_id_ < this->comp_lookup_table.size()) && "Invalid component id");
+	assert((comp_id_ != INVALID_COMPONENT_ID && comp_id_ < this->comp_lookup_table.size()) && "Invalid component id");
 	this->comp_lookup_table[comp_id_] = nullptr;
 }
 

@@ -6,6 +6,7 @@
 #include "ecs/family_type_id.hpp"
 
 #include "memory/global_memory_user.hpp"
+#include "memory/allocators/memory_chunk_allocator.hpp"
 
 namespace raptor_engine {
 namespace ecs {
@@ -31,7 +32,7 @@ class component_manager : memory::global_memory_user
 	};
 
 	template<typename T>
-	class component_container : public memory::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>,
+	class component_container : public memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>,
 								public i_component_container
 	{
 		component_container(const component_container&)			   = delete;
@@ -39,7 +40,8 @@ class component_manager : memory::global_memory_user
 
 	public:
 
-		component_container() : memory::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>("component_manager") { }
+		component_container() : memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>("component_manager")
+		{ }
 
 		virtual ~component_container() = default;
 
@@ -72,13 +74,13 @@ public:
 	template<typename T, class... ARGS>
 	T* add_component(const entity_id entity_id_, ARGS&&... args_)
 	{
-		static constexptr std::hash<component_id> entity_component_id_hasher {std::hash<component_id>()};
+		static constexpr std::hash<component_id> entity_component_id_hasher {std::hash<component_id>()};
 
 		const component_type_id CTID = T::STATIC_COMPONENT_TYPE_ID;
 
 		void* p_object_memory = get_component_container<T>()->create_object();
 
-		component_id comp_id		   = this->acquire_component_id((T*)p_object_memeory);
+		component_id comp_id		   = this->acquire_component_id((T*)p_object_memory);
 		((T*)p_object_memory)->comp_id = comp_id;
 
 		i_component* comp = new (p_object_memory) T(std::forward<ARGS>(args_)...);
