@@ -11,8 +11,6 @@
 namespace raptor_engine {
 namespace ecs {
 
-static const component_id INVALID_COMPONENT_ID = INVALID_OBJECT_ID;
-
 template <typename T>
 const component_type_id component<T>::STATIC_COMPONENT_TYPE_ID = family_type_id<i_component>::get<T>();
 

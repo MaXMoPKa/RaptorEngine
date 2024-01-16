@@ -8,7 +8,11 @@ namespace ecs {
 
 using entity_id = util::handle64;
 
+static const entity_id INVALID_ENTITY_ID = util::handle64::INVALID_HANDLE;
+
 using component_id = object_id;
+
+static const component_id INVALID_COMPONENT_ID = INVALID_OBJECT_ID;
 
 class i_component
 {

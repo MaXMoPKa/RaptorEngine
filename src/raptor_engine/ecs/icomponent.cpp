@@ -2,10 +2,6 @@
 
 using namespace raptor_engine::ecs;
 
-static const entity_id INVALID_ENTITY_ID = util::handle64::INVALID_HANDLE;
-
-static const component_id INVALID_COMPONENT_ID = INVALID_OBJECT_ID;
-
 i_component::i_component() 
 	: hash_value {0}
 	, id {0}
