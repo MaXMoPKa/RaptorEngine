@@ -7,7 +7,7 @@ namespace ecs {
 namespace event {
 
 using EventTypeId    = type_id;
-using EventTimeStamp = time_stamp;
+using EventTimeStamp = TimeStamp;
 
 static const EventTypeId INVALID_EVENT_TYPE = INVALID_TYPE_ID;
 
@@ -18,22 +18,22 @@ public:
 	IEvent(EventTypeId id_);
 	virtual ~IEvent();
 
-	inline const EventTypeId get_id() const
+	inline const EventTypeId GetId() const
 	{
 		return this->id;
 	}
-	inline const EventTimeStamp get_time_created() const
+	inline const EventTimeStamp GetTimeCreated() const
 	{
 		return this->timeCreated;
 	}
 
 private:
-	inline void set_id(const EventTypeId id_)
+	inline void SetId(const EventTypeId id_)
 	{
 		this->id = id_;
 	}
 
-	inline void set_time_created(const EventTimeStamp timeCreated_)
+	inline void SetTimeCreated(const EventTimeStamp timeCreated_)
 	{
 		this->timeCreated = timeCreated_;
 	}
