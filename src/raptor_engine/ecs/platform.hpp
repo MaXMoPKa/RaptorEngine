@@ -15,11 +15,11 @@
 namespace raptor_engine {
 namespace ecs {
 
-using object_id = std::size_t;
-using type_id   = std::size_t;
+using ObjectId = std::size_t;
+using TypeId   = std::size_t;
 
-static const object_id INVALID_OBJECT_ID = std::numeric_limits<object_id>::max();
-static const type_id   INVALID_TYPE_ID	 = std::numeric_limits<type_id>::max();
+static const ObjectId INVALID_OBJECT_ID = std::numeric_limits<ObjectId>::max();
+static const TypeId	  INVALID_TYPE_ID	= std::numeric_limits<TypeId>::max();
 
 union TimeStamp
 {

@@ -11,57 +11,57 @@ namespace ecs {
 namespace util
 {
 
-template<typename handle_value_type, std::size_t version_bits, std::size_t index_bits>
-union handle
+template<typename HandleValueType, std::size_t VersionBits, std::size_t IndexBits>
+union Handle
 {
-	static_assert(sizeof(handle_value_type) * CHAR_BIT >= (version_bits + index_bits),
+	static_assert(sizeof(HandleValueType) * CHAR_BIT >= (VersionBits + IndexBits),
 				 "Invalid handle layout. More bits used than base value type can hold!");
 
-	using value_type = handle_value_type;
+	using ValueType = HandleValueType;
 
-	static constexpr std::size_t NUM_VERSION_BITS { version_bits };
-	static constexpr std::size_t NUM_INDEX_BITS { index_bits };
+	static constexpr std::size_t NUM_VERSION_BITS {VersionBits};
+	static constexpr std::size_t NUM_INDEX_BITS {IndexBits};
 
-	static constexpr value_type MIN_VERSION { 0 };
-	static constexpr value_type MAX_VERSION { (1U << NUM_VERSION_BITS) - 2U };
-	static constexpr value_type MAX_INDICES { ((value_type)1U << NUM_INDEX_BITS) - 2U };
+	static constexpr ValueType	MIN_VERSION {0};
+	static constexpr ValueType	MAX_VERSION {(1U << NUM_VERSION_BITS) - 2U};
+	static constexpr ValueType	MAX_INDICES {((ValueType)1U << NUM_INDEX_BITS) - 2U};
 
-    static constexpr value_type INVALID_HANDLE { std::numeric_limits<value_type>::max() };
+    static constexpr ValueType INVALID_HANDLE {std::numeric_limits<ValueType>::max()};
 
 public:
 	struct
 	{
-		value_type index : NUM_INDEX_BITS;
-		value_type version : NUM_VERSION_BITS;
+		ValueType index   : NUM_INDEX_BITS;
+		ValueType version : NUM_VERSION_BITS;
 	};
 
-	handle() = default;
+	Handle() = default;
 
-	handle(value_type value_) 
+	Handle(ValueType value_) 
 		: value(value_)
 	{
 
 	}
 
-	handle(value_type index_, value_type version_) 
+	Handle(ValueType index_, ValueType version_) 
 		: index(index_)
 		, version(version_)
 	{
 
 	}
 
-	inline operator value_type() const
+	inline operator ValueType() const
 	{
 		return value;
 	}
 
 private:
-	value_type value;
+	ValueType value;
 
 };
 
-using handle32 = handle<u32, 12, 20>;
-using handle64 = handle<u64, 24, 40>;
+using Handle32 = Handle<u32, 12, 20>;
+using Handle64 = Handle<u64, 24, 40>;
 
 } // namespace util
 } // namespace ecs
