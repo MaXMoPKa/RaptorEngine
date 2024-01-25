@@ -6,23 +6,23 @@ namespace raptor_engine {
 namespace ecs {
 
 template <class T>
-class family_type_id
+class FamilyTypeId
 {
 public:
 	template <class U>
-	static const type_id get()
+	static const TypeId get()
 	{
-		static const type_id STATIC_TYPE_ID { s_count++ };
+		static const TypeId STATIC_TYPE_ID {count++};
 		return STATIC_TYPE_ID;
 	}
 
-	static type_id get()
+	static TypeId get()
 	{
-		return s_count;
+		return count;
 	}
 
 private:
-	inline static type_id s_count = 0;
+	inline static TypeId count = 0;
 };
 
 } // namespace ecs

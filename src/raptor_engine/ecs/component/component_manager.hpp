@@ -12,7 +12,7 @@ namespace raptor_engine {
 namespace ecs {
 
 template <typename T>
-const ComponentTypeId Component<T>::STATIC_COMPONENT_TYPE_ID = family_type_id<IComponent>::get<T>();
+const ComponentTypeId Component<T>::STATIC_COMPONENT_TYPE_ID = FamilyTypeId<IComponent>::get<T>();
 
 class ComponentManager : memory::global_memory_user
 {
@@ -38,7 +38,7 @@ class ComponentManager : memory::global_memory_user
 
 	public:
 
-		ComponentContainer() : memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>("component_manager")
+		ComponentContainer() : memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>("ComponentManager")
 		{ }
 
 		virtual ~ComponentContainer() = default;
@@ -78,7 +78,7 @@ public:
 
 		void* objectMemoryPointer = GetComponentContainer<T>()->CreateObject();
 
-		ComponentId componentId				   = this->acquire_component_id((T*)objectMemoryPointer);
+		ComponentId componentId				   = this->AcquireComponentId((T*)objectMemoryPointer);
 		((T*)objectMemoryPointer)->componentId = componentId;
 
 		IComponent* component = new (objectMemoryPointer) T(std::forward<ARGS>(args_)...);

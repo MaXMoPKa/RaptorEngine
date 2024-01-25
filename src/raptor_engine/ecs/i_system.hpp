@@ -7,8 +7,8 @@
 namespace raptor_engine {
 namespace ecs {
 
-using system_type_id  = type_id;
-using system_priority = u16;
+using SystemTypeId  = TypeId;
+using SystemPriority = u16;
 
 static const system_type_id INVALID_SYSTEM_ID = INVALID_TYPE_ID;
 

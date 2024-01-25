@@ -4,7 +4,7 @@ using namespace raptor_engine::ecs;
 
 ComponentManager::ComponentManager()
 {
-	const std::size_t numComponents {family_type_id<IComponent>::get()};
+	const std::size_t numComponents {FamilyTypeId<IComponent>::get()};
 
 	this->entityComponentMap.resize(ENTITY_LUT_GROW);
 	for (auto i = 0; i < ENTITY_LUT_GROW; ++i)
@@ -64,7 +64,7 @@ void ComponentManager::MapEntityComponent(EntityId		  entityId_,
 										  ComponentId	  componentId_,
 										  ComponentTypeId componentTypeId_)
 {
-	static const std::size_t numComponents { family_type_id<IComponent>::get() };
+	static const std::size_t numComponents {FamilyTypeId<IComponent>::get()};
 
 	if ((this->entityComponentMap.size() - 1) < entityId_.index)
 	{

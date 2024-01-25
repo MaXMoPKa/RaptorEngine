@@ -9,87 +9,90 @@ namespace ecs {
 namespace util
 {
 
-template <class T, class handle_type, std::size_t grow = 1024>
-class handle_table
+template <class T, class HandleType, std::size_t grow = 1024>
+class HandleTable
 {
 public:
-	handle_table()
+	HandleTable()
 	{
-		this->grow_table();
+		this->GrowTable();
 	}
 
-	~handle_table() = default;
+	~HandleTable() = default;
 
 public:
-	handle_type acquire_handle(T* raw_object_)
+	HandleType AcquireHandle(T* rawObject_)
 	{
-		typename handle_type::value_type i = 0;
+		typename HandleType::value_type i = 0;
 		for (; i < this->table.size(); ++i)
 		{
 			if (this->table[i].second == nullptr)
 			{
-				this->table[i].second = raw_object_;
-				this->table[i].first  = ((this->table[i].first + 1) > handle_type::MAX_VERSION) ?
-											handle_type::MAX_VERSION :
+				this->table[i].second = rawObject_;
+				this->table[i].first  = ((this->table[i].first + 1) > HandleType::MAX_VERSION) ?
+											HandleType::MAX_VERSION :
 											this->table[i].first + 1;
-				return handle_type(i, this->table[i].first);
+				return HandleType(i, this->table[i].first);
 			}
 		}
 
-		this->grow_table();
+		this->GrowTable();
 
 		this->table[i].first  = 1;
-		this->table[i].second = raw_object_;
+		this->table[i].second = rawObject_;
 
-		return handle_type(i, this->table[i].first);
+		return HandleType(i, this->table[i].first);
 	}
 
-	void release_handle(handle_type handle_)
+	void ReleaseHandle(HandleType handleType_)
 	{
-		assert((handle_.index < this->table.size() && handle_.version == this->table[handle_.index].first) &&
+		assert(
+			(handleType_.index < this->table.size() && handleType_.version == this->table[handleType_.index].first) &&
 			   "Invalid hande!");
-		this->table[handle_.index].second = nullptr;
+		this->table[handleType_.index].second = nullptr;
 	}
 
-	inline bool is_expired(handle_type handle_) const
+	inline bool IsExpired(HandleType handleType_) const
 	{
-		return this->table[handle_.index].first != handle_.version;
+		return this->table[handleType_.index].first != handleType_.version;
 	}
 
-	inline handle_type operator[](typename handle_type::value_type index_) const
+	inline HandleType operator[](typename HandleType::value_type index_) const
 	{
 		assert(index_ < this->table.size() && "Invalid handle!");
-		return handle_type(index_, this->table[index_].first);
+		return HandleType(index_, this->table[index_].first);
 	}
 
-	inline T* operator[](handle_type handle_)
+	inline T* operator[](HandleType handleType_)
 	{
-		assert((handle_.index < this->table.size() && handle_.version == this->table[handle_.index].first) &&
+		assert(
+			(handleType_.index < this->table.size() && handleType_.version == this->table[handleType_.index].first) &&
 			   "Invalid handle!");
-		return (this->table[handle_.index].first == handle_.version ? this->table[handle_.index].second : nullptr);
+		return (this->table[handleType_.index].first == handleType_.version ? this->table[handleType_.index].second :
+																		  nullptr);
 	}
 
 private:
-	void grow_table()
+	void GrowTable()
 	{
-		std::size_t old_size = this->table.size();
+		std::size_t oldSize = this->table.size();
 
-		assert(old_size < handle_type::MAX_INDICES && "Max table capacity reached!");
+		assert(oldSize < HandleType::MAX_INDICES && "Max table capacity reached!");
 
-		std::size_t new_size = std::min(old_size + grow, (std::size_t)handle_type::MAX_INDICES);
+		std::size_t newSize = std::min(oldSize + grow, (std::size_t)HandleType::MAX_INDICES);
 
-		this->table.resize(new_size);
+		this->table.resize(newSize);
 
-		for (typename handle_type::value_type i = old_size; i < new_size; ++i)
+		for (typename HandleType::value_type i = oldSize; i < newSize; ++i)
 		{
-			this->table[i] = table_entry(handle_type::MIN_VERSION, nullptr);
+			this->table[i] = TableEntry(HandleType::MIN_VERSION, nullptr);
 		}
 	}
 
 private:
-	using table_entry = std::pair<typename handle_type::value_type, T*>;
+	using TableEntry = std::pair<typename HandleType::value_type, T*>;
 
-	std::vector<table_entry> table;
+	std::vector<TableEntry> table;
 };
 
 

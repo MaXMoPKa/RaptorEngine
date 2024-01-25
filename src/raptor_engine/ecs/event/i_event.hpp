@@ -6,7 +6,7 @@ namespace raptor_engine {
 namespace ecs {
 namespace event {
 
-using EventTypeId    = type_id;
+using EventTypeId    = TypeId;
 using EventTimeStamp = TimeStamp;
 
 static const EventTypeId INVALID_EVENT_TYPE = INVALID_TYPE_ID;

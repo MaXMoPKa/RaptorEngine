@@ -26,21 +26,21 @@ public:
 	bool operator!=(const IComponent& other_) const;
 
 public:
-	const ComponentId getHash() const;
+	const ComponentId GetHash() const;
 
-	const ComponentId getId() const;
+	const ComponentId GetId() const;
 
-	const EntityId getOwnerId() const;
+	const EntityId GetOwnerId() const;
 
-	bool getIsActive() const;
+	bool GetIsActive() const;
 
-	void setHash(const ComponentId hash_);
+	void SetHash(const ComponentId hash_);
 
-	void setId(const ComponentId id_);
+	void SetId(const ComponentId id_);
 
-	void setOwnerId(const EntityId owner_id_);
+	void SetOwnerId(const EntityId owner_id_);
 
-	void setIsActive(bool is_active_);
+	void SetIsActive(bool is_active_);
 
 protected:
 	ComponentId	hashValue;

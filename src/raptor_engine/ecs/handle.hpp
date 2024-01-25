@@ -17,46 +17,46 @@ union Handle
 	static_assert(sizeof(HandleValueType) * CHAR_BIT >= (VersionBits + IndexBits),
 				 "Invalid handle layout. More bits used than base value type can hold!");
 
-	using ValueType = HandleValueType;
+	using value_type = HandleValueType;
 
 	static constexpr std::size_t NUM_VERSION_BITS {VersionBits};
 	static constexpr std::size_t NUM_INDEX_BITS {IndexBits};
 
-	static constexpr ValueType	MIN_VERSION {0};
-	static constexpr ValueType	MAX_VERSION {(1U << NUM_VERSION_BITS) - 2U};
-	static constexpr ValueType	MAX_INDICES {((ValueType)1U << NUM_INDEX_BITS) - 2U};
+	static constexpr value_type MIN_VERSION {0};
+	static constexpr value_type MAX_VERSION {(1U << NUM_VERSION_BITS) - 2U};
+	static constexpr value_type MAX_INDICES {((value_type)1U << NUM_INDEX_BITS) - 2U};
 
-    static constexpr ValueType INVALID_HANDLE {std::numeric_limits<ValueType>::max()};
+    static constexpr value_type INVALID_HANDLE {std::numeric_limits<value_type>::max()};
 
 public:
 	struct
 	{
-		ValueType index   : NUM_INDEX_BITS;
-		ValueType version : NUM_VERSION_BITS;
+		value_type index   : NUM_INDEX_BITS;
+		value_type version : NUM_VERSION_BITS;
 	};
 
 	Handle() = default;
 
-	Handle(ValueType value_) 
+	Handle(value_type value_) 
 		: value(value_)
 	{
 
 	}
 
-	Handle(ValueType index_, ValueType version_) 
+	Handle(value_type index_, value_type version_) 
 		: index(index_)
 		, version(version_)
 	{
 
 	}
 
-	inline operator ValueType() const
+	inline operator value_type() const
 	{
 		return value;
 	}
 
 private:
-	ValueType value;
+	value_type value;
 
 };
 

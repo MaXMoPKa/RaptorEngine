@@ -23,42 +23,42 @@ bool IComponent::operator!=(const IComponent& other_) const
 	return this->hashValue != other_.hashValue;
 }
 
-const ComponentId IComponent::getHash() const
+const ComponentId IComponent::GetHash() const
 {
 	return this->hashValue;
 }
 
-const ComponentId IComponent::getId() const
+const ComponentId IComponent::GetId() const
 {
 	return this->id;
 }
 
-const EntityId IComponent::getOwnerId() const
+const EntityId IComponent::GetOwnerId() const
 {
 	return this->ownerId;
 }
 
-bool IComponent::getIsActive() const
+bool IComponent::GetIsActive() const
 {
 	return this->isActive;
 }
 
-void IComponent::setHash(const ComponentId hash_)
+void IComponent::SetHash(const ComponentId hash_)
 {
 	this->hashValue = hash_;
 }
 
-void IComponent::setId(const ComponentId id_)
+void IComponent::SetId(const ComponentId id_)
 {
 	this->id = id_;
 }
 
-void IComponent::setOwnerId(const EntityId ownerId_)
+void IComponent::SetOwnerId(const EntityId ownerId_)
 {
 	this->ownerId = ownerId_;
 }
 
-void IComponent::setIsActive(bool state_)
+void IComponent::SetIsActive(bool state_)
 {
 	this->isActive = state_;
 }
