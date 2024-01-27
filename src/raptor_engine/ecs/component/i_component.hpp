@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ecs/platform.hpp"
-#include "ecs/handle.hpp"
+#include "ecs/utils/platform.hpp"
+#include "ecs/utils/handle.hpp"
 
 namespace raptor_engine {
 namespace ecs {

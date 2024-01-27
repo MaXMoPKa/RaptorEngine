@@ -2,7 +2,7 @@
 
 #include "ecs/component/component_manager.hpp"
 #include "ecs/entity/i_entity.hpp"
-#include "ecs/handle_table.hpp"
+#include "ecs/utils/handle_table.hpp"
 
 namespace raptor_engine {
 namespace ecs {
@@ -23,12 +23,12 @@ class EntityManager
     }; // IEntity_container
 
 	template <typename T>
-	class EntityContainer : public memory::allocator::memory_chunk_allocator<T, ENTITY_T_CHUNK_SIZE>,
+	class EntityContainer : public memory::allocator::MemoryChunkAllocator<T, ENTITY_T_CHUNK_SIZE>,
 							public IEntityContainer
 	{
 	public:
 		EntityContainer() 
-			: memory::allocator::memory_chunk_allocator<T, ENTITY_T_CHUNK_SIZE>("EntityManager")
+			: memory::allocator::MemoryChunkAllocator<T, ENTITY_T_CHUNK_SIZE>("EntityManager")
 		{ }
 
 		virtual ~EntityContainer() { }

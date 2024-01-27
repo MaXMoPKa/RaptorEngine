@@ -6,9 +6,9 @@ namespace raptor_engine {
 namespace memory {
 namespace utils {
 
-static constexpr u8 get_adjustment(u64 const size, u8 const alignment) {
-  u8 adjustment = alignment - (size & (alignment - 1));
-  return adjustment == alignment ? 0 : adjustment;
+static constexpr u8 GetAdjustment(u64 const size_, u8 const alignment_) {
+  u8 adjustment = alignment_ - (size_ & (alignment_ - 1));
+  return adjustment == alignment_ ? 0 : adjustment;
 }
 
 }  // namespace utils

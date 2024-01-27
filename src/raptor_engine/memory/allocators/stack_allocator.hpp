@@ -11,19 +11,19 @@ namespace raptor_engine {
 namespace memory {
 namespace allocator {
 
-class stack_allocator : public i_allocator
+class StackAllocator : public IAllocator
 {
 public:
-	stack_allocator(const std::size_t memory_size_, const void* memory);
-	virtual ~stack_allocator() override;
+	StackAllocator(const std::size_t memorySize_, const void* memory_);
+	virtual ~StackAllocator() override;
 
 public:
-	virtual void* allocate(const std::size_t size_, const u8 alignment_) override;
-	virtual void  free(void* memory_) override;
-	virtual void  clear() override;
+	virtual void* Allocate(const std::size_t size_, const u8 alignment_) override;
+	virtual void  Free(void* memory_) override;
+	virtual void  Clear() override;
 
 private:
-	struct allocator_meta_info
+	struct AllocatorMetaInfo
 	{
 		u8 adjustment;
 	};

@@ -8,7 +8,7 @@ EventHandler::EventHandler()
 	//LogInfo("Initialize EventHandler!");
 
 	this->eventMemoryAllocator =
-		new EventMemoryAllocator(ECS_EVENT_MEMORY_BUFFER_SIZE, allocate(ECS_EVENT_MEMORY_BUFFER_SIZE, "EventHandler"));
+		new EventMemoryAllocator(ECS_EVENT_MEMORY_BUFFER_SIZE, Allocate(ECS_EVENT_MEMORY_BUFFER_SIZE, "EventHandler"));
 
 	this->GetEventStorage().reserve(1024);
 }
@@ -26,7 +26,7 @@ EventHandler::~EventHandler()
 	this->GetEventDispatcherMap().clear();
 
 	// Release allocated memory
-	this->free((void*)this->GetEventMemoryAllocator()->get_address());
+	this->Free((void*)this->GetEventMemoryAllocator()->GetAddress());
 
 	delete this->GetEventMemoryAllocator();
 	this->SetEventMemoryAllocator(nullptr);

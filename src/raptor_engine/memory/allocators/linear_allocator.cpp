@@ -10,164 +10,169 @@ using namespace raptor_engine::utils;
 using namespace raptor_engine::memory;
 using namespace raptor_engine::memory::allocator;
 
-class linear_allocator_pimpl {
+class LinearAllocatorPimpl {
  public:
-  linear_allocator_pimpl() : size{0}, address{nullptr}, used_size{0} {}
+  LinearAllocatorPimpl() : size {0}, address {nullptr}, usedSize {0} { }
 
-  linear_allocator_pimpl(u64 size, const void* address)
-      : size{size}, address{address}, used_size{0} {}
+  LinearAllocatorPimpl(u64 size_, const void* address_)
+      : size{size_}, address{address_}, usedSize{0} {}
 
-  ~linear_allocator_pimpl() {
-    this->used_size = 0;
+  ~LinearAllocatorPimpl()
+  {
+    this->usedSize = 0;
     this->size = 0;
     this->address = nullptr;
   }
 
  public:
-  void create(u64 size, const void* address) {
-    linear_allocator_pimpl tmp(size, address);
-    this->swap(tmp);
+  void Create(u64 size_, const void* address_) {
+	LinearAllocatorPimpl tmp(size_, address_);
+    this->Swap(tmp);
   }
 
-  void swap(linear_allocator_pimpl& allocator) noexcept {
-    if (this == &allocator) {
+  void Swap(LinearAllocatorPimpl& allocator_) noexcept
+  {
+    if (this == &allocator_) {
       return;
     }
 
-    std::swap(this->size, allocator.size);
-    std::swap(this->address, allocator.address);
-    std::swap(this->used_size, allocator.used_size);
+    std::swap(this->size, allocator_.size);
+    std::swap(this->address, allocator_.address);
+    std::swap(this->usedSize, allocator_.usedSize);
   }
 
-  void reset() noexcept {
-    linear_allocator_pimpl tmp{};
-    this->swap(tmp);
+  void Reset() noexcept {
+	LinearAllocatorPimpl tmp {};
+    this->Swap(tmp);
   }
 
  public:
-  [[nodiscard]] void* allocate(u64 size, u8 alignment) {
+  [[nodiscard]] void* Allocate(u64 size_, u8 alignment_) {
     union {
-      void* as_void_ptr;
-      uiptr as_uiptr;
+      void* asVoidPtr;
+      uiptr asUintPtr;
     };
 
-    as_void_ptr = (void*)this->address;
-    as_uiptr += this->used_size;
+    asVoidPtr = (void*)this->address;
+	asUintPtr += this->usedSize;
 
-    auto const adjustment = utils::get_adjustment(size, alignment);
+    auto const adjustment = utils::GetAdjustment(size_, alignment_);
 
-    if (!this->is_allocation_possible(size + adjustment)) {
+    if (!this->IsAllocationPossible(size + adjustment)) {
       return nullptr;
     }
 
-    as_uiptr += adjustment;
+    asUintPtr += adjustment;
 
-    this->used_size += size + adjustment;
+    this->usedSize += size + adjustment;
 
-    return as_void_ptr;
+    return asVoidPtr;
   }
 
-  void free() {
+  void Free() {
     assert(false &&
            "Linear allocators doesn't support freeing of memory blocks. Call "
-           "clear() instead.");
+           "Clear() instead.");
   }
 
-  void clear() noexcept { this->used_size = 0; }
+  void Clear() noexcept { this->usedSize = 0; }
 
  public:
-  [[nodiscard]] inline void const* get_address() const { return this->address; }
+  [[nodiscard]] inline void const* GetAddress() const { return this->address; }
 
-  [[nodiscard]] inline u64 get_size() const { return this->size; }
+  [[nodiscard]] inline u64 GetSize() const { return this->size; }
 
-  [[nodiscard]] inline u64 get_used_size() const { return this->used_size; }
+  [[nodiscard]] inline u64 GetUsedSize() const { return this->usedSize; }
 
  public:
-  bool is_allocation_possible(u64 size) {
-    return this->size >= this->used_size + size;
+  bool IsAllocationPossible(u64 size_) {
+    return this->size >= this->usedSize + size;
   }
 
  private:
   u64 size;
   const void* address;
-  u64 used_size;
+  u64 usedSize;
 };
 
-linear_allocator::linear_allocator() {
-  static_assert(sizeof(pimpl) >= sizeof(linear_allocator_pimpl),
-                "buffer not big enough to hold linear_allocator_pimpl");
+LinearAllocator::LinearAllocator()
+{
+  static_assert(sizeof(pimpl) >= sizeof(LinearAllocatorPimpl),
+                "buffer not big enough to hold LinearAllocatorPimpl");
 
-  static_assert(
-      std::alignment_of<aligned_storage_type>::value >=
-          std::alignment_of<linear_allocator_pimpl>::value,
-      "alignment requirements of linear_allocator_pimpl not fulfilled");
+  static_assert(std::alignment_of<AlignedStorageType>::value >= std::alignment_of<LinearAllocatorPimpl>::value,
+                "alignment requirements of LinearAllocatorPimpl not fulfilled");
 
-  placement_new<linear_allocator_pimpl>(&(this->pimpl), sizeof(this->pimpl));
+  placement_new<LinearAllocatorPimpl>(&(this->pimpl), sizeof(this->pimpl));
 }
 
-linear_allocator::linear_allocator(u64 size, const void* address) {
-  static_assert(sizeof(pimpl) >= sizeof(linear_allocator_pimpl),
-                "buffer not big enough to hold linear_allocator_pimpl");
+LinearAllocator::LinearAllocator(u64 size_, const void* address_)
+{
+  static_assert(sizeof(pimpl) >= sizeof(LinearAllocatorPimpl),
+                "buffer not big enough to hold LinearAllocatorPimpl");
 
-  static_assert(
-      std::alignment_of<aligned_storage_type>::value >=
-          std::alignment_of<linear_allocator_pimpl>::value,
-      "alignment requirements of linear_allocator_pimpl not fulfilled");
+  static_assert(std::alignment_of<AlignedStorageType>::value >= std::alignment_of<LinearAllocatorPimpl>::value,
+                "alignment requirements of LinearAllocatorPimpl not fulfilled");
 
-  placement_new<linear_allocator_pimpl>(&(this->pimpl), sizeof(this->pimpl),
-                                        size, address);
+  placement_new<LinearAllocatorPimpl>(&(this->pimpl), sizeof(this->pimpl), size_, address_);
 }
 
-linear_allocator::linear_allocator(linear_allocator&& allocator) noexcept =
-    default;
+LinearAllocator::LinearAllocator(LinearAllocator&& allocator_) noexcept = default;
 
-linear_allocator& linear_allocator::operator=(
-    linear_allocator&& allocator) noexcept = default;
+LinearAllocator& LinearAllocator::operator=(LinearAllocator&& allocator_) noexcept = default;
 
-linear_allocator::~linear_allocator() {
-  placement_delete<linear_allocator_pimpl>(&this->pimpl);
+LinearAllocator::~LinearAllocator()
+{
+  placement_delete<LinearAllocatorPimpl>(&this->pimpl);
 }
 
-void linear_allocator::create(u64 size, const void* address) {
-  placement_cast<linear_allocator_pimpl>(&this->pimpl)->create(size, address);
+void LinearAllocator::Create(u64 size_, const void* address_)
+{
+  placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Create(size_, address_);
 }
 
-void linear_allocator::swap(linear_allocator& allocator) noexcept {
-  auto allocator_pimpl =
-      placement_cast<linear_allocator_pimpl>(&allocator.pimpl);
-  placement_cast<linear_allocator_pimpl>(&this->pimpl)->swap(*allocator_pimpl);
+void LinearAllocator::Swap(LinearAllocator& allocator_) noexcept
+{
+  auto allocator_pimpl = placement_cast<LinearAllocatorPimpl>(&allocator_.pimpl);
+  placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Swap(*allocator_pimpl);
 }
 
-void linear_allocator::reset() noexcept {
-  placement_cast<linear_allocator_pimpl>(&this->pimpl)->reset();
+void LinearAllocator::Reset() noexcept
+{
+  placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Reset();
 }
 
-void* linear_allocator::allocate(u64 size, u8 alignment) {
-  return placement_cast<linear_allocator_pimpl>(&this->pimpl)
-      ->allocate(size, alignment);
+void* LinearAllocator::Allocate(u64 size_, u8 alignment_)
+{
+  return placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Allocate(size_, alignment_);
 }
 
-void linear_allocator::free() {
-  placement_cast<linear_allocator_pimpl>(&this->pimpl)->free();
+void LinearAllocator::Free()
+{
+  placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Free();
 }
 
-void linear_allocator::clear() noexcept {
-  placement_cast<linear_allocator_pimpl>(&this->pimpl)->clear();
+void LinearAllocator::Clear() noexcept
+{
+  placement_cast<LinearAllocatorPimpl>(&this->pimpl)->Clear();
 }
 
-bool linear_allocator::is_allocation_possible(u64 size) {
-  return placement_cast<linear_allocator_pimpl>(&this->pimpl)
-      ->is_allocation_possible(size);
+bool LinearAllocator::IsAllocationPossible(u64 size_)
+{
+  return placement_cast<LinearAllocatorPimpl>(&this->pimpl)->IsAllocationPossible(size_);
 }
 
-[[nodiscard]] void const* linear_allocator::get_address() const {
-  return placement_cast<linear_allocator_pimpl>(&this->pimpl)->get_address();
+[[nodiscard]] void const* LinearAllocator::GetAddress() const
+{
+  return placement_cast<LinearAllocatorPimpl>(&this->pimpl)->GetAddress();
 }
 
-[[nodiscard]] u64 linear_allocator::get_size() const {
-  return placement_cast<linear_allocator_pimpl>(&this->pimpl)->get_size();
+[[nodiscard]] u64 LinearAllocator::GetSize() const
+{
+  return placement_cast<LinearAllocatorPimpl>(&this->pimpl)->GetSize();
 }
 
-[[nodiscard]] u64 linear_allocator::get_used_size() const {
-  return placement_cast<linear_allocator_pimpl>(&this->pimpl)->get_used_size();
+[[nodiscard]] u64 LinearAllocator::GetUsedSize() const
+{
+  return placement_cast<LinearAllocatorPimpl>(&this->pimpl)->GetUsedSize();
 }

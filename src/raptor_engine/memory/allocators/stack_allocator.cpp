@@ -5,69 +5,69 @@
 
 using namespace raptor_engine::memory::allocator;
 
-stack_allocator::stack_allocator(const std::size_t memory_size_, const void* memory_) 
-	: i_allocator {memory_size_, memory_} 
+StackAllocator::StackAllocator(const std::size_t memorySize_, const void* memory_) 
+	: IAllocator {memorySize_, memory_} 
 {
 
 }
 
-stack_allocator::~stack_allocator()
+StackAllocator::~StackAllocator()
 {
-	this->clear();
+	this->Clear();
 }
 
-void* stack_allocator::allocate(const std::size_t size_, const u8 alignment_)
+void* StackAllocator::Allocate(const std::size_t size_, const u8 alignment_)
 {
 	assert(size_ > 0 && "allocate called with memory_size == 0");
 
 	union
 	{
-		void*				 as_void_pointer;
-		uiptr				 as_uiptr;
-		allocator_meta_info* as_meta_info;
+		void*			   asVoidPointer;
+		uiptr			   asUintPtr;
+		AllocatorMetaInfo* asMetaInfo;
 	};
 
-	as_void_pointer = (void*)this->memory_address;
+	asVoidPointer = (void*)this->memoryAddress;
 
-	as_uiptr += this->memory_used;
+	asUintPtr += this->memoryUsed;
 
-	u8 adjustment = get_adjustment(as_void_pointer, alignment_, sizeof(allocator_meta_info));
+	u8 adjustment = GetAdjustment(asVoidPointer, alignment_, sizeof(AllocatorMetaInfo));
 
-	if (this->memory_used + size_ + adjustment > this->memory_size)
+	if (this->memoryUsed + size_ + adjustment > this->memorySize)
 	{
 		return nullptr;
 	}
 
-	as_meta_info->adjustment = adjustment;
+	asMetaInfo->adjustment = adjustment;
 
-	as_uiptr += adjustment;
+	asUintPtr += adjustment;
 
-	this->memory_used += size_ + adjustment;
-	this->memory_allocations_count++;
+	this->memoryUsed += size_ + adjustment;
+	this->memoryAllocationsCount++;
 
-	return as_void_pointer;
+	return asVoidPointer;
 }
 
-void stack_allocator::free(void* memory_)
+void StackAllocator::Free(void* memory_)
 {
 	union
 	{
-		void* as_void_pointer;
-		uiptr as_uiptr;
-		allocator_meta_info* as_meta_info;
+		void* asVoidPointer;
+		uiptr asUintPtr;
+		AllocatorMetaInfo* asMetaInfo;
 	};
 
-	as_void_pointer = memory_;
+	asVoidPointer = memory_;
 
-	as_uiptr -= sizeof(allocator_meta_info);
+	asUintPtr -= sizeof(AllocatorMetaInfo);
 
-	this->memory_used -=
-		((uiptr)this->memory_address + this->memory_used) - ((uiptr)memory_ + as_meta_info->adjustment);
-	this->memory_allocations_count--;
+	this->memoryUsed -=
+		((uiptr)this->memoryAddress + this->memoryUsed) - ((uiptr)memory_ + asMetaInfo->adjustment);
+	this->memoryAllocationsCount--;
 }
 
-void stack_allocator::clear()
+void StackAllocator::Clear()
 {
-	this->memory_used              = 0;
-	this->memory_allocations_count = 0;
+	this->memoryUsed             = 0;
+	this->memoryAllocationsCount = 0;
 }

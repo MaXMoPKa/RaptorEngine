@@ -3,7 +3,7 @@
 #include <functional>
 
 #include "ecs/component/component.hpp"
-#include "ecs/family_type_id.hpp"
+#include "ecs/utils/family_type_id.hpp"
 
 #include "memory/global_memory_user.hpp"
 #include "memory/allocators/memory_chunk_allocator.hpp"
@@ -14,7 +14,7 @@ namespace ecs {
 template <typename T>
 const ComponentTypeId Component<T>::STATIC_COMPONENT_TYPE_ID = FamilyTypeId<IComponent>::get<T>();
 
-class ComponentManager : memory::global_memory_user
+class ComponentManager : memory::GlobalMemoryUser
 {
 	friend class IComponent;
 
@@ -30,7 +30,7 @@ class ComponentManager : memory::global_memory_user
 	};
 
 	template<typename T>
-	class ComponentContainer : public memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>,
+	class ComponentContainer : public memory::allocator::MemoryChunkAllocator<T, COMPONENT_T_CHUNK_SIZE>,
 							   public IComponentContainer
 	{
 		ComponentContainer(const ComponentContainer&)			 = delete;
@@ -38,7 +38,8 @@ class ComponentManager : memory::global_memory_user
 
 	public:
 
-		ComponentContainer() : memory::allocator::memory_chunk_allocator<T, COMPONENT_T_CHUNK_SIZE>("ComponentManager")
+		ComponentContainer()
+			: memory::allocator::MemoryChunkAllocator<T, COMPONENT_T_CHUNK_SIZE>("ComponentManager")
 		{ }
 
 		virtual ~ComponentContainer() = default;

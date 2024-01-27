@@ -9,58 +9,58 @@
 
 using namespace raptor_engine::memory;
 
-memory_manager::memory_manager()
+MemoryManager::MemoryManager()
 {
-	this->global_memory = malloc(memory_manager::MEMORY_CAPACITY);
-	assert(this->global_memory != nullptr && "Failed to allocate global memory.");
+	this->globalMemory = malloc(MemoryManager::MEMORY_CAPACITY);
+	assert(this->globalMemory != nullptr && "Failed to allocate global memory.");
 
-	this->memory_allocator = new stack_allocator(memory_manager::MEMORY_CAPACITY, this->global_memory);
-	assert(this->memory_allocator != nullptr && "Failed to create memory allocator!");
+	this->memoryAllocator = new StackAllocator(MemoryManager::MEMORY_CAPACITY, this->globalMemory);
+	assert(this->memoryAllocator != nullptr && "Failed to create memory allocator!");
 
-	this->pending_memory.clear();
-	this->freed_memory.clear();
+	this->pendingMemory.clear();
+	this->freedMemory.clear();
 }
 
-memory_manager::~memory_manager()
+MemoryManager::~MemoryManager()
 {
-	this->memory_allocator->clear();
-	delete this->memory_allocator;
-	this->memory_allocator = nullptr;
+	this->memoryAllocator->Clear();
+	delete this->memoryAllocator;
+	this->memoryAllocator = nullptr;
 
-	free(this->global_memory);
-	this->global_memory = nullptr;
+	free(this->globalMemory);
+	this->globalMemory = nullptr;
 }
 
-void* memory_manager::allocate(std::size_t memory_size_, const std::string& user_)
+void* MemoryManager::Allocate(std::size_t memorySize_, const std::string& user_)
 {
-	void* point_memory = memory_allocator->allocate(memory_size_, alignof(u8));
-	this->pending_memory.push_back(std::make_pair(user_, point_memory));
-	return point_memory;
+	void* pointMemory = memoryAllocator->Allocate(memorySize_, alignof(u8));
+	this->pendingMemory.push_back(std::make_pair(user_, pointMemory));
+	return pointMemory;
 }
 
-void memory_manager::free(void* pointer_memory_)
+void MemoryManager::Free(void* pointerMemory_)
 {
-	if (pointer_memory_ == this->pending_memory.back().second)
+	if (pointerMemory_ == this->pendingMemory.back().second)
 	{
-		this->memory_allocator->free(pointer_memory_);
-		this->pending_memory.pop_back();
+		this->memoryAllocator->Free(pointerMemory_);
+		this->pendingMemory.pop_back();
 
 		bool check = true;
 		while (check == true)
 		{
 			check = false;
 			const auto& it =
-				std::find_if(this->freed_memory.begin(), 
-					         this->freed_memory.end(), 
+				std::find_if(this->freedMemory.begin(), 
+					         this->freedMemory.end(), 
 					         [&](const void* pointer_) 
 			                 {
-					             return pointer_ == this->pending_memory.back().second;
+					             return pointer_ == this->pendingMemory.back().second;
 				             });
-			if (it != this->freed_memory.end())
+			if (it != this->freedMemory.end())
 			{
-				this->memory_allocator->free(pointer_memory_);
-				this->pending_memory.pop_back();
-				this->freed_memory.remove(*it);
+				this->memoryAllocator->Free(pointerMemory_);
+				this->pendingMemory.pop_back();
+				this->freedMemory.remove(*it);
 
 				check = true;
 			}
@@ -68,22 +68,22 @@ void memory_manager::free(void* pointer_memory_)
 	}
 	else
 	{
-		this->freed_memory.push_back(pointer_memory_);
+		this->freedMemory.push_back(pointerMemory_);
 	}
 }
 
-void memory_manager::check_memory_leaks()
+void MemoryManager::CheckMemoryLeaks()
 {
-	assert(!(this->freed_memory.size() > 0 && this->pending_memory.size() == 0) && "Implementation failure");
+	assert(!(this->freedMemory.size() > 0 && this->pendingMemory.size() == 0) && "Implementation failure");
 
-	if (this->pending_memory.size() > 0)
+	if (this->pendingMemory.size() > 0)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR::MEMORY_MANAGER: memory leak detected!");
-		for (const auto& i : this->pending_memory)
+		for (const auto& i : this->pendingMemory)
 		{
-			bool is_freed = false;
-			is_freed	  = std::any_of(this->freed_memory.begin(), 
-				                        this->freed_memory.end(), 
+			bool isFreed = false;
+			isFreed	  = std::any_of(this->freedMemory.begin(), 
+				                        this->freedMemory.end(), 
 				                        [&i](const void* pointer_) 
 			                            { 
 				                            if (pointer_ == i.second)
@@ -95,7 +95,7 @@ void memory_manager::check_memory_leaks()
 												return false;
 											}
 			                            });
-			if (is_freed == false)
+			if (isFreed == false)
 			{
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR::MEMORY_MANAGER: %s memory user didn't release allocated memory %s", i.first.c_str(), i.second);
 			}

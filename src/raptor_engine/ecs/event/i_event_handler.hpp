@@ -14,14 +14,14 @@ namespace raptor_engine {
 namespace ecs {
 namespace event {
 
-class EventHandler : memory::global_memory_user
+class EventHandler : memory::GlobalMemoryUser
 {
 	//friend class ecs::EcsEngine;
 
 	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcher*>;
 
 	using EventStorage		   = std::vector<IEvent*>;
-	using EventMemoryAllocator = memory::allocator::linear_allocator;
+	using EventMemoryAllocator = memory::allocator::LinearAllocator;
 
 private:
 	inline void SetEventDispatcherMap(const EventDispatcherMap& eventDispatcherMap)
@@ -71,7 +71,7 @@ public:
 
 	inline void ClearEventBuffer()
 	{
-		this->GetEventMemoryAllocator()->clear();
+		this->GetEventMemoryAllocator()->Clear();
 		this->GetEventStorage().clear();
 	}
 

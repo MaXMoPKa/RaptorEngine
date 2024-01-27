@@ -5,11 +5,11 @@
 
 using namespace raptor_engine::memory::allocator;
 
-i_allocator::i_allocator(const std::size_t memory_size_, const void* memory_) 
-	: memory_size {memory_size_}
-	, memory_address {memory_}
-	, memory_used {0}
-	, memory_allocations_count {0}
+IAllocator::IAllocator(const std::size_t memorySize_, const void* memory_) 
+	: memorySize {memorySize_}
+	, memoryAddress {memory_}
+	, memoryUsed {0}
+	, memoryAllocationsCount {0}
 {
 
 }

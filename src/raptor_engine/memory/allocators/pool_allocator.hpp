@@ -8,25 +8,25 @@ namespace raptor_engine {
 namespace memory {
 namespace allocator {
 
-class pool_allocator : public i_allocator
+class PoolAllocator : public IAllocator
 {
 public:
-	pool_allocator(std::size_t memory_size_,
-		           const void* memory_,
-		           std::size_t object_size_,
-		           u8 object_alignment_);
+	PoolAllocator(std::size_t memorySize_,
+		          const void* memory_,
+		          std::size_t objectSize_,
+		          u8          objectAlignment_);
 
-	virtual ~pool_allocator();
+	virtual ~PoolAllocator();
 
 public:
-	virtual void* allocate(std::size_t size_, u8 alignment_) override;
-	virtual void  free(void* memory_) override;
-	virtual void  clear() override;
+	virtual void* Allocate(std::size_t size_, u8 alignment_) override;
+	virtual void  Free(void* memory_) override;
+	virtual void  Clear() override;
 
 private:
-	const std::size_t object_size;
-	const u8		  object_alignment;
-	void**			  free_list;
+	const std::size_t objectSize;
+	const u8		  objectAlignment;
+	void**			  freeList;
 };
 
 }  // namespace allocator

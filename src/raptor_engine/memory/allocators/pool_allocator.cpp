@@ -4,73 +4,73 @@
 
 using namespace raptor_engine::memory::allocator;
 
-pool_allocator::pool_allocator(std::size_t memory_size_,
-							   const void* memory_,
-							   std::size_t object_size_,
-							   u8		   object_alignment_)
-	: i_allocator {memory_size_, memory_}
-	, object_size {object_size_}
-	, object_alignment {object_alignment_}
+PoolAllocator::PoolAllocator(std::size_t memorySize_,
+							 const void* memory_,
+							 std::size_t objectSize_,
+							 u8 	     objectAlignment_)
+	: IAllocator {memorySize_, memory_}
+	, objectSize {objectSize_}
+	, objectAlignment {objectAlignment_}
 {
-	this->clear();
+	this->Clear();
 }
 
-pool_allocator::~pool_allocator() 
+PoolAllocator::~PoolAllocator()
 {
-	this->free_list = nullptr;
+	this->freeList = nullptr;
 }
 
-void* pool_allocator::allocate(std::size_t size_, u8 alignment_)
+void* PoolAllocator::Allocate(std::size_t size_, u8 alignment_)
 {
 	assert(size_ > 0 && "allocate called with memroy_size = 0.");
-	assert(size_ == this->object_size && alignment_ == this->object_alignment);
+	assert(size_ == this->objectSize && alignment_ == this->objectAlignment);
 
-	if (this->free_list == nullptr)
+	if (this->freeList == nullptr)
 	{
 		return nullptr;
 	}
 
-	void* pointer = this->free_list;
+	void* pointer = this->freeList;
 
-	this->free_list = (void**)(*this->free_list);
+	this->freeList = (void**)(*this->freeList);
 
-	this->memory_used += this->object_size;
-	this->memory_allocations_count++;
+	this->memoryUsed += this->objectSize;
+	this->memoryAllocationsCount++;
 
 	return pointer;
 }
 
-void pool_allocator::free(void* memory_) 
+void PoolAllocator::Free(void* memory_)
 {
-	*((void**)memory_) = this->free_list;
-	this->free_list	   = (void**)memory_;
+	*((void**)memory_) = this->freeList;
+	this->freeList	   = (void**)memory_;
 
-	this->memory_used -= this->object_size;
-	this->memory_allocations_count--;
+	this->memoryUsed -= this->objectSize;
+	this->memoryAllocationsCount--;
 }
 
-void pool_allocator::clear() 
+void PoolAllocator::Clear()
 {
-	u8 adjustment              = get_adjustment(this->memory_address, this->object_alignment);
-	std::size_t number_objects = (std::size_t)floor((this->memory_size - adjustment) / this->object_size);
+	u8 adjustment             = GetAdjustment(this->memoryAddress, this->objectAlignment);
+	std::size_t numberObjects = (std::size_t)floor((this->memorySize - adjustment) / this->objectSize);
 
 	union
 	{
-		void* as_void_pointer;
-		uiptr as_uiptr;
+		void* asVoidPointer;
+		uiptr asUintPtr;
 	};
 
-	as_void_pointer = (void*)this->memory_address;
+	asVoidPointer = (void*)this->memoryAddress;
 
-	as_uiptr += adjustment;
+	asUintPtr += adjustment;
 
-	this->free_list = (void**)as_void_pointer;
+	this->freeList = (void**)asVoidPointer;
 
-	void** pointer = this->free_list;
+	void** pointer = this->freeList;
 
-	for (int i = 0; i < (number_objects - 1); ++i)
+	for (int i = 0; i < (numberObjects - 1); ++i)
 	{
-		*pointer = (void*)((uiptr)pointer + this->object_size);
+		*pointer = (void*)((uiptr)pointer + this->objectSize);
 		pointer	 = (void**)*pointer;
 	}
 

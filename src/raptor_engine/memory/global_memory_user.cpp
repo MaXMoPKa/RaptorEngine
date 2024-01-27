@@ -2,18 +2,18 @@
 
 using namespace raptor_engine::memory;
 
-global_memory_user::global_memory_user() 
-	: ecs_memory_manager(new memory_manager()) 
+GlobalMemoryUser::GlobalMemoryUser() 
+	: ecsMemoryManager(new MemoryManager()) 
 {
 
 }
 
-const void* global_memory_user::allocate(std::size_t memory_size_, const char* user_)
+const void* GlobalMemoryUser::Allocate(std::size_t memorySize_, const char* user_)
 {
-	return this->ecs_memory_manager->allocate(memory_size_, user_);
+	return this->ecsMemoryManager->Allocate(memorySize_, user_);
 }
 
-void global_memory_user::free(void* memory_pointer_)
+void GlobalMemoryUser::Free(void* memoryPointer_)
 {
-	this->ecs_memory_manager->free(memory_pointer_);
+	this->ecsMemoryManager->Free(memoryPointer_);
 }
