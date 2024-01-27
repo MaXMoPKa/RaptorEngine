@@ -10,13 +10,18 @@
 #include "memory/allocators/linear_allocator.hpp"
 
 
-namespace raptor_engine {
-namespace ecs {
-namespace event {
+namespace raptor_engine 
+{
+class Engine;
+
+namespace ecs 
+{
+namespace event 
+{
 
 class EventHandler : memory::GlobalMemoryUser
 {
-	//friend class ecs::EcsEngine;
+	friend class Engine;
 
 	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcher*>;
 

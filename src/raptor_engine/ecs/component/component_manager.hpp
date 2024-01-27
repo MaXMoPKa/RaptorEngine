@@ -12,7 +12,7 @@ namespace raptor_engine {
 namespace ecs {
 
 template <typename T>
-const ComponentTypeId Component<T>::STATIC_COMPONENT_TYPE_ID = FamilyTypeId<IComponent>::get<T>();
+const ComponentTypeId Component<T>::STATIC_COMPONENT_TYPE_ID = util::FamilyTypeId<IComponent>::get<T>();
 
 class ComponentManager : memory::GlobalMemoryUser
 {

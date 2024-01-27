@@ -6,11 +6,111 @@
 
 #include "core/render_engine.hpp"
 
+
+#include "ecs/event/event_delegate.hpp"
+#include "ecs/event/event_handler.hpp"
+
 using namespace raptor_enigne::systems;
 using namespace raptor_engine::structs;
 using namespace raptor_engine::render;
 
 namespace raptor_engine {
+/*
+namespace ecs
+{
+namespace util
+{
+class Timer;
+} // namespace util
+namespace event
+{
+class IEvent;
+class IEventListener;
+} // namespace event
+
+class EntityManager;
+class ComponentManager;
+class SystemManager;
+
+} // namespace ecs
+
+class Engine
+{
+	friend class IEntity;
+	friend class IComponent;
+	friend class ISystem;
+
+	friend class IEvent;
+	friend class IEventListener;
+
+	friend class EntityManager;
+
+public:
+	Engine();
+	
+	Engine(const Engine&)            = delete;
+	Engine& operator=(const Engine&) = delete;
+	
+	~Engine();
+
+public:
+	inline ecs::EntityManager* GetEntityManager()
+	{
+		return this->entityManager;
+	}
+
+	inline ecs::ComponentManager* GetComponentManager()
+	{
+		return this->componentManager;
+	}
+
+	inline ecs::SystemManager* GetSystemManager()
+	{
+		return this->systemManager;
+	}
+
+public:
+    template <typename E, typename... ARGS>
+	void SendEvent(ARGS&&... args_)
+	{
+		this->eventHandler->Send<E>(std::forward<ARGS>(args_)...);
+	}
+
+	void Update(f32 dt_);
+
+public:
+	static Engine* GetInstance();
+
+private:
+	template <class E>
+	inline void SubscribeEvent(const ecs::event::IEventDelegate* eventDelegate_)
+	{
+		this->eventHandler->AddEventCallback<E>(eventDelegate_);
+	}
+
+	void UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_);
+
+private:
+	static Engine* engineInstance;
+
+private:
+	ecs::util::Timer*	      timer;
+	ecs::EntityManager*	      entityManager;
+	ecs::ComponentManager*    componentManager;
+	ecs::SystemManager*	      systemManager;
+	ecs::event::EventHandler* eventHandler;
+
+};
+
+Engine* Engine::GetInstance()
+{
+	if (engineInstance == nullptr) {
+		engineInstance = new Engine();
+	}
+
+	return engineInstance;
+}
+*/
 
 /**
  * @brief engine class is the main class for work. It is accumulate systems and

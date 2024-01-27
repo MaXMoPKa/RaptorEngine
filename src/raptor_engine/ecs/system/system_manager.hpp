@@ -15,6 +15,8 @@ using SystemWorkStateMask = std::vector<bool>;
 
 class SystemManager : public memory::GlobalMemoryUser
 {
+	friend class Engine;
+
 	using SystemAllocator        = memory::allocator::LinearAllocator;
 	using SystemRegistry         = std::unordered_map<u64, ISystem*>;
 	using SystemDependencyMatrix = std::vector<std::vector<bool>>;

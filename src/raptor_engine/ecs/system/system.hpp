@@ -47,7 +47,7 @@ private:
 };
 
 template <typename T>
-const SystemTypeId System<T>::STATIC_SYSTEM__TYPE_ID = FamilyTypeId<ISystem>::get<T>();
+const SystemTypeId System<T>::STATIC_SYSTEM__TYPE_ID = util::FamilyTypeId<ISystem>::get<T>();
 
 
 } // namespace ecs

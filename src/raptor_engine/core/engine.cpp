@@ -6,8 +6,62 @@
 #include "render/shader.hpp"
 #include "render/renderable_object.hpp"
 
+#include "ecs/utils/timer.hpp"
+
+#include "ecs/system/system_manager.hpp"
+#include "ecs/component/component_manager.hpp"
+#include "ecs/entity/entity_manager.hpp"
+
 using namespace raptor_engine;
 using namespace render;
+
+/*
+namespace raptor_engine
+{
+	Engine::Engine() 
+		: timer {new ecs::util::Timer()}
+		, eventHandler {new ecs::event::EventHandler()}
+		, systemManager {new ecs::SystemManager()}
+		, componentManager {new ecs::ComponentManager()}
+		, entityManager {new ecs::EntityManager(this->componentManager)}
+	{ }
+
+	Engine::~Engine()
+	{
+		delete entityManager;
+		entityManager = nullptr;
+
+		delete componentManager;
+		componentManager = nullptr;
+
+		delete systemManager;
+		systemManager = nullptr;
+
+		delete eventHandler;
+		eventHandler = nullptr;
+
+		delete timer;
+		timer = nullptr;
+	}
+
+	void Engine::Update(f32 dt_)
+	{
+		timer->Tick(dt_);
+
+		systemManager->Update(dt_);
+		eventHandler->DispatchEvents();
+
+		entityManager->RemoveDestroyedEntities();
+		eventHandler->DispatchEvents();
+	}
+
+	void Engine::UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_)
+	{
+		eventHandler->RemoveEventCallback(eventDelegate_);
+	}
+
+} // namespace raptor_engine
+*/
 
 class engine::engine_pimpl
 {

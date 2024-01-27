@@ -1,4 +1,4 @@
-#include "ecs/event/i_event_handler.hpp"
+#include "ecs/event/event_handler.hpp"
 
 using namespace raptor_engine::ecs::event;
 

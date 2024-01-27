@@ -2,14 +2,19 @@
 
 #include "ecs/utils/platform.hpp"
 
-namespace raptor_engine {
-namespace ecs {
+namespace raptor_engine 
+{
+namespace ecs 
+{
+namespace util
+{
 
-template <class T>
+template<class T>
 class FamilyTypeId
 {
 public:
-	template <class U>
+
+	template<class U>
 	static const TypeId get()
 	{
 		static const TypeId STATIC_TYPE_ID {count++};
@@ -22,8 +27,10 @@ public:
 	}
 
 private:
+
 	inline static TypeId count = 0;
 };
 
+} // namespace util
 } // namespace ecs
 } // namespace raptor_engine
