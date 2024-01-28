@@ -63,23 +63,6 @@ namespace raptor_engine
 		eventHandler->RemoveEventCallback(eventDelegate_);
 	}
 
-	void Engine::Initialize()
-	{
-		if (engineInstance == nullptr) {
-			engineInstance = new Engine();
-		}
-	}
-
-	void Engine::Terminate()
-	{
-		if (engineInstance != nullptr) {
-			delete engineInstance;
-			engineInstance = nullptr;
-		}
-
-		memory::MemoryManager::GetInstance()->CheckMemoryLeaks();
-	}
-
 } // namespace raptor_engine
 
 

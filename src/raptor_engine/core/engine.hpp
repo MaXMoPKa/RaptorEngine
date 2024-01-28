@@ -83,6 +83,24 @@ public:
 	void UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_);
 
 public:
+
+	static void Initialize()
+	{
+		if (engineInstance == nullptr) {
+			engineInstance = new Engine();
+		}
+	}
+
+	static void Terminate()
+	{
+		if (engineInstance != nullptr) {
+			delete engineInstance;
+			engineInstance = nullptr;
+		}
+
+		memory::MemoryManager::GetInstance()->CheckMemoryLeaks();
+	}
+
 	static Engine* GetInstance()
 	{
 		if (engineInstance == nullptr) {
@@ -91,11 +109,6 @@ public:
 
 		return engineInstance;
 	}
-
-private:
-	void Initialize();
-
-	void Terminate();
 
 private:
 	static Engine* engineInstance;
