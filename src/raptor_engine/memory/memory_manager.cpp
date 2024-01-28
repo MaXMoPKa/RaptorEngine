@@ -9,6 +9,8 @@
 
 using namespace raptor_engine::memory;
 
+MemoryManager* MemoryManager::managerInstance = nullptr;
+
 MemoryManager::MemoryManager()
 {
 	this->globalMemory = malloc(MemoryManager::MEMORY_CAPACITY);

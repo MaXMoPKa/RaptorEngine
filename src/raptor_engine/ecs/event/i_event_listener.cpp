@@ -11,7 +11,7 @@ void IEventListener::UnregisterAllEventCallbacks()
 {
 	for (auto cb : this->GetRegisteredCallbacks())
 	{
-		//ecsEngine->unsubscribeEvent(cb);
+		Engine::GetInstance()->UnsubscribeEvent(cb);
 	}
 
 	this->GetRegisteredCallbacks().clear();

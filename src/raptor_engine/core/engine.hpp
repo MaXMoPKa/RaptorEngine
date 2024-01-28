@@ -9,19 +9,18 @@
 
 #include "ecs/event/event_delegate.hpp"
 #include "ecs/event/event_handler.hpp"
+#include "ecs/utils/timer.hpp"
+
+#include "memory/memory_manager.hpp"
 
 using namespace raptor_enigne::systems;
 using namespace raptor_engine::structs;
 using namespace raptor_engine::render;
 
 namespace raptor_engine {
-/*
+
 namespace ecs
 {
-namespace util
-{
-class Timer;
-} // namespace util
 namespace event
 {
 class IEvent;
@@ -36,15 +35,6 @@ class SystemManager;
 
 class Engine
 {
-	friend class IEntity;
-	friend class IComponent;
-	friend class ISystem;
-
-	friend class IEvent;
-	friend class IEventListener;
-
-	friend class EntityManager;
-
 public:
 	Engine();
 	
@@ -69,6 +59,11 @@ public:
 		return this->systemManager;
 	}
 
+	inline ecs::util::Timer* GetTimer()
+	{
+		return this->timer;
+	}
+
 public:
     template <typename E, typename... ARGS>
 	void SendEvent(ARGS&&... args_)
@@ -79,16 +74,28 @@ public:
 	void Update(f32 dt_);
 
 public:
-	static Engine* GetInstance();
-
-private:
-	template <class E>
+	template<class E>
 	inline void SubscribeEvent(const ecs::event::IEventDelegate* eventDelegate_)
 	{
 		this->eventHandler->AddEventCallback<E>(eventDelegate_);
 	}
 
 	void UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_);
+
+public:
+	static Engine* GetInstance()
+	{
+		if (engineInstance == nullptr) {
+			engineInstance = new Engine();
+		}
+
+		return engineInstance;
+	}
+
+private:
+	void Initialize();
+
+	void Terminate();
 
 private:
 	static Engine* engineInstance;
@@ -102,15 +109,6 @@ private:
 
 };
 
-Engine* Engine::GetInstance()
-{
-	if (engineInstance == nullptr) {
-		engineInstance = new Engine();
-	}
-
-	return engineInstance;
-}
-*/
 
 /**
  * @brief engine class is the main class for work. It is accumulate systems and

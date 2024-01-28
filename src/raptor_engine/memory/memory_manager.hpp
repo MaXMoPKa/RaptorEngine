@@ -17,6 +17,9 @@ class MemoryManager
 	using StackAllocator = allocator::StackAllocator;
 
 public:
+	static constexpr std::size_t MEMORY_CAPACITY = ECS_GLOBAL_MEMORY_CAPACITY;
+
+public:
 	MemoryManager();
 	~MemoryManager();
 
@@ -31,9 +34,20 @@ public:
 	void CheckMemoryLeaks();
 
 public:
-	static constexpr std::size_t MEMORY_CAPACITY = ECS_GLOBAL_MEMORY_CAPACITY;
+	static MemoryManager* GetInstance()
+	{
+		if (managerInstance == nullptr) 
+		{
+			managerInstance = new MemoryManager();
+		}
 
-public:
+		return managerInstance;
+	}
+
+private:
+	static MemoryManager* managerInstance;
+
+private:
 	void*                                            globalMemory;
 	StackAllocator*                                  memoryAllocator;
 	std::vector<std::pair<const std::string, void*>> pendingMemory;

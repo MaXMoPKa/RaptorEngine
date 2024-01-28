@@ -12,12 +12,15 @@
 #include "ecs/component/component_manager.hpp"
 #include "ecs/entity/entity_manager.hpp"
 
+
 using namespace raptor_engine;
 using namespace render;
 
-/*
+
 namespace raptor_engine
 {
+    Engine* Engine::engineInstance = nullptr;
+
 	Engine::Engine() 
 		: timer {new ecs::util::Timer()}
 		, eventHandler {new ecs::event::EventHandler()}
@@ -60,8 +63,25 @@ namespace raptor_engine
 		eventHandler->RemoveEventCallback(eventDelegate_);
 	}
 
+	void Engine::Initialize()
+	{
+		if (engineInstance == nullptr) {
+			engineInstance = new Engine();
+		}
+	}
+
+	void Engine::Terminate()
+	{
+		if (engineInstance != nullptr) {
+			delete engineInstance;
+			engineInstance = nullptr;
+		}
+
+		memory::MemoryManager::GetInstance()->CheckMemoryLeaks();
+	}
+
 } // namespace raptor_engine
-*/
+
 
 class engine::engine_pimpl
 {

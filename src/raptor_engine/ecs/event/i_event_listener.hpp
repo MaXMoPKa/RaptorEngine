@@ -4,6 +4,8 @@
 
 #include "ecs/event/event_delegate.hpp"
 
+#include "core/engine.hpp"
+
 namespace raptor_engine {
 namespace ecs {
 namespace event {
@@ -23,7 +25,7 @@ public:
 		IEventDelegate* eventDelegate = new EventDelegate<C, E>(static_cast<C*>(this), Callback);
 
 		this->GetRegisteredCallbacks().push_back(eventDelegate);
-		// ecsEngine->SubscribeEvemt<E>(eventDelegate);
+		Engine::GetInstance()->SubscribeEvemt<E>(eventDelegate);
 	}
 
 	template<typename E, typename C>
@@ -37,7 +39,7 @@ public:
 			{
 				this->GetRegisteredCallbacks().remove_if([&](const IEventDelegate* other_) { return other_ == cb; });
 
-				//ecsEngine->unsubscribeEvent(&delegate);
+				Engine::GetInstance()->UnsubscribeEvent(&delegate);
 				break;
 			}
 		}

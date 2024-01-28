@@ -1,6 +1,6 @@
 #pragma once
 
-#include "memory/memory_manager.hpp"
+#include <cstddef>
 
 namespace raptor_engine {
 namespace memory {
@@ -15,9 +15,6 @@ public:
 public:
 	const void* Allocate(std::size_t memorySize_, const char* user_ = nullptr);
 	void		Free(void* memoryPointer_);
-
-private:
-	MemoryManager* ecsMemoryManager;
 };
 
 }
