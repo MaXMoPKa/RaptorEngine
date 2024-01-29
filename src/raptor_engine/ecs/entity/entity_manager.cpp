@@ -2,7 +2,7 @@
 
 using namespace raptor_engine::ecs;
 
-EntityManager::EntityManager(ComponentManager* componentManager_) 
+EntityManager::EntityManager(const ComponentManagerSptr& componentManager_) 
 	: pendingDestroyedEntity{1024}
 	, numPendingDestroyedEntity {0}
 	, componentManager {componentManager_}

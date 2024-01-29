@@ -52,7 +52,7 @@ class EntityManager
 	}; // entity_container
 
 public:
-	EntityManager(ComponentManager* componentManager_);
+	EntityManager(const ComponentManagerSptr& componentManager_);
 	~EntityManager();
 
 private:
@@ -120,9 +120,13 @@ private:
 	EntityRegistry           entityRegistry;
 	PendingDestroyedEntities pendingDestroyedEntity;
 	std::size_t				 numPendingDestroyedEntity;
-	ComponentManager*		 componentManager;
+	ComponentManagerSptr	 componentManager;
 	EntityHandleTable		 entityHandleTable;
 };
+
+using EntityManagerUptr = std::unique_ptr<EntityManager>;
+using EntityManagerSptr = std::shared_ptr<EntityManager>;
+using EntityManagerWptr = std::weak_ptr<EntityManager>;
 
 } // namespace ecs
 } // namespace raptor_engine

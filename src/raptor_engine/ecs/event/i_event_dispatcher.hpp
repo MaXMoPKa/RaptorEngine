@@ -18,9 +18,9 @@ public:
 public:
 	virtual void Dispatch(IEvent* event) = 0;
 
-	virtual void AddEventCallback(const IEventDelegate* eventDelegate_) = 0;
+	virtual void AddEventCallback(const IEventDelegateSptr& eventDelegate_) = 0;
 
-	virtual void RemoveEventCallback(IEventDelegate* eventDelegate_) = 0;
+	virtual void RemoveEventCallback(const IEventDelegateSptr& eventDelegate_) = 0;
 
 	virtual std::size_t GetEventCallbackCount() const = 0;
 

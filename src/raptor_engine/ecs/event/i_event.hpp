@@ -43,6 +43,11 @@ private:
 	EventTimeStamp timeCreated;
 };
 
+using IEventUptr = std::unique_ptr<IEvent>;
+using IEventSptr = std::shared_ptr<IEvent>;
+using IEventWptr = std::weak_ptr<IEvent>;
+
+
 } // namespace event
 } // namespace ecs
 } // namespace raptor_engine

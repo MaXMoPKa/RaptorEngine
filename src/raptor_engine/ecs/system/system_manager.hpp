@@ -237,5 +237,9 @@ private:
 	SystemWorkOrder		   workOrder;
 };
 
+using SystemManagerUptr = std::unique_ptr<SystemManager>;
+using SystemManagerSptr = std::shared_ptr<SystemManager>;
+using SystemManagerWptr = std::weak_ptr<SystemManager>;
+
 } // namespace ecs
 } // namespace raptor_engine

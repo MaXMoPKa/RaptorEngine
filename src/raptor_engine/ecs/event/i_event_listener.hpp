@@ -12,7 +12,7 @@ namespace event {
 
 class IEventListener
 {
-    using RegisteredCallbacks = std::list<IEventDelegate*>;
+    using RegisteredCallbacks = std::list<IEventDelegateSptr>;
 
 public:
 	IEventListener() = default;
@@ -20,7 +20,7 @@ public:
 
 public:
 	template <typename E, typename C>
-	inline void RegisterEventCallback(void (C::*Callback)(const E* const))
+	inline void RegisterEventCallback(void (C::*Callback)(const E))
 	{
 		IEventDelegate* eventDelegate = new EventDelegate<C, E>(static_cast<C*>(this), Callback);
 
@@ -29,15 +29,15 @@ public:
 	}
 
 	template<typename E, typename C>
-	inline void UnregisterEventCallback(void (C::* Callback)(const E* const))
+	inline void UnregisterEventCallback(void (C::* Callback)(const E))
 	{
 		EventDelegate<C, E> delegate(static_cast<C*>(this), Callback);
 
-		for (auto cb : this->registeredCallbacks)
+		for (auto& cb : this->registeredCallbacks)
 		{
 			if (cb->GetId() == delegate.GetId())
 			{
-				this->GetRegisteredCallbacks().remove_if([&](const IEventDelegate* other_) { return other_ == cb; });
+				this->GetRegisteredCallbacks().remove_if([&](const IEventDelegateSptr& other_) { return other_ == cb; });
 
 				Engine::GetInstance()->UnsubscribeEvent(&delegate);
 				break;

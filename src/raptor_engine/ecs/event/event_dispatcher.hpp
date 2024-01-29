@@ -11,8 +11,8 @@ namespace event {
 template<typename T>
 class EventDispatcher : public IEventDispatcher
 {
-	using EventDelegateList		 = std::list<IEventDelegate*>;
-	using PendingRemoveDelegates = std::list<IEventDelegate*>;
+	using EventDelegateList		 = std::list<IEventDelegateSptr>;
+	using PendingRemoveDelegates = std::list<IEventDelegateSptr>;
 
 public:
 	EventDispatcher() : locked(false) { }
@@ -22,7 +22,7 @@ public:
 		this->GetEventCallbacks().clear();
 	}
 
-	virtual void Dispatch(IEvent* event) override
+	virtual void Dispatch(const IEventSptr& event) override
 	{
 		this->SetLocked(true);
 		LogTrace("Dispatch event %s", typeid(T).name());
@@ -32,12 +32,12 @@ public:
 			{
 				auto result = std::find_if(this->GetEventCallbacks().begin(),
 										   this->GetEventCallbacks().end(),
-										   [&](const IEventDelegate* other) { return other->operator==(EC); });
+										   [&](const IEventDelegateSptr& other) { return other->operator==(EC); });
 				if (result != this->GetEventCallbacks().end()) 
 				{
-					IEventDelegate* ptrMem = (IEventDelegate*)(*result);
+					IEventDelegateSptr ptrMem = static_cast<IEventDelegateSptr>(*result);
 					this->GetEventCallbacks().erase(result);
-					delete ptrMem;
+					ptrMem.reset();
 					ptrMem = nullptr;
 				}
 			}
@@ -52,11 +52,11 @@ public:
 
 		this->SetLocked(false);
 	}
-	virtual void AddEventCallback(IEventDelegate* eventDelegate) override
+	virtual void AddEventCallback(const IEventDelegateSptr& eventDelegate) override
 	{
 		auto result = std::find_if(this->GetPendingRemoveDelegates().begin(),
 								   this->GetPendingRemoveDelegates().end(),
-								   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
+								   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
 
 		if (result != this->GetPendingRemoveDelegates().end()) 
 		{
@@ -66,21 +66,21 @@ public:
 
 		this->GetEventCallbacks().push_back(eventDelegate);
 	}
-	virtual void RemoveEventCallback(IEventDelegate* eventDelegate) override
+	virtual void RemoveEventCallback(const IEventDelegateSptr& eventDelegate) override
 	{
 		if (this->GetLocked() == false) 
 		{
 			auto result = std::find_if(this->GetEventCallbacks().begin(),
 									   this->GetEventCallbacks().end(),
-									   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
+									   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
 
 			if (result != this->GetEventCallbacks().end()) 
 			{
-				IEventDelegate* ptrMem = (IEventDelegate*)(*result);
+				IEventDelegateSptr ptrMem = static_cast<IEventDelegateSptr>(*result);
 
 				this->GetEventCallbacks().erase(result);
 
-				delete ptrMem;
+				ptrMem.reset();
 				ptrMem = nullptr;
 			}
 		} 
@@ -88,7 +88,7 @@ public:
 		{
 			auto result = std::find_if(this->GetEventCallbacks().begin(),
 									   this->GetEventCallbacks().end(),
-									   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
+									   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
 			// assert(result != this->GetEventCallbacks().end() && "");
 			if (result != this->GetEventCallbacks().end()) 
 			{

@@ -196,5 +196,9 @@ private:
 	EntityComponentMap entityComponentMap;
 };
 
+using ComponentManagerUptr = std::unique_ptr<ComponentManager>;
+using ComponentManagerSptr = std::shared_ptr<ComponentManager>;
+using ComponentManagerWptr = std::weak_ptr<ComponentManager>;
+
 } // namespace ecs
 } // namespace raptor_engine

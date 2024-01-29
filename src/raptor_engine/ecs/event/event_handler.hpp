@@ -115,7 +115,7 @@ private:
 
 	// Add event callback
 	template<class E>
-	inline void AddEventCallback(IEventDelegate* const eventDelegate)
+	inline void AddEventCallback(const IEventDelegateSptr& eventDelegate)
 	{
 		EventTypeId ETID = E::STATIC_EVENT_TYPE_ID;
 
@@ -135,7 +135,7 @@ private:
 	}
 
 	// Remove event callback
-	inline void RemoveEventCallback(IEventDelegate* eventDelegate)
+	inline void RemoveEventCallback(const IEventDelegateSptr& eventDelegate)
 	{
 		auto							   typeId = eventDelegate->GetStaticEventTypeId();
 		EventDispatcherMap::const_iterator iter	  = this->GetEventDispatcherMap().find(typeId);
@@ -150,6 +150,10 @@ private:
 	EventMemoryAllocator* eventMemoryAllocator;
 	EventStorage		  eventStorage;
 };
+
+using EventHandlerUptr = std::unique_ptr<EventHandler>;
+using EventHandlerSptr = std::shared_ptr<EventHandler>;
+using EventHandlerWptr = std::weak_ptr<EventHandler>;
 
 } // namespace event
 } // namespace ecs

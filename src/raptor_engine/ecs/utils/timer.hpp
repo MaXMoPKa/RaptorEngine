@@ -33,6 +33,10 @@ private:
 	Elapsed elapsed;
 };
 
+using TimerUptr = std::unique_ptr<Timer>;
+using TimerSptr = std::shared_ptr<Timer>;
+using TimerWptr = std::weak_ptr<Timer>;
+
 } // namespace util
 } // namespace ecs
 } // namespace raptor_engine

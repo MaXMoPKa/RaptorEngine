@@ -8,44 +8,23 @@
 
 #include "ecs/utils/timer.hpp"
 
-#include "ecs/system/system_manager.hpp"
-#include "ecs/component/component_manager.hpp"
-#include "ecs/entity/entity_manager.hpp"
-
-
 using namespace raptor_engine;
 using namespace render;
 
 
 namespace raptor_engine
 {
-    Engine* Engine::engineInstance = nullptr;
+    EngineSptr Engine::engineInstance = nullptr;
 
 	Engine::Engine() 
-		: timer {new ecs::util::Timer()}
-		, eventHandler {new ecs::event::EventHandler()}
-		, systemManager {new ecs::SystemManager()}
-		, componentManager {new ecs::ComponentManager()}
-		, entityManager {new ecs::EntityManager(this->componentManager)}
+		: timer {std::make_shared<ecs::util::Timer>()}
+		, eventHandler {std::make_shared<ecs::event::EventHandler>()},
+		  systemManager {std::make_shared<ecs::SystemManager>()}
+		, componentManager {std::make_shared<ecs::ComponentManager>()},
+		  entityManager {std::make_shared<ecs::EntityManager>(this->componentManager)}
 	{ }
 
-	Engine::~Engine()
-	{
-		delete entityManager;
-		entityManager = nullptr;
-
-		delete componentManager;
-		componentManager = nullptr;
-
-		delete systemManager;
-		systemManager = nullptr;
-
-		delete eventHandler;
-		eventHandler = nullptr;
-
-		delete timer;
-		timer = nullptr;
-	}
+	Engine::~Engine() = default;
 
 	void Engine::Update(f32 dt_)
 	{
@@ -58,7 +37,7 @@ namespace raptor_engine
 		eventHandler->DispatchEvents();
 	}
 
-	void Engine::UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_)
+	void Engine::UnsubscribeEvent(ecs::event::IEventDelegateSptr& eventDelegate_)
 	{
 		eventHandler->RemoveEventCallback(eventDelegate_);
 	}

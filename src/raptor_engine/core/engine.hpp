@@ -13,6 +13,10 @@
 
 #include "memory/memory_manager.hpp"
 
+#include "ecs/component/component_manager.hpp"
+#include "ecs/entity/entity_manager.hpp"
+#include "ecs/system/system_manager.hpp"
+
 using namespace raptor_enigne::systems;
 using namespace raptor_engine::structs;
 using namespace raptor_engine::render;
@@ -26,12 +30,11 @@ namespace event
 class IEvent;
 class IEventListener;
 } // namespace event
-
-class EntityManager;
-class ComponentManager;
-class SystemManager;
-
 } // namespace ecs
+
+using EngineUptr = std::unique_ptr<Engine>;
+using EngineSptr = std::shared_ptr<Engine>;
+using EngineWptr = std::weak_ptr<Engine>;
 
 class Engine
 {
@@ -44,24 +47,25 @@ public:
 	~Engine();
 
 public:
-	inline ecs::EntityManager* GetEntityManager()
+
+	inline ecs::util::TimerSptr& GetTimer()
 	{
-		return this->entityManager;
+		return this->timer;
 	}
 
-	inline ecs::ComponentManager* GetComponentManager()
-	{
-		return this->componentManager;
-	}
-
-	inline ecs::SystemManager* GetSystemManager()
+	inline ecs::SystemManagerSptr GetSystemManager()
 	{
 		return this->systemManager;
 	}
 
-	inline ecs::util::Timer* GetTimer()
+	inline ecs::ComponentManagerSptr GetComponentManager()
 	{
-		return this->timer;
+		return this->componentManager;
+	}
+
+	inline ecs::EntityManagerSptr& GetEntityManager()
+	{
+		return this->entityManager;
 	}
 
 public:
@@ -75,50 +79,50 @@ public:
 
 public:
 	template<class E>
-	inline void SubscribeEvent(const ecs::event::IEventDelegate* eventDelegate_)
+	inline void SubscribeEvent(const ecs::event::IEventDelegateSptr& eventDelegate_)
 	{
 		this->eventHandler->AddEventCallback<E>(eventDelegate_);
 	}
 
-	void UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_);
+	void UnsubscribeEvent(ecs::event::IEventDelegateSptr& eventDelegate_);
 
 public:
 
 	static void Initialize()
 	{
 		if (engineInstance == nullptr) {
-			engineInstance = new Engine();
+			engineInstance = std::make_shared<Engine>();
 		}
 	}
 
 	static void Terminate()
 	{
 		if (engineInstance != nullptr) {
-			delete engineInstance;
+			engineInstance.reset();
 			engineInstance = nullptr;
 		}
 
 		memory::MemoryManager::GetInstance()->CheckMemoryLeaks();
 	}
 
-	static Engine* GetInstance()
+	static EngineSptr GetInstance()
 	{
 		if (engineInstance == nullptr) {
-			engineInstance = new Engine();
+			engineInstance = std::make_shared<Engine>();
 		}
 
 		return engineInstance;
 	}
 
 private:
-	static Engine* engineInstance;
+	static EngineSptr engineInstance;
 
 private:
-	ecs::util::Timer*	      timer;
-	ecs::EntityManager*	      entityManager;
-	ecs::ComponentManager*    componentManager;
-	ecs::SystemManager*	      systemManager;
-	ecs::event::EventHandler* eventHandler;
+	ecs::util::TimerSptr         timer;
+	ecs::event::EventHandlerSptr eventHandler;
+	ecs::SystemManagerSptr	     systemManager;
+	ecs::ComponentManagerSptr	 componentManager;
+	ecs::EntityManagerSptr	     entityManager;
 
 };
 
