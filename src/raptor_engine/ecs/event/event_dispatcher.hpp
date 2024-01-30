@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <cassert>
 
 #include "ecs/event/i_event_dispatcher.hpp"
 
@@ -11,8 +12,8 @@ namespace event {
 template<typename T>
 class EventDispatcher : public IEventDispatcher
 {
-	using EventDelegateList		 = std::list<IEventDelegateSptr>;
-	using PendingRemoveDelegates = std::list<IEventDelegateSptr>;
+	using EventDelegateList		 = std::list<IEventDelegate*>;
+	using PendingRemoveDelegates = std::list<IEventDelegate*>;
 
 public:
 	EventDispatcher() : locked(false) { }
@@ -22,22 +23,22 @@ public:
 		this->GetEventCallbacks().clear();
 	}
 
-	virtual void Dispatch(const IEventSptr& event) override
+	virtual void Dispatch(IEvent* event) override
 	{
 		this->SetLocked(true);
-		LogTrace("Dispatch event %s", typeid(T).name());
+		//LogTrace("Dispatch event %s", typeid(T).name());
 		if (this->GetPendingRemoveDelegates().empty() == false) 
 		{
 			for (auto EC : this->GetPendingRemoveDelegates()) 
 			{
 				auto result = std::find_if(this->GetEventCallbacks().begin(),
 										   this->GetEventCallbacks().end(),
-										   [&](const IEventDelegateSptr& other) { return other->operator==(EC); });
+										   [&](const IEventDelegate* other) { return other->operator==(EC); });
 				if (result != this->GetEventCallbacks().end()) 
 				{
-					IEventDelegateSptr ptrMem = static_cast<IEventDelegateSptr>(*result);
+					IEventDelegate* ptrMem = static_cast<IEventDelegate*>(*result);
 					this->GetEventCallbacks().erase(result);
-					ptrMem.reset();
+					delete ptrMem;
 					ptrMem = nullptr;
 				}
 			}
@@ -47,16 +48,16 @@ public:
 		for (auto EC : this->GetEventCallbacks()) 
 		{
 			assert(EC != nullptr && "Invalid event callback.");
-			EC->invoke(event);
+			EC->Invoke(event);
 		}
 
 		this->SetLocked(false);
 	}
-	virtual void AddEventCallback(const IEventDelegateSptr& eventDelegate) override
+	virtual void AddEventCallback(IEventDelegate* eventDelegate) override
 	{
 		auto result = std::find_if(this->GetPendingRemoveDelegates().begin(),
 								   this->GetPendingRemoveDelegates().end(),
-								   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
+								   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
 
 		if (result != this->GetPendingRemoveDelegates().end()) 
 		{
@@ -66,21 +67,21 @@ public:
 
 		this->GetEventCallbacks().push_back(eventDelegate);
 	}
-	virtual void RemoveEventCallback(const IEventDelegateSptr& eventDelegate) override
+	virtual void RemoveEventCallback(IEventDelegate* eventDelegate) override
 	{
 		if (this->GetLocked() == false) 
 		{
 			auto result = std::find_if(this->GetEventCallbacks().begin(),
 									   this->GetEventCallbacks().end(),
-									   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
+									   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
 
 			if (result != this->GetEventCallbacks().end()) 
 			{
-				IEventDelegateSptr ptrMem = static_cast<IEventDelegateSptr>(*result);
+				IEventDelegate* ptrMem = static_cast<IEventDelegate*>(*result);
 
 				this->GetEventCallbacks().erase(result);
 
-				ptrMem.reset();
+				delete ptrMem;
 				ptrMem = nullptr;
 			}
 		} 
@@ -88,7 +89,7 @@ public:
 		{
 			auto result = std::find_if(this->GetEventCallbacks().begin(),
 									   this->GetEventCallbacks().end(),
-									   [&](const IEventDelegateSptr& other) { return other->operator==(eventDelegate); });
+									   [&](const IEventDelegate* other) { return other->operator==(eventDelegate); });
 			// assert(result != this->GetEventCallbacks().end() && "");
 			if (result != this->GetEventCallbacks().end()) 
 			{

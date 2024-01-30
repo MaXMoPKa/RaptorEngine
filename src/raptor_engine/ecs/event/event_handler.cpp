@@ -8,7 +8,7 @@ EventHandler::EventHandler()
 	//LogInfo("Initialize EventHandler!");
 
 	this->eventMemoryAllocator =
-		std::make_shared<EventMemoryAllocator>(ECS_EVENT_MEMORY_BUFFER_SIZE, Allocate(ECS_EVENT_MEMORY_BUFFER_SIZE, "EventHandler"));
+		new EventMemoryAllocator(ECS_EVENT_MEMORY_BUFFER_SIZE, Allocate(ECS_EVENT_MEMORY_BUFFER_SIZE, "EventHandler"));
 
 	this->GetEventStorage().reserve(1024);
 }
@@ -19,7 +19,7 @@ EventHandler::~EventHandler()
 		 it != this->GetEventDispatcherMap().end();
 		 ++it) 
 	{
-		(*it).second.reset();
+		delete (*it).second;
 		(*it).second = nullptr;
 	}
 
@@ -28,7 +28,7 @@ EventHandler::~EventHandler()
 	// Release allocated memory
 	this->Free((void*)this->GetEventMemoryAllocator()->GetAddress());
 
-	this->GetEventMemoryAllocator().reset();
+	delete this->GetEventMemoryAllocator();
 	this->SetEventMemoryAllocator(nullptr);
 
 	//LogInfo("Relealse EventHandler!");

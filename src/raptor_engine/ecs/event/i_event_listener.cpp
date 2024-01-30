@@ -1,6 +1,11 @@
 #include "ecs/event/i_event_listener.hpp"
 
-using namespace raptor_engine::ecs::event;
+namespace raptor_engine
+{
+namespace ecs
+{
+namespace event
+{
 
 IEventListener::~IEventListener()
 {
@@ -9,10 +14,13 @@ IEventListener::~IEventListener()
 
 void IEventListener::UnregisterAllEventCallbacks()
 {
-	for (const IEventDelegateSptr& cb : this->GetRegisteredCallbacks())
-	{
+	for (IEventDelegate* cb : this->GetRegisteredCallbacks()) {
 		Engine::GetInstance()->UnsubscribeEvent(cb);
 	}
 
 	this->GetRegisteredCallbacks().clear();
+}
+
+}
+}
 }

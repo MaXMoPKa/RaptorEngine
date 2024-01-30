@@ -25,14 +25,14 @@ public:
 	virtual ~IEventDelegate() = default;
 
 public:
-	virtual inline void Invoke(const IEventSptr& e) = 0;
+	virtual inline void Invoke(const IEvent* const e) = 0;
 	
 	virtual inline EventDelegateId GetId() const	= 0;
 	virtual inline u64 GetStaticEventTypeId() const = 0;
 	
-	virtual bool operator==(const IEventDelegateSptr& other) const = 0;
+	virtual bool operator==(const IEventDelegate* other) const = 0;
 
-	virtual IEventDelegateSptr Clone() = 0;
+	virtual IEventDelegate* Clone() = 0;
 };
 
 

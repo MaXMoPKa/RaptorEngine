@@ -12,7 +12,7 @@ class System : public ISystem
 	friend class SystemManager;
 
 public:
-	static const SystemTypeId STATIC_SYSTEM__TYPE_ID;
+	static const SystemTypeId STATIC_SYSTEM_TYPE_ID;
 
 public:
 	virtual ~System() = default;
@@ -20,7 +20,7 @@ public:
 public:
 	virtual inline const SystemTypeId GetStaticSystemTypeId() const
 	{
-		return STATIC_SYSTEM__TYPE_ID;
+		return STATIC_SYSTEM_TYPE_ID;
 	}
 
 	virtual inline const char* GetSystemTypeName() const override
@@ -32,7 +32,7 @@ public:
 	template <typename... Dependencies>
 	void AddDependencies(Dependencies&&... dependencies_)
 	{
-		this->SystemManager->AddSystemDependency(this, std::forward<Dependencies>(dependencies_)...);
+		this->systemManager->AddSystemDependency(this, std::forward<Dependencies>(dependencies_)...);
 	}
 
 	virtual void PreUpdate(f32 dt) override { }
@@ -42,12 +42,12 @@ public:
 	virtual void PostUpdate(f32 dt) override { }
 
 private:
-	SystemManager* manager;
+	SystemManager* systemManager;
 
 };
 
 template <typename T>
-const SystemTypeId System<T>::STATIC_SYSTEM__TYPE_ID = util::FamilyTypeId<ISystem>::get<T>();
+const SystemTypeId System<T>::STATIC_SYSTEM_TYPE_ID = util::FamilyTypeId<ISystem>::get<T>();
 
 
 } // namespace ecs

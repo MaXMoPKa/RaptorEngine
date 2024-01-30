@@ -23,12 +23,12 @@ public:
 	virtual ~EventDelegate() = default;
 
 public:
-	virtual IEventDelegate* clone() override
+	virtual IEventDelegate* Clone() override
 	{
 		return new EventDelegate(this->receiver, this->callback);
 	}
 
-	virtual inline void invoke(const IEvent* const e) override
+	virtual inline void Invoke(const IEvent* const e) override
 	{
 		(receiver->*callback)(reinterpret_cast<const EventType* const>(e));
 	}

@@ -23,9 +23,9 @@ class EventHandler : memory::GlobalMemoryUser
 {
 	friend class Engine;
 
-	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcherSptr>;
+	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcher*>;
 
-	using EventStorage		   = std::vector<IEventSptr>;
+	using EventStorage		   = std::vector<IEvent*>;
 	using EventMemoryAllocator = memory::allocator::LinearAllocator;
 
 private:
@@ -42,7 +42,7 @@ private:
 		return this->eventDispatcherMap;
 	}
 
-	inline void SetEventMemoryAllocator(std::shared_ptr<EventMemoryAllocator> eventMemoryAllocator)
+	inline void SetEventMemoryAllocator(EventMemoryAllocator* eventMemoryAllocator)
 	{
 		this->eventMemoryAllocator = eventMemoryAllocator;
 	}
@@ -95,7 +95,7 @@ public:
 
 		if (pMem != nullptr) 
 		{
-			this->GetEventStorage().push_back(std::make_shared<E>(new (pMem) E(std::forward<Args>(eventArgs)...)));
+			this->GetEventStorage().push_back(new (pMem) E(std::forward<Args>(eventArgs)...));
 			//LogTrace("%s event buffered.", typeid(E).name());
 		} 
 		else 
@@ -115,14 +115,14 @@ private:
 
 	// Add event callback
 	template<class E>
-	inline void AddEventCallback(const IEventDelegateSptr& eventDelegate)
+	inline void AddEventCallback(IEventDelegate* const eventDelegate)
 	{
 		EventTypeId ETID = E::STATIC_EVENT_TYPE_ID;
 
 		EventDispatcherMap::const_iterator iter = this->GetEventDispatcherMap().find(ETID);
 		if (iter == this->GetEventDispatcherMap().end()) 
 		{
-			std::pair<EventTypeId, IEventDispatcherSptr> kvp(ETID, std::make_shared<EventDispatcher<E>>());
+			std::pair<EventTypeId, IEventDispatcher*> kvp(ETID, new EventDispatcher<E>());
 
 			kvp.second->AddEventCallback(eventDelegate);
 
@@ -135,7 +135,7 @@ private:
 	}
 
 	// Remove event callback
-	inline void RemoveEventCallback(const IEventDelegateSptr& eventDelegate)
+	inline void RemoveEventCallback(IEventDelegate* eventDelegate)
 	{
 		auto							   typeId = eventDelegate->GetStaticEventTypeId();
 		EventDispatcherMap::const_iterator iter	  = this->GetEventDispatcherMap().find(typeId);
@@ -146,9 +146,9 @@ private:
 	}
 
 private:
-	EventDispatcherMap	                   eventDispatcherMap;
-	std::shared_ptr<EventMemoryAllocator>  eventMemoryAllocator;
-	EventStorage		                   eventStorage;
+	EventDispatcherMap	  eventDispatcherMap;
+	EventMemoryAllocator* eventMemoryAllocator;
+	EventStorage		  eventStorage;
 };
 
 using EventHandlerUptr = std::unique_ptr<EventHandler>;
