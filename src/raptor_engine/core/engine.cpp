@@ -37,7 +37,7 @@ namespace raptor_engine
 		eventHandler->DispatchEvents();
 	}
 
-	void Engine::UnsubscribeEvent(ecs::event::IEventDelegateSptr& eventDelegate_)
+	void Engine::UnsubscribeEvent(const ecs::event::IEventDelegateSptr& eventDelegate_)
 	{
 		eventHandler->RemoveEventCallback(eventDelegate_);
 	}

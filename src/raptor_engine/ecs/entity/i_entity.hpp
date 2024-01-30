@@ -82,5 +82,9 @@ private:
 	ComponentManager* componentManager;
 };
 
+using IEntityUptr = std::unique_ptr<IEntity>;
+using IEntitySptr = std::shared_ptr<IEntity>;
+using IEntityWptr = std::weak_ptr<IEntity>;
+
 } // namespace ecs
 } // namespace raptor_engine

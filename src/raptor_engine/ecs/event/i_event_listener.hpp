@@ -22,10 +22,10 @@ public:
 	template <typename E, typename C>
 	inline void RegisterEventCallback(void (C::*Callback)(const E))
 	{
-		IEventDelegate* eventDelegate = new EventDelegate<C, E>(static_cast<C*>(this), Callback);
+		IEventDelegateSptr eventDelegate = std::make_shared<EventDelegate<C, E>>(static_cast<C*>(this), Callback);
 
 		this->GetRegisteredCallbacks().push_back(eventDelegate);
-		Engine::GetInstance()->SubscribeEvemt<E>(eventDelegate);
+		Engine::GetInstance()->SubscribeEvent<E>(eventDelegate);
 	}
 
 	template<typename E, typename C>
@@ -33,7 +33,7 @@ public:
 	{
 		EventDelegate<C, E> delegate(static_cast<C*>(this), Callback);
 
-		for (auto& cb : this->registeredCallbacks)
+		for (const IEventDelegateSptr& cb : this->registeredCallbacks)
 		{
 			if (cb->GetId() == delegate.GetId())
 			{
@@ -66,6 +66,10 @@ private:
 private:
 	RegisteredCallbacks registeredCallbacks;
 };
+
+using IEventListenerUptr = std::unique_ptr<IEventListener>;
+using IEventListenerSptr = std::shared_ptr<IEventListener>;
+using IEventListenerWptr = std::weak_ptr<IEventListener>;
 
 } // namespace event
 } // namespace ecs

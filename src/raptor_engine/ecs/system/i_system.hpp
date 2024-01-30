@@ -49,5 +49,9 @@ private:
 	u8			   reserved	    : 6;
 };
 
+using ISystemUptr = std::unique_ptr<ISystem>;
+using ISystemSptr = std::shared_ptr<ISystem>;
+using ISystemWptr = std::weak_ptr<ISystem>;
+
 } // namespace ecs
 } // namespace raptor_engine

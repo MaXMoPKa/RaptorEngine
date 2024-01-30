@@ -23,9 +23,9 @@ class EventHandler : memory::GlobalMemoryUser
 {
 	friend class Engine;
 
-	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcher*>;
+	using EventDispatcherMap = std::unordered_map<EventTypeId, IEventDispatcherSptr>;
 
-	using EventStorage		   = std::vector<IEvent*>;
+	using EventStorage		   = std::vector<IEventSptr>;
 	using EventMemoryAllocator = memory::allocator::LinearAllocator;
 
 private:
@@ -42,7 +42,7 @@ private:
 		return this->eventDispatcherMap;
 	}
 
-	inline void SetEventMemoryAllocator(EventMemoryAllocator* eventMemoryAllocator)
+	inline void SetEventMemoryAllocator(std::shared_ptr<EventMemoryAllocator> eventMemoryAllocator)
 	{
 		this->eventMemoryAllocator = eventMemoryAllocator;
 	}
@@ -95,7 +95,7 @@ public:
 
 		if (pMem != nullptr) 
 		{
-			this->GetEventStorage().push_back(new (pMem) E(std::forward<Args>(eventArgs)...));
+			this->GetEventStorage().push_back(std::make_shared<E>(new (pMem) E(std::forward<Args>(eventArgs)...)));
 			//LogTrace("%s event buffered.", typeid(E).name());
 		} 
 		else 
@@ -122,7 +122,7 @@ private:
 		EventDispatcherMap::const_iterator iter = this->GetEventDispatcherMap().find(ETID);
 		if (iter == this->GetEventDispatcherMap().end()) 
 		{
-			std::pair<EventTypeId, IEventDispatcher*> kvp(ETID, new EventDispatcher<E>());
+			std::pair<EventTypeId, IEventDispatcherSptr> kvp(ETID, std::make_shared<EventDispatcher<E>>());
 
 			kvp.second->AddEventCallback(eventDelegate);
 
@@ -146,9 +146,9 @@ private:
 	}
 
 private:
-	EventDispatcherMap	  eventDispatcherMap;
-	EventMemoryAllocator* eventMemoryAllocator;
-	EventStorage		  eventStorage;
+	EventDispatcherMap	                   eventDispatcherMap;
+	std::shared_ptr<EventMemoryAllocator>  eventMemoryAllocator;
+	EventStorage		                   eventStorage;
 };
 
 using EventHandlerUptr = std::unique_ptr<EventHandler>;

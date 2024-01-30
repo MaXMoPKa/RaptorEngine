@@ -84,7 +84,7 @@ public:
 		this->eventHandler->AddEventCallback<E>(eventDelegate_);
 	}
 
-	void UnsubscribeEvent(ecs::event::IEventDelegateSptr& eventDelegate_);
+	void UnsubscribeEvent(const ecs::event::IEventDelegateSptr& eventDelegate_);
 
 public:
 

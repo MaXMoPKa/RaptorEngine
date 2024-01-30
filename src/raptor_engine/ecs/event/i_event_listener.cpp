@@ -9,7 +9,7 @@ IEventListener::~IEventListener()
 
 void IEventListener::UnregisterAllEventCallbacks()
 {
-	for (auto cb : this->GetRegisteredCallbacks())
+	for (const IEventDelegateSptr& cb : this->GetRegisteredCallbacks())
 	{
 		Engine::GetInstance()->UnsubscribeEvent(cb);
 	}

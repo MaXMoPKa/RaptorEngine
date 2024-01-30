@@ -49,5 +49,9 @@ protected:
 	bool		isActive;
 };
 
+using IComponentUptr = std::unique_ptr<IComponent>;
+using IComponentSptr = std::shared_ptr<IComponent>;
+using IComponentWptr = std::weak_ptr<IComponent>;
+
 } // namespace ecs
 } // namespace raptor_engine

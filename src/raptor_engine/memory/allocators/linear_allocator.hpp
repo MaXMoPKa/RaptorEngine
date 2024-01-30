@@ -127,6 +127,10 @@ class LinearAllocator {
   AlignedStorageType pimpl;
 };
 
+using LinearAllocatorUptr = std::unique_ptr<LinearAllocator>;
+using LinearAllocatorSptr = std::shared_ptr<LinearAllocator>;
+using LinearAllocatorWptr = std::weak_ptr<LinearAllocator>;
+
 }  // namespace allocator
 }  // namespace memory
 }  // namespace raptor_engine
