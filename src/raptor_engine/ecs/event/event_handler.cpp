@@ -26,7 +26,7 @@ EventHandler::~EventHandler()
 	this->GetEventDispatcherMap().clear();
 
 	// Release allocated memory
-	this->Free((void*)this->GetEventMemoryAllocator()->GetAddress());
+	this->Free((void*)this->GetEventMemoryAllocator()->GetMemoryAddress());
 
 	delete this->GetEventMemoryAllocator();
 	this->SetEventMemoryAllocator(nullptr);

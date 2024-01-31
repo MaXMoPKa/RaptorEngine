@@ -86,24 +86,6 @@ public:
 	void UnsubscribeEvent(ecs::event::IEventDelegate* eventDelegate_);
 
 public:
-
-	static void Initialize()
-	{
-		if (engineInstance == nullptr) {
-			engineInstance = std::make_shared<Engine>();
-		}
-	}
-
-	static void Terminate()
-	{
-		if (engineInstance != nullptr) {
-			engineInstance.reset();
-			engineInstance = nullptr;
-		}
-
-		memory::MemoryManager::GetInstance()->CheckMemoryLeaks();
-	}
-
 	static const EngineSptr& GetInstance()
 	{
 		if (engineInstance == nullptr) {

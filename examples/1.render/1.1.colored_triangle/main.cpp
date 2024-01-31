@@ -3,6 +3,7 @@
 //#include "systems/hardware_system.hpp"
 
 #include "core/systems/hardware_system.hpp"
+#include "core/systems/window_system.hpp"
 
 //using namespace raptor_enigne::systems;
 //using namespace raptor_engine::structs;
@@ -16,12 +17,12 @@ int main()
  //   static const std::size_t HEIGHT {720U};
  //   static const char		 TITLE[] {"Engine test window"};
 
- //   window_data_sptr window_info = std::make_shared<window_data>(TITLE,
-	//														    SDL_WINDOWPOS_CENTERED,
-	//														    SDL_WINDOWPOS_CENTERED,
-	//														    WIDTH,
-	//														    HEIGHT,
-	//														    SDL_WINDOW_OPENGL);
+   /*window_data_sptr window_info = std::make_shared<window_data>(TITLE,
+														    SDL_WINDOWPOS_CENTERED,
+														    SDL_WINDOWPOS_CENTERED,
+														    WIDTH,
+														    HEIGHT,
+														    SDL_WINDOW_OPENGL);*/
 
  //   hardware_system_data_sptr hardware_system_info =
 	//	std::make_shared<hardware_system_data>(32U /*SDL_INIT_VIDEO*/, window_info);
@@ -54,6 +55,7 @@ int main()
 	const ecs::SystemManagerSptr& systemManager = engine->GetSystemManager();
 
 	core::HardwareSystem* hardwareSystem = systemManager->AddSystem<core::HardwareSystem>();
+	core::WindowSystem*	  windowSystem	 = systemManager->AddSystem<core::WindowSystem>();
 
 	engine->SendEvent<core::events::ReceiveInitializeEvent>(32U);
 

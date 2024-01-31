@@ -51,11 +51,11 @@ public:
 			system							   = new (systemMemory) T(std::forward<ARGS>(args_)...);
 			this->registry[staticSystemTypeId] = system;
 
-			// LogInfo("System \'%s\' (%d bytes) created.", typeid(T).name(), sizeof(T));
+			//LogInfo("System \'%s\' (%d bytes) created.", typeid(T).name(), sizeof(T));
 		}
 		else
 		{
-			// LogError("Unable to create system \'%s\' (%d bytes).", typeid(T).name(), sizeof(T));
+			//LogError("Unable to create system \'%s\' (%d bytes).", typeid(T).name(), sizeof(T));
 			assert(true);
 		}
 

@@ -22,7 +22,7 @@ SystemManager::~SystemManager()
 	workOrder.clear();
 	registry.clear();
 
-	Free((void*)this->allocator->GetAddress());
+	Free((void*)this->allocator->GetMemoryAddress());
 	delete this->allocator;
 	this->allocator = nullptr;
 }
